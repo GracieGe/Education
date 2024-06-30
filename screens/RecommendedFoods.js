@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-virtualized-view';
 import { categories, recommendedFoods } from '../data';
 import HorizontalFoodCard from '../components/HorizontalFoodCard';
 
-const RecommendedFoods = () => {
+const RecommendedFoods = ({ navigation }) => {
   const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
   const filteredFoods = recommendedFoods.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
@@ -23,6 +23,8 @@ const RecommendedFoods = () => {
         borderWidth: 1.3,
         borderRadius: 24,
         marginRight: 12,
+        flex: 1,
+        alignItems: 'center',
       }}
       onPress={() => toggleCategory(item.id)}>
       <Text style={{
@@ -49,16 +51,17 @@ const RecommendedFoods = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Recommended For You!😍" />
+        <Header title="All Teacher Profiles" />
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}>
           <FlatList
             data={categories}
             keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
-            horizontal
+            numColumns={3}
             renderItem={renderCategoryItem}
+            scrollEnabled={false}
+            contentContainerStyle={{ justifyContent: 'space-between' }}
           />
           <View style={{
             backgroundColor: COLORS.secondaryWhite,
@@ -67,11 +70,11 @@ const RecommendedFoods = () => {
             <FlatList
               data={filteredFoods}
               keyExtractor={item => item.id}
-              numColumns={2}
-              columnWrapperStyle={{ gap: 16 }}
+              numColumns={1}
               renderItem={({ item }) => {
                 return (
                   <HorizontalFoodCard
+                    key={item.id}
                     name={item.name}
                     image={item.image}
                     distance={item.distance}

@@ -922,7 +922,7 @@ export const drink = [
 export const discountFoods = [
     {
         id: "1",
-        name: "Classic Pepperoni Pizza",
+        name: "Chinese",
         image: images.pizza1,
         distance: "100 m",
         price: "$10.00",
@@ -933,7 +933,7 @@ export const discountFoods = [
     },
     {
         id: "2",
-        name: "Double Cheeseburger",
+        name: "Mathematics",
         image: images.hamburger1,
         distance: "1.2 km",
         price: "$8.00",
@@ -944,7 +944,7 @@ export const discountFoods = [
     },
     {
         id: "3",
-        name: "Garlic Breadsticks",
+        name: "English",
         image: images.bread1,
         distance: "1.6 km",
         price: "$6.00",
@@ -955,7 +955,7 @@ export const discountFoods = [
     },
     {
         id: "4",
-        name: "Grilled Chicken Sandwich",
+        name: "Physics",
         image: images.meat1,
         distance: "2.5 km",
         price: "$9.00",
@@ -966,7 +966,7 @@ export const discountFoods = [
     },
     {
         id: "5",
-        name: "Caesar Salad",
+        name: "Chemistry",
         image: images.salad1,
         distance: "800 m",
         price: "$12.00",
@@ -977,7 +977,7 @@ export const discountFoods = [
     },
     {
         id: "6",
-        name: "Vegetarian Supreme Pizza",
+        name: "Chinese",
         image: images.pizza2,
         distance: "3.0 km",
         price: "$15.00",
@@ -988,7 +988,7 @@ export const discountFoods = [
     },
     {
         id: "7",
-        name: "Bacon Cheeseburger",
+        name: "Mathematics",
         image: images.hamburger2,
         distance: "2.0 km",
         price: "$10.00",
@@ -999,7 +999,7 @@ export const discountFoods = [
     },
     {
         id: "8",
-        name: "Freshly Baked Baguette",
+        name: "English",
         image: images.bread2,
         distance: "1.8 km",
         price: "$5.00",
@@ -1010,7 +1010,7 @@ export const discountFoods = [
     },
     {
         id: "9",
-        name: "BBQ Pork Ribs",
+        name: "Physics",
         image: images.meat2,
         distance: "1.4 km",
         price: "$18.00",
@@ -1024,7 +1024,7 @@ export const discountFoods = [
 export const recommendedFoods = [
     {
         id: "1",
-        name: "Classic Pepperoni Pizza",
+        name: "Liu Yang",
         image: images.pizza1,
         distance: "100 m",
         price: "$10.00",
@@ -1036,7 +1036,7 @@ export const recommendedFoods = [
     },
     {
         id: "2",
-        name: "Double Cheeseburger",
+        name: "John Smith",
         image: images.hamburger1,
         distance: "1.2 km",
         price: "$8.00",
@@ -1048,7 +1048,7 @@ export const recommendedFoods = [
     },
     {
         id: "3",
-        name: "Garlic Breadsticks",
+        name: "Emily Johnson",
         image: images.bread1,
         distance: "1.6 km",
         price: "$6.00",
@@ -1060,7 +1060,7 @@ export const recommendedFoods = [
     },
     {
         id: "4",
-        name: "Grilled Chicken Sandwich",
+        name: "Zihao Zhang",
         image: images.meat1,
         distance: "2.5 km",
         price: "$9.00",
@@ -1072,7 +1072,7 @@ export const recommendedFoods = [
     },
     {
         id: "5",
-        name: "Caesar Salad",
+        name: "Jiaqi Huang",
         image: images.salad1,
         distance: "800 m",
         price: "$12.00",
@@ -1084,7 +1084,7 @@ export const recommendedFoods = [
     },
     {
         id: "6",
-        name: "Vegetarian Supreme Pizza",
+        name: "Jessica Wilson",
         image: images.pizza2,
         distance: "3.0 km",
         price: "$15.00",
@@ -1096,7 +1096,7 @@ export const recommendedFoods = [
     },
     {
         id: "7",
-        name: "Bacon Cheeseburger",
+        name: "James Anderson",
         image: images.hamburger2,
         distance: "2.0 km",
         price: "$10.00",
@@ -1108,7 +1108,7 @@ export const recommendedFoods = [
     },
     {
         id: "8",
-        name: "Freshly Baked Baguette",
+        name: "Na Zhou",
         image: images.bread2,
         distance: "1.8 km",
         price: "$5.00",
@@ -1120,7 +1120,7 @@ export const recommendedFoods = [
     },
     {
         id: "9",
-        name: "BBQ Pork Ribs",
+        name: "Laura Thomas",
         image: images.meat2,
         distance: "1.4 km",
         price: "$18.00",

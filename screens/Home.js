@@ -5,7 +5,6 @@ import { banners, categories, discountFoods, recommendedFoods } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import SubHeaderItem from '../components/SubHeaderItem';
-import Category from '../components/Category';
 import VerticalFoodCard from '../components/VerticalFoodCard';
 import HorizontalFoodCard from '../components/HorizontalFoodCard';
 
@@ -146,57 +145,71 @@ const Home = ({ navigation }) => {
   }
 
   /**
- * Render categories
- */
-  const renderCategories = () => {
-
-    return (
-      <View>
-        <SubHeaderItem
-          title="Categories"
-          navTitle="See all"
-          onPress={() => navigation.navigate("Categories")}
-        />
-        <FlatList
-          data={categories.slice(0, 8)}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={false}
-          numColumns={4} // Render two items per row
-          renderItem={({ item, index }) => (
-            <Category
-              name={item.name}
-              icon={item.icon}
-              backgroundColor={COLORS.white}
-              onPress={item.onPress ? () => navigation.navigate({ name: item.onPress }) : null}
-            />
-          )}
-        />
-      </View>
-    )
-  }
-
-
-  /**
-   * render discount foods
+   * render courses
    */
   const renderDiscountedFoods = () => {
+    const [selectedCategories, setSelectedCategories] = useState(["1"]);
+
+    const filteredFoods = discountFoods.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+
+    // Category item
+    const renderCategoryItem = ({ item }) => (
+      <TouchableOpacity
+        style={{
+          backgroundColor: selectedCategories.includes(item.id) ? COLORS.primary : "transparent",
+          padding: 10,
+          marginVertical: 5,
+          borderColor: COLORS.primary,
+          borderWidth: 1.3,
+          borderRadius: 24,
+          marginRight: 12,
+          flex: 1, 
+          alignItems: 'center',
+        }}
+        onPress={() => toggleCategory(item.id)}>
+        <Text style={{
+          color: selectedCategories.includes(item.id) ? COLORS.white : COLORS.primary
+        }}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+
+    // Toggle category selection
+    const toggleCategory = (categoryId) => {
+      const updatedCategories = [...selectedCategories];
+      const index = updatedCategories.indexOf(categoryId);
+
+      if (index === -1) {
+        updatedCategories.push(categoryId);
+      } else {
+        updatedCategories.splice(index, 1);
+      }
+
+      setSelectedCategories(updatedCategories);
+    };
 
     return (
       <View>
         <SubHeaderItem
-          title="Discount guaranteed!👌"
+          title="Courses For You"
           navTitle="See all"
           onPress={() => navigation.navigate("DiscountFoods")}
         />
+        <FlatList
+        data={categories}
+        keyExtractor={item => item.id}
+        numColumns={3} 
+        renderItem={renderCategoryItem}
+        scrollEnabled={false} 
+        contentContainerStyle={{ justifyContent: 'space-between' }} 
+      />
         <View style={{
           backgroundColor: COLORS.secondaryWhite,
           marginVertical: 16
         }}>
           <FlatList
-            data={discountFoods}
+            data={filteredFoods}
             keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
+            numColumns={2}
             renderItem={({ item }) => {
               return (
                 <VerticalFoodCard
@@ -218,7 +231,7 @@ const Home = ({ navigation }) => {
   }
 
   /**
-   * render recommended foods
+   * render teacher profiles
    */
   const renderRecommendedFoods = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
@@ -311,7 +324,6 @@ const Home = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {renderSearchBar()}
           {renderBanner()}
-          {renderCategories()}
           {renderDiscountedFoods()}
           {renderRecommendedFoods()}
         </ScrollView>
