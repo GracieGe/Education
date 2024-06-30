@@ -25,7 +25,6 @@ const Home = ({ navigation }) => {
             style={styles.userIcon}
           />
           <View style={styles.viewNameContainer}>
-            <Text style={styles.greeeting}>Good Morning👋</Text>
             <Text style={[styles.title, {
               color: COLORS.greyscale900
             }]}>Andrew Ainsley</Text>
@@ -82,13 +81,6 @@ const Home = ({ navigation }) => {
           style={styles.searchInput}
           onFocus={handleInputFocus}
         />
-        <TouchableOpacity>
-          <Image
-            source={icons.filter}
-            resizeMode='contain'
-            style={styles.filterIcon}
-          />
-        </TouchableOpacity>
       </TouchableOpacity>
     )
   }
@@ -97,14 +89,14 @@ const Home = ({ navigation }) => {
     <View style={styles.bannerContainer}>
       <View style={styles.bannerTopContainer}>
         <View>
-          <Text style={styles.bannerDicount}>{item.discount} OFF</Text>
-          <Text style={styles.bannerDiscountName}>{item.discountName}</Text>
+          <Text style={styles.bannerCompanyName}>{item.companyName}</Text>
+          <Text ></Text>
         </View>
-        <Text style={styles.bannerDiscountNum}>{item.discount}</Text>
+
       </View>
       <View style={styles.bannerBottomContainer}>
-        <Text style={styles.bannerBottomTitle}>{item.bottomTitle}</Text>
-        <Text style={styles.bannerBottomSubtitle}>{item.bottomSubtitle}</Text>
+        <Text style={styles.bannerEmail}>{item.email}</Text>
+        <Text style={styles.bannerAddress}>{item.address}</Text>
       </View>
     </View>
   );
@@ -244,6 +236,8 @@ const Home = ({ navigation }) => {
           borderWidth: 1.3,
           borderRadius: 24,
           marginRight: 12,
+          flex: 1, 
+          alignItems: 'center',
         }}
         onPress={() => toggleCategory(item.id)}>
         <Text style={{
@@ -269,17 +263,18 @@ const Home = ({ navigation }) => {
     return (
       <View>
         <SubHeaderItem
-          title="Recommended For You!😍"
+          title="Teacher Profiles"
           navTitle="See all"
           onPress={() => navigation.navigate("RecommendedFoods")}
         />
         <FlatList
-          data={categories}
-          keyExtractor={item => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={renderCategoryItem}
-        />
+        data={categories}
+        keyExtractor={item => item.id}
+        numColumns={3} 
+        renderItem={renderCategoryItem}
+        scrollEnabled={false} 
+        contentContainerStyle={{ justifyContent: 'space-between' }} 
+      />
         <View style={{
           backgroundColor: COLORS.secondaryWhite,
           marginVertical: 16
@@ -287,9 +282,11 @@ const Home = ({ navigation }) => {
           <FlatList
             data={filteredFoods}
             keyExtractor={item => item.id}
+            numColumns={1} 
             renderItem={({ item }) => {
               return (
                 <HorizontalFoodCard
+                  key={item.id}
                   name={item.name}
                   image={item.image}
                   distance={item.distance}
@@ -302,7 +299,7 @@ const Home = ({ navigation }) => {
                 />
               )
             }}
-          />
+          />  
         </View>
       </View>
     )
@@ -398,11 +395,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Regular",
     marginHorizontal: 8
   },
-  filterIcon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.primary
-  },
   bannerContainer: {
     width: SIZES.width - 32,
     height: 154,
@@ -416,31 +408,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center"
   },
-  bannerDicount: {
-    fontSize: 12,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.white,
-    marginBottom: 4
-  },
-  bannerDiscountName: {
+  bannerCompanyName: {
     fontSize: 16,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.white
-  },
-  bannerDiscountNum: {
-    fontSize: 46,
     fontFamily: "Urbanist Bold",
     color: COLORS.white
   },
   bannerBottomContainer: {
     marginTop: 8
   },
-  bannerBottomTitle: {
+  bannerEmail: {
     fontSize: 14,
     fontFamily: "Urbanist Medium",
     color: COLORS.white
   },
-  bannerBottomSubtitle: {
+  bannerAddress: {
     fontSize: 14,
     fontFamily: "Urbanist Medium",
     color: COLORS.white,

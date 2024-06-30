@@ -521,10 +521,10 @@ export const transactionHistory = [
 export const banners = [
     {
         id: 1,
-        discount: '40%',
-        discountName: "Today's Special",
-        bottomTitle: 'Get a discount for every orde!',
-        bottomSubtitle: 'Only valid for today!'
+        companyName: "Shanghai Hongcai Education Institution",
+        email: 'Email: fysphy@sina.cn',
+        address: 'Address: 112 Miaopu Road, Shanghai',
+        
     },
     {
         id: 2,
@@ -545,7 +545,7 @@ export const banners = [
 export const categories = [
     {
         id: "1",
-        name: "Burger",
+        name: "All",
         icon: icons.burger,
         iconColor: "rgba(51, 94, 247, 1)",
         backgroundColor: "rgba(51, 94, 247, .12)",
@@ -553,7 +553,7 @@ export const categories = [
     },
     {
         id: "2",
-        name: "Pizza",
+        name: "Chinese",
         icon: icons.pizza,
         iconColor: "rgba(255, 152, 31, 1)",
         backgroundColor: "rgba(255, 152, 31, .12)",
@@ -561,7 +561,7 @@ export const categories = [
     },
     {
         id: "3",
-        name: "Noodles",
+        name: "Mathematics",
         icon: icons.noodles,
         iconColor: "rgba(26, 150, 240, 1)",
         backgroundColor: "rgba(26, 150, 240,.12)",
@@ -569,140 +569,28 @@ export const categories = [
     },
     {
         id: "4",
-        name: "Meat",
-        icon: icons.meat,
-        iconColor: "rgba(255, 192, 45, 1)",
-        backgroundColor: "rgba(255, 192, 45,.12)",
-        onPress: "CategoryMeat"
-    },
-    {
-        id: "5",
-        name: "Vegetables",
-        icon: icons.vegetable,
-        iconColor: "rgba(245, 67, 54, 1)",
-        backgroundColor: "rgba(245, 67, 54,.12)",
-        onPress: null
-    },
-    {
-        id: "6",
-        name: "Dessert",
+        name: "English",
         icon: icons.dessert,
         iconColor: "rgba(74, 175, 87, 1)",
         backgroundColor: "rgba(74, 175, 87,.12)",
         onPress: null
     },
     {
-        id: "7",
-        name: "Drink",
+        id: "5",
+        name: "Physics",
         icon: icons.healthyDrink,
         iconColor: "rgba(0, 188, 211, 1)",
         backgroundColor: "rgba(0, 188, 211,.12)",
         onPress: null
     },
     {
-        id: "8",
-        name: "Bread",
+        id: "6",
+        name: "Chemistry",
         icon: icons.bread,
         iconColor: "rgba(114, 16, 255, 1)",
         backgroundColor: "rgba(114, 16, 255, .12)",
         onPress: "CategoryBread"
     },
-    {
-        id: "9",
-        name: "Croissant",
-        icon: icons.croissant,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "10",
-        name: "Pancakes",
-        icon: icons.pancake,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "11",
-        name: "Cheese",
-        icon: icons.cheese,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "12",
-        name: "Sandwich",
-        icon: icons.sandwich,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "13",
-        name: "Taco",
-        icon: icons.taco,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "14",
-        name: "Salad",
-        icon: icons.salad,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "15",
-        name: "Bento",
-        icon: icons.bento,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "16",
-        name: "Rice",
-        icon: icons.rice,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "17",
-        name: "Spaghetti",
-        icon: icons.spaghetti,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "18",
-        name: "Sushi",
-        icon: icons.sushi,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "19",
-        name: "Ice Cream",
-        icon: icons.iceCream,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    },
-    {
-        id: "20",
-        name: "Cookies",
-        icon: icons.cookie,
-        iconColor: "rgba(114, 16, 255, 1)",
-        backgroundColor: "rgba(114, 16, 255, .12)",
-        onPress: null
-    }
 ];
 
 
