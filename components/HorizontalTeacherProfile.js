@@ -33,15 +33,15 @@ const HorizontalTeacherProfile = ({
                 </View>
                 <View style={styles.viewContainer}>
                     <FontAwesome name="star" size={14} color="rgb(250, 159, 28)" />
-                    <Text style={[styles.location, {
+                    <Text style={[styles.grade, {
                         color: COLORS.grayscale700,
                     }]}>{" "}{rating}  ({numReviews})</Text>
                 </View>
                 <View style={styles.bottomViewContainer}>
-                    <View style={styles.priceContainer}>
+                    <View style={styles.courseContainer}>
                         <Text style={styles.course}>{course}</Text>
-                        <Text style={styles.location}>{""}| {" "}</Text>
-                        <Text style={styles.location}>{grade}</Text>
+                        <Text style={styles.grade}>{""}| {" "}</Text>
+                        <Text style={styles.grade}>{grade}</Text>
                     </View>
                     <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
                     </TouchableOpacity>
@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
         marginVertical: 4,
         marginRight: 40
     },
-    location: {
+    grade: {
         fontSize: 14,
         fontFamily: "Urbanist Regular",
         color: COLORS.grayscale700,
         marginVertical: 4
     },
-    priceContainer: {
+    courseContainer: {
         flexDirection: "column",
         marginVertical: 4,
     },
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginVertical: 4
     },
-    priceContainer: {
+    courseContainer: {
         flexDirection: "row",
         alignItems: "center"
     },

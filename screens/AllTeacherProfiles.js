@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-virtualized-view';
 import { categories, teacherProfiles } from '../data';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
-const RecommendedFoods = ({ navigation }) => {
+const AllTeacherProfiles = ({ navigation }) => {
   const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
   const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
@@ -108,4 +108,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RecommendedFoods
+export default AllTeacherProfiles

@@ -233,7 +233,7 @@ const Home = ({ navigation }) => {
   /**
    * render teacher profiles
    */
-  const renderRecommendedFoods = () => {
+  const renderTeacherProfiles = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
     const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
@@ -278,7 +278,7 @@ const Home = ({ navigation }) => {
         <SubHeaderItem
           title="Teacher Profiles"
           navTitle="See all"
-          onPress={() => navigation.navigate("RecommendedFoods")}
+          onPress={() => navigation.navigate("AllTeacherProfiles")}
         />
         <FlatList
         data={categories}
@@ -323,7 +323,7 @@ const Home = ({ navigation }) => {
           {renderSearchBar()}
           {renderBanner()}
           {renderDiscountedFoods()}
-          {renderRecommendedFoods()}
+          {renderTeacherProfiles()}
         </ScrollView>
       </View>
     </SafeAreaView>

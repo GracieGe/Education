@@ -47,7 +47,7 @@ import Wallet from "./Wallet";
 import Profile from "./Profile";
 import Categories from "./Categories";
 import DiscountFoods from "./DiscountFoods";
-import RecommendedFoods from "./RecommendedFoods";
+import AllTeacherProfiles from "./AllTeacherProfiles";
 import CategoryBread from "./CategoryBread";
 import CategoryHamburger from "./CategoryHamburger";
 import CategoryMeat from "./CategoryMeat";
@@ -123,7 +123,7 @@ export {
     Profile,
     Categories,
     DiscountFoods,
-    RecommendedFoods,
+    AllTeacherProfiles,
     CategoryBread,
     CategoryHamburger,
     CategoryMeat,
