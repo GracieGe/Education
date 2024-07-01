@@ -3,15 +3,13 @@ import React, { useState } from 'react';
 import { COLORS, SIZES, icons } from '../constants';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const HorizontalFoodCard = ({
+const HorizontalTeacherProfile = ({
     name,
     image,
-    distance,
-    price,
-    fee,
+    course,
+    grade,
     rating,
     numReviews,
-    isPromo,
     onPress
 }) => {
     const [isFavourite, setIsFavourite] = useState(false);
@@ -27,13 +25,6 @@ const HorizontalFoodCard = ({
                 resizeMode='cover'
                 style={styles.image}
             />
-            {
-                isPromo && isPromo === true && (
-                    <View style={styles.reviewContainer}>
-                        <Text style={styles.rating}>PROMO</Text>
-                    </View>
-                )
-            }
             <View style={styles.columnContainer}>
                 <View style={styles.topViewContainer}>
                     <Text style={[styles.name, {
@@ -41,9 +32,6 @@ const HorizontalFoodCard = ({
                     }]}>{name}</Text>
                 </View>
                 <View style={styles.viewContainer}>
-                    <Text style={[styles.location, {
-                        color: COLORS.grayscale700,
-                    }]}>{distance}  | {" "}</Text>
                     <FontAwesome name="star" size={14} color="rgb(250, 159, 28)" />
                     <Text style={[styles.location, {
                         color: COLORS.grayscale700,
@@ -51,21 +39,11 @@ const HorizontalFoodCard = ({
                 </View>
                 <View style={styles.bottomViewContainer}>
                     <View style={styles.priceContainer}>
-                        <Text style={styles.price}>{price}</Text>
+                        <Text style={styles.course}>{course}</Text>
                         <Text style={styles.location}>{""}| {" "}</Text>
-                        <Image
-                            source={icons.moto}
-                            resizeMode='contain'
-                            style={styles.motoIcon}
-                        />
-                        <Text style={styles.location}>{fee}</Text>
+                        <Text style={styles.location}>{grade}</Text>
                     </View>
                     <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
-                        <Image
-                            source={isFavourite ? icons.heart2 : icons.heart2Outline}
-                            resizeMode='contain'
-                            style={styles.heartIcon}
-                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -117,12 +95,6 @@ const styles = StyleSheet.create({
         color: COLORS.primary,
         marginRight: 8
     },
-    heartIcon: {
-        width: 16,
-        height: 16,
-        tintColor: COLORS.red,
-        marginLeft: 6
-    },
     reviewContainer: {
         position: "absolute",
         top: 16,
@@ -163,18 +135,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center"
     },
-    price: {
+    course: {
         fontSize: 16,
         fontFamily: "Urbanist SemiBold",
         color: COLORS.primary,
         marginRight: 8
     },
-    motoIcon: {
-        height: 18,
-        width: 18,
-        tintColor: COLORS.primary,
-        marginRight: 4
-    }
 });
 
-export default HorizontalFoodCard
+export default HorizontalTeacherProfile

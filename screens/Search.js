@@ -10,7 +10,7 @@ import Button from '../components/Button';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VerticalFoodCard from '../components/VerticalFoodCard';
-import HorizontalFoodCard from '../components/HorizontalFoodCard';
+import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 // Handler slider
 const CustomSliderHandle = ({ enabled, markerStyle }) => {
@@ -202,12 +202,11 @@ const Search = ({ navigation }) => {
                                             keyExtractor={(item) => item.id}
                                             renderItem={({ item }) => {
                                                 return (
-                                                    <HorizontalFoodCard
+                                                    <HorizontalTeacherProfile
                                                         name={item.name}
                                                         image={item.image}
-                                                        distance={item.distance}
-                                                        price={item.price}
-                                                        fee={item.fee}
+                                                        course={item.course}
+                                                        grade={item.grade}
                                                         rating={item.rating}
                                                         numReviews={item.numReviews}
                                                         isPromo={item.isPromo}

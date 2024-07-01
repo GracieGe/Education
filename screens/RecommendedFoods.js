@@ -4,13 +4,13 @@ import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import { categories, recommendedFoods } from '../data';
-import HorizontalFoodCard from '../components/HorizontalFoodCard';
+import { categories, teacherProfiles } from '../data';
+import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const RecommendedFoods = ({ navigation }) => {
   const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
-  const filteredFoods = recommendedFoods.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+  const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
 
   // Category item
   const renderCategoryItem = ({ item }) => (
@@ -73,16 +73,14 @@ const RecommendedFoods = ({ navigation }) => {
               numColumns={1}
               renderItem={({ item }) => {
                 return (
-                  <HorizontalFoodCard
+                  <HorizontalTeacherProfile
                     key={item.id}
                     name={item.name}
                     image={item.image}
-                    distance={item.distance}
-                    price={item.price}
-                    fee={item.fee}
+                    course={item.course}
+                    grade={item.grade}
                     rating={item.rating}
                     numReviews={item.numReviews}
-                    isPromo={item.isPromo}
                     onPress={() => navigation.navigate("FoodDetails")}
                   />
                 )

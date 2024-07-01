@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { COLORS, SIZES, icons, images } from '../constants';
-import { banners, categories, discountFoods, recommendedFoods } from '../data';
+import { banners, categories, discountFoods, teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import SubHeaderItem from '../components/SubHeaderItem';
 import VerticalFoodCard from '../components/VerticalFoodCard';
-import HorizontalFoodCard from '../components/HorizontalFoodCard';
+import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -236,7 +236,7 @@ const Home = ({ navigation }) => {
   const renderRecommendedFoods = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
-    const filteredFoods = recommendedFoods.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+    const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
 
     // Category item
     const renderCategoryItem = ({ item }) => (
@@ -298,16 +298,14 @@ const Home = ({ navigation }) => {
             numColumns={1} 
             renderItem={({ item }) => {
               return (
-                <HorizontalFoodCard
+                <HorizontalTeacherProfile
                   key={item.id}
                   name={item.name}
                   image={item.image}
-                  distance={item.distance}
-                  price={item.price}
-                  fee={item.fee}
+                  course={item.course}
+                  grade={item.grade}
                   rating={item.rating}
                   numReviews={item.numReviews}
-                  isPromo={item.isPromo}
                   onPress={() => navigation.navigate("FoodDetails")}
                 />
               )

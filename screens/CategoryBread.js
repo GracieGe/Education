@@ -4,7 +4,7 @@ import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import HorizontalFoodCard from '../components/HorizontalFoodCard';
+import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 import { breadFoods } from '../data';
 
 // render category bread
@@ -24,7 +24,7 @@ const CategoryBread = ({ navigation }) => {
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (
-                  <HorizontalFoodCard
+                  <HorizontalTeacherProfile
                     name={item.name}
                     image={item.image}
                     distance={item.distance}
