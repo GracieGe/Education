@@ -9,7 +9,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import VerticalFoodCard from '../components/VerticalFoodCard';
+import VerticalCourseCard from '../components/VerticalCourseCard';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 // Handler slider
@@ -183,7 +183,7 @@ const Search = ({ navigation }) => {
                                             columnWrapperStyle={{ gap: 16 }}
                                             renderItem={({ item }) => {
                                                 return (
-                                                    <VerticalFoodCard
+                                                    <VerticalCourseCard
                                                         name={item.name}
                                                         image={item.image}
                                                         distance={item.distance}

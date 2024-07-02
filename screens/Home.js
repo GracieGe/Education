@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { COLORS, SIZES, icons, images } from '../constants';
-import { banners, categories, discountFoods, teacherProfiles } from '../data';
+import { banners, categories, allCourses, teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import SubHeaderItem from '../components/SubHeaderItem';
-import VerticalFoodCard from '../components/VerticalFoodCard';
+import VerticalCourseCard from '../components/VerticalCourseCard';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const Home = ({ navigation }) => {
@@ -147,10 +147,11 @@ const Home = ({ navigation }) => {
   /**
    * render courses
    */
-  const renderDiscountedFoods = () => {
+  const renderCourses = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
-    const filteredFoods = discountFoods.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+    // only show 6 results
+    const filteredCourses = allCourses.filter(courses => selectedCategories.includes("1") || selectedCategories.includes(courses.categoryId)).slice(0, 6);
 
     // Category item
     const renderCategoryItem = ({ item }) => (
@@ -192,7 +193,7 @@ const Home = ({ navigation }) => {
         <SubHeaderItem
           title="Courses For You"
           navTitle="See all"
-          onPress={() => navigation.navigate("DiscountFoods")}
+          onPress={() => navigation.navigate("AllCourses")}
         />
         <FlatList
         data={categories}
@@ -207,17 +208,16 @@ const Home = ({ navigation }) => {
           marginVertical: 16
         }}>
           <FlatList
-            data={filteredFoods}
+            data={filteredCourses}
             keyExtractor={item => item.id}
             numColumns={2}
             renderItem={({ item }) => {
               return (
-                <VerticalFoodCard
+                <VerticalCourseCard
                   name={item.name}
                   image={item.image}
-                  distance={item.distance}
+                  grade={item.grade}
                   price={item.price}
-                  fee={item.fee}
                   rating={item.rating}
                   numReviews={item.numReviews}
                   onPress={() => navigation.navigate("FoodDetails")}
@@ -236,7 +236,8 @@ const Home = ({ navigation }) => {
   const renderTeacherProfiles = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
-    const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+    // only show 6 results
+    const filteredTeachers = teacherProfiles.filter(teachers => selectedCategories.includes("1") || selectedCategories.includes(teachers.categoryId)).slice(0, 6);
 
     // Category item
     const renderCategoryItem = ({ item }) => (
@@ -293,7 +294,7 @@ const Home = ({ navigation }) => {
           marginVertical: 16
         }}>
           <FlatList
-            data={filteredFoods}
+            data={filteredTeachers}
             keyExtractor={item => item.id}
             numColumns={1} 
             renderItem={({ item }) => {
@@ -306,7 +307,7 @@ const Home = ({ navigation }) => {
                   grade={item.grade}
                   rating={item.rating}
                   numReviews={item.numReviews}
-                  onPress={() => navigation.navigate("FoodDetails")}
+                  onPress={() => navigation.navigate("DriverDetails")}
                 />
               )
             }}
@@ -322,7 +323,7 @@ const Home = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {renderSearchBar()}
           {renderBanner()}
-          {renderDiscountedFoods()}
+          {renderCourses()}
           {renderTeacherProfiles()}
         </ScrollView>
       </View>

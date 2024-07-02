@@ -88,6 +88,8 @@ const Favourite = ({ navigation }) => {
           borderWidth: 1.3,
           borderRadius: 24,
           marginRight: 12,
+          flex: 1, 
+          alignItems: 'center',
         }}
         onPress={() => toggleCategory(item.id)}>
         <Text style={{
@@ -116,9 +118,10 @@ const Favourite = ({ navigation }) => {
           <FlatList
             data={categories}
             keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
-            horizontal
+            numColumns={3}
             renderItem={renderCategoryItem}
+            scrollEnabled={false} 
+            contentContainerStyle={{ justifyContent: 'space-between' }} 
           />
         </View>
 

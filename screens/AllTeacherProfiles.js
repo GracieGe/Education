@@ -10,7 +10,7 @@ import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 const AllTeacherProfiles = ({ navigation }) => {
   const [selectedCategories, setSelectedCategories] = useState(["1"]);
 
-  const filteredFoods = teacherProfiles.filter(food => selectedCategories.includes("1") || selectedCategories.includes(food.categoryId));
+  const filteredTeachers = teacherProfiles.filter(teachers => selectedCategories.includes("1") || selectedCategories.includes(teachers.categoryId));
 
   // Category item
   const renderCategoryItem = ({ item }) => (
@@ -68,7 +68,7 @@ const AllTeacherProfiles = ({ navigation }) => {
             marginVertical: 16
           }}>
             <FlatList
-              data={filteredFoods}
+              data={filteredTeachers}
               keyExtractor={item => item.id}
               numColumns={1}
               renderItem={({ item }) => {
@@ -81,7 +81,7 @@ const AllTeacherProfiles = ({ navigation }) => {
                     grade={item.grade}
                     rating={item.rating}
                     numReviews={item.numReviews}
-                    onPress={() => navigation.navigate("FoodDetails")}
+                    onPress={() => navigation.navigate("DriverDetails")}
                   />
                 )
               }}

@@ -4,14 +4,14 @@ import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import { discountFoods, categories } from '../data';
-import VerticalFoodCard from '../components/VerticalFoodCard';
+import { categories, allCourses } from '../data';
+import VerticalFoodCard from '../components/VerticalCourseCard';
 
-const DiscountFoods = ({ navigation }) => {
+const AllCourses = ({ navigation }) => {
   const [selectedCategories, setSelectedCategories] = useState(["1"]); // Example default selected category
 
-  const filteredFoods = discountFoods.filter(food => 
-    selectedCategories.includes("1") || selectedCategories.includes(food.categoryId)
+  const filteredCourses = allCourses.filter(courses => 
+    selectedCategories.includes("1") || selectedCategories.includes(courses.categoryId)
   );
 
   const toggleCategory = (categoryId) => {
@@ -62,7 +62,7 @@ const DiscountFoods = ({ navigation }) => {
           />
           <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
             <FlatList
-              data={filteredFoods}
+              data={filteredCourses}
               keyExtractor={item => item.id}
               numColumns={2}
               columnWrapperStyle={{ gap: 16 }}
@@ -72,9 +72,8 @@ const DiscountFoods = ({ navigation }) => {
                   <VerticalFoodCard
                     name={item.name}
                     image={item.image}
-                    distance={item.distance}
+                    grade={item.grade}
                     price={item.price}
-                    fee={item.fee}
                     rating={item.rating}
                     numReviews={item.numReviews}
                     onPress={() => navigation.navigate("FoodDetails")}
@@ -104,4 +103,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DiscountFoods
+export default AllCourses

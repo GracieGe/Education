@@ -12,7 +12,6 @@ const HorizontalTeacherProfile = ({
     numReviews,
     onPress
 }) => {
-    const [isFavourite, setIsFavourite] = useState(false);
 
     return (
         <TouchableOpacity
@@ -43,8 +42,6 @@ const HorizontalTeacherProfile = ({
                         <Text style={styles.grade}>{""}| {" "}</Text>
                         <Text style={styles.grade}>{grade}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
-                    </TouchableOpacity>
                 </View>
             </View>
         </TouchableOpacity>

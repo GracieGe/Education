@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import { COLORS, SIZES, icons } from '../constants';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const VerticalFoodCard = ({
+const VerticalCourseCard = ({
     name,
     image,
-    distance,
+    grade,
     price,
-    fee,
     rating,
     numReviews,
     onPress
@@ -26,16 +25,13 @@ const VerticalFoodCard = ({
                 resizeMode='cover'
                 style={styles.image}
             />
-            <View style={styles.reviewContainer}>
-                <Text style={styles.rating}>PROMO</Text>
-            </View>
             <Text style={[styles.name, {
                 color: COLORS.greyscale900,
             }]}>{name}</Text>
             <View style={styles.viewContainer}>
                 <Text style={[styles.location, {
                     color: COLORS.grayscale700,
-                }]}>{distance}  | {" "}</Text>
+                }]}>{grade}  | {" "}</Text>
                 <FontAwesome name="star" size={14} color="rgb(250, 159, 28)" />
                 <Text style={[styles.location, {
                     color: COLORS.grayscale700,
@@ -44,13 +40,6 @@ const VerticalFoodCard = ({
             <View style={styles.bottomPriceContainer}>
                 <View style={styles.priceContainer}>
                     <Text style={styles.price}>{price}</Text>
-                    <Text style={styles.location}>{""}| {" "}</Text>
-                    <Image
-                        source={icons.moto}
-                        resizeMode='contain'
-                        style={styles.motoIcon}
-                    />
-                    <Text style={styles.location}>{fee}</Text>
                 </View>
                 <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
                     <Image
@@ -125,19 +114,6 @@ const styles = StyleSheet.create({
         tintColor: COLORS.red,
         marginLeft: 6
     },
-    reviewContainer: {
-        position: "absolute",
-        top: 16,
-        left: 16,
-        width: 56,
-        height: 20,
-        borderRadius: 6,
-        backgroundColor: COLORS.primary,
-        zIndex: 999,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-    },
     rating: {
         fontSize: 12,
         fontFamily: "Urbanist SemiBold",
@@ -148,12 +124,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    motoIcon: {
-        height: 18,
-        width: 18,
-        tintColor: COLORS.primary,
-        marginRight: 4
-    }
 })
 
-export default VerticalFoodCard
+export default VerticalCourseCard

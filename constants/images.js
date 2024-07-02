@@ -68,6 +68,15 @@ const drink3 = require("../assets/images/drink3.jpeg");
 const backgroundAvatar1 = require("../assets/images/background_avatar1.jpeg");
 const backgroundAvatar2 = require("../assets/images/background_avatar2.jpeg");
 
+const courses1 = require("../assets/images/courses/courses1.jpeg");
+const courses2 = require("../assets/images/courses/courses2.jpeg");
+const courses3 = require("../assets/images/courses/courses3.jpg");
+const courses4 = require("../assets/images/courses/courses4.jpg");
+const courses5 = require("../assets/images/courses/courses5.jpg");
+const courses6 = require("../assets/images/courses/courses6.jpeg");
+const courses7 = require("../assets/images/courses/courses7.jpeg");
+const courses8 = require("../assets/images/courses/courses8.jpg");
+const courses9 = require("../assets/images/courses/courses9.png");
 
 export default {
     ornament,
@@ -138,4 +147,14 @@ export default {
     drink3,
     backgroundAvatar1,
     backgroundAvatar2,
+
+    courses1,
+    courses2,
+    courses3,
+    courses4,
+    courses5,
+    courses6,
+    courses7,
+    courses8,
+    courses9,
 }
