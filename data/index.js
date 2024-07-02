@@ -523,22 +523,19 @@ export const banners = [
         id: 1,
         companyName: "Shanghai Hongcai Education Institution",
         email: 'Email: fysphy@sina.cn',
-        address: 'Address: 112 Miaopu Road, Shanghai',
-        
+        address: 'Address: 112 Miaopu Road, Shanghai',    
     },
     {
         id: 2,
-        discount: '50%',
-        discountName: "Weekend Sale",
-        bottomTitle: 'Special discount for weekend orderings!',
-        bottomSubtitle: 'This weekend only!'
+        companyName: "Shanghai Hongcai Education Institution",
+        email: 'Email: fysphy@sina.cn',
+        address: 'Address: 112 Miaopu Road, Shanghai',    
     },
     {
         id: 3,
-        discount: '30%',
-        discountName: "Limited Time Offer",
-        bottomTitle: 'Hurry up! Limited time offer!',
-        bottomSubtitle: 'Valid until supplies last!'
+        companyName: "Shanghai Hongcai Education Institution",
+        email: 'Email: fysphy@sina.cn',
+        address: 'Address: 112 Miaopu Road, Shanghai',
     }
 ];
 

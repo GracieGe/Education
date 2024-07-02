@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { COLORS, SIZES, icons, images } from '../constants';
 import { banners, categories, allCourses, teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,32 @@ import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef(null);
+  const scrollInterval = useRef(null);
+
+  useEffect(() => {
+    startAutoScroll();
+
+    return () => {
+      if (scrollInterval.current) {
+        clearInterval(scrollInterval.current);
+      }
+    };
+  }, []);
+
+  const startAutoScroll = () => {
+    scrollInterval.current = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = prevIndex + 1;
+        if (nextIndex >= banners.length) {
+          flatListRef.current.scrollToIndex({ index: 0, animated: true });
+          return 0;
+        }
+        flatListRef.current.scrollToIndex({ index: nextIndex, animated: true });
+        return nextIndex;
+      });
+    }, 3000);
+  };
 
   /**
   * render header
@@ -122,14 +148,13 @@ const Home = ({ navigation }) => {
     return (
       <View style={styles.bannerItemContainer}>
         <FlatList
+          ref={flatListRef}
           data={banners}
           renderItem={renderBannerItem}
           keyExtractor={keyExtractor}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5}
           onMomentumScrollEnd={(event) => {
             const newIndex = Math.round(
               event.nativeEvent.contentOffset.x / SIZES.width
