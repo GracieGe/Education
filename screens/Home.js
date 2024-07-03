@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { COLORS, SIZES, icons, images } from '../constants';
 import { banners, categories, allCourses, teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,32 +10,6 @@ import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef(null);
-  const scrollInterval = useRef(null);
-
-  useEffect(() => {
-    startAutoScroll();
-
-    return () => {
-      if (scrollInterval.current) {
-        clearInterval(scrollInterval.current);
-      }
-    };
-  }, []);
-
-  const startAutoScroll = () => {
-    scrollInterval.current = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = prevIndex + 1;
-        if (nextIndex >= banners.length) {
-          flatListRef.current.scrollToIndex({ index: 0, animated: true });
-          return 0;
-        }
-        flatListRef.current.scrollToIndex({ index: nextIndex, animated: true });
-        return nextIndex;
-      });
-    }, 3000);
-  };
 
   /**
   * render header
@@ -140,34 +114,6 @@ const Home = ({ navigation }) => {
       />
     );
   };
-
-  /**
-* Render banner
-*/
-  const renderBanner = () => {
-    return (
-      <View style={styles.bannerItemContainer}>
-        <FlatList
-          ref={flatListRef}
-          data={banners}
-          renderItem={renderBannerItem}
-          keyExtractor={keyExtractor}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(event) => {
-            const newIndex = Math.round(
-              event.nativeEvent.contentOffset.x / SIZES.width
-            );
-            setCurrentIndex(newIndex);
-          }}
-        />
-        <View style={styles.dotContainer}>
-          {banners.map((_, index) => renderDot(index))}
-        </View>
-      </View>
-    )
-  }
 
   /**
    * render courses
@@ -347,7 +293,6 @@ const Home = ({ navigation }) => {
         {renderHeader()}
         <ScrollView showsVerticalScrollIndicator={false}>
           {renderSearchBar()}
-          {renderBanner()}
           {renderCourses()}
           {renderTeacherProfiles()}
         </ScrollView>
