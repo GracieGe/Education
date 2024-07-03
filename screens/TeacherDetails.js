@@ -3,15 +3,9 @@ import React from 'react';
 import { COLORS, SIZES, icons, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
-import Clipboard from '@react-native-clipboard/clipboard';
 
-const DriverDetails = ({ navigation }) => {
-  const phoneNumber = '+1-202-555-0161'; // Replace with driver phone number
-
-  const handleCopyToClipboard = () => {
-    Clipboard.setString(phoneNumber);
-    Alert.alert('Copied!', 'Phone Number ID copied to clipboard.');
-  };
+const TeacherDetails = ({ navigation }) => {
+  
   /**
    * Render header
    */
@@ -20,7 +14,7 @@ const DriverDetails = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image
+            <Image 
               source={icons.back}
               resizeMode='contain'
               style={[styles.backIcon, {
@@ -30,7 +24,7 @@ const DriverDetails = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>Driver Details</Text>
+          }]}>Teacher Details</Text>
         </View>
         <TouchableOpacity>
           <Image
@@ -52,30 +46,15 @@ const DriverDetails = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.userInfoContainer}>
             <Image
-              source={images.user2}
+              source={images.user3}
               resizeMode='contain'
               style={styles.avatar}
             />
             <Text style={[styles.driverName, {
               color: COLORS.greyscale900
             }]}>
-              Daniel Austin
+              Yang Liu
             </Text>
-            <View style={styles.phoneNumberContainer}>
-              <Text style={[styles.phoneNumber, {
-                color: COLORS.greyscale900
-              }]}>
-                {phoneNumber}
-              </Text>
-              <TouchableOpacity
-                onPress={handleCopyToClipboard}>
-                <Image
-                  source={icons.document2}
-                  resizeMode='contain'
-                  style={styles.documentIcon}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
 
           <View style={[styles.driverStatsContainer, {
@@ -99,9 +78,9 @@ const DriverDetails = ({ navigation }) => {
             <View style={styles.driverStatsItem}>
               <View style={styles.driverStatsIconContainer}>
                 <Image
-                  source={icons.car2}
+                  source={icons.people4}
                   resizeMode='contain'
-                  style={styles.driverStatsIcon}
+                  style={styles.peopleIcon}
                 />
               </View>
               <Text style={[styles.statsNum, {
@@ -109,7 +88,7 @@ const DriverDetails = ({ navigation }) => {
               }]}>279</Text>
               <Text style={[styles.statsLabel, {
                 color: COLORS.grayscale700,
-              }]}>Trips</Text>
+              }]}>Students</Text>
             </View>
             <View style={styles.driverStatsItem}>
               <View style={styles.driverStatsIconContainer}>
@@ -124,68 +103,39 @@ const DriverDetails = ({ navigation }) => {
               }]}>5</Text>
               <Text style={[styles.statsLabel, {
                 color: COLORS.grayscale700,
-              }]}>Years</Text>
+              }]}>Teaching Years</Text>
             </View>
           </View>
 
-          <View style={[styles.summaryContainer, {
+          <View style={[styles.descriptionContainer, {
             backgroundColor: COLORS.white,
             borderRadius: 6,
           }]}>
-            <View style={styles.viewContainer}>
-              <Text style={[styles.viewLeft, {
-                color:  "gray"
-              }]}>Menber Since</Text>
-              <Text style={[styles.viewRight, {
-                color: COLORS.black
-              }]}>July 19, 2027</Text>
-            </View>
-            <View style={styles.viewContainer}>
-              <Text style={[styles.viewLeft, {
-                color: "gray"
-              }]}>Car Model</Text>
-              <Text style={[styles.viewRight, {
-                color: COLORS.black
-              }]}>Mercedes-Benz E-class</Text>
-            </View>
-            <View style={styles.viewContainer}>
-              <Text style={[styles.viewLeft, {
-                color: "gray"
-              }]}>Plate Number</Text>
-              <Text style={[styles.viewRight, {
-                color: COLORS.black
-              }]}>HSW 4736 XK</Text>
-            </View>
+            <Text style={[styles.descriptionTitle, { color: COLORS.black }]}>
+            Description of Teacher
+            </Text>
+            <Text style={[styles.descriptionText, { color: COLORS.black }]}>
+              xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            </Text> 
           </View>
         </ScrollView>
         <View style={styles.bottomContainer}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={[styles.btn, {
-              backgroundColor: COLORS.red
-            }]}>
-            <Image
-              source={icons.close}
-              resizeMode='contain'
-              style={styles.btnIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
             onPress={() => navigation.navigate("VideoCall")}
-            style={styles.btn}>
+            style={styles.document}>
             <Image
-              source={icons.videoCamera}
+              source={icons.document}
               resizeMode='contain'
-              style={styles.btnIcon}
+              style={styles.documentIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("VoiceCall")}
-            style={styles.btn}>
+            style={styles.chat}>
             <Image
-              source={icons.telephone}
+              source={icons.chatBubble2}
               resizeMode='contain'
-              style={styles.btnIcon}
+              style={styles.chatIcon}
             />
           </TouchableOpacity>
         </View>
@@ -243,16 +193,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
   },
-  phoneNumberContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 8
-  },
-  phoneNumber: {
-    fontFamily: "Urbanist Medium",
-    fontSize: 16,
-    color: COLORS.grayscale700
-  },
   documentIcon: {
     height: 20,
     width: 20,
@@ -263,14 +203,14 @@ const styles = StyleSheet.create({
     width: SIZES.width - 32,
     borderRadius: 16,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     paddingVertical: 24,
     marginVertical: 12,
     backgroundColor: COLORS.white
   },
   driverStatsItem: {
     alignItems: "center",
-    paddingHorizontal: 24
+    width: '33%'
   },
   driverStatsIconContainer: {
     height: 52,
@@ -285,6 +225,11 @@ const styles = StyleSheet.create({
     width: 20,
     tintColor: COLORS.white
   },
+  peopleIcon: {
+    height: 25,
+    width: 25,
+    tintColor: COLORS.white
+  },
   statsNum: {
     fontFamily: "Urbanist Bold",
     fontSize: 18,
@@ -295,40 +240,34 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Regular",
     fontSize: 13,
     color: COLORS.grayscale700,
+    textAlign: 'center'
   },
-  summaryContainer: {
+  descriptionContainer: {
     width: SIZES.width - 32,
+    minHeight: 100,
     backgroundColor: COLORS.white,
     alignItems: "center",
     padding: 16,
     marginVertical: 8
   },
-  viewContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 6
+  descriptionTitle: {
+    fontSize: 18,
+    fontFamily: "Urbanist Bold",
+    marginBottom: 8,
   },
-  viewLeft: {
-    fontSize: 14,
-    fontFamily: "Urbanist Regular",
-    color: "gray"
-  },
-  viewRight: {
+  descriptionText: {
     fontSize: 16,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.black
+    fontFamily: "Urbanist Regular",
   },
   bottomContainer: {
     position: "absolute",
-    bottom: 0,
+    bottom: 20,
     left: 0,
     right: 0,
     flexDirection: "row",
     justifyContent: "center",
   },
-  btn: {
+  chat: {
     width: 64,
     height: 64,
     alignItems: "center",
@@ -337,11 +276,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     marginHorizontal: 16
   },
-  btnIcon: {
-    height: 24,
-    width: 24,
+  document: {
+    width: 64,
+    height: 64,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 999,
+    backgroundColor: COLORS.greyscale600,
+    marginHorizontal: 16
+  },
+  chatIcon: {
+    height: 25,
+    width: 25,
+    tintColor: COLORS.white
+  },
+  documentIcon: {
+    height: 25,
+    width: 25,
     tintColor: COLORS.white
   }
 })
 
-export default DriverDetails
+export default TeacherDetails

@@ -1012,7 +1012,7 @@ export const allCourses = [
 export const teacherProfiles = [
     {
         id: "1",
-        name: "Liu Yang",
+        name: "Yang Liu",
         image: images.user3,
         course: "Chinese",
         grade: "Senior One",

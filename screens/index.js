@@ -63,7 +63,7 @@ import CheckoutOrdersAddress from "./CheckoutOrdersAddress";
 import SearchingDriver from "./SearchingDriver";
 import CheckoutOrdersCompleted from "./CheckoutOrdersCompleted";
 import TrackDriver from "./TrackDriver";
-import DriverDetails from "./DriverDetails";
+import TeacherDetails from "./TeacherDetails";
 import VoiceCall from "./VoiceCall";
 import VideoCall from "./VideoCall";
 import WhatsYourMood from "./WhatsYourMood";
@@ -139,7 +139,7 @@ export {
     SearchingDriver,
     CheckoutOrdersCompleted,
     TrackDriver,
-    DriverDetails,
+    TeacherDetails,
     VoiceCall,
     VideoCall,
     WhatsYourMood,

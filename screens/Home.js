@@ -278,7 +278,7 @@ const Home = ({ navigation }) => {
                   grade={item.grade}
                   rating={item.rating}
                   numReviews={item.numReviews}
-                  onPress={() => navigation.navigate("DriverDetails")}
+                  onPress={() => navigation.navigate("TeacherDetails")}
                 />
               )
             }}
@@ -375,38 +375,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Urbanist Regular",
     marginHorizontal: 8
-  },
-  bannerContainer: {
-    width: SIZES.width - 32,
-    height: 154,
-    paddingHorizontal: 28,
-    paddingTop: 28,
-    borderRadius: 32,
-    backgroundColor: COLORS.primary
-  },
-  bannerTopContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  bannerCompanyName: {
-    fontSize: 16,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.white
-  },
-  bannerBottomContainer: {
-    marginTop: 8
-  },
-  bannerEmail: {
-    fontSize: 14,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.white
-  },
-  bannerAddress: {
-    fontSize: 14,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.white,
-    marginTop: 4
   },
   userAvatar: {
     width: 64,
