@@ -26,15 +26,6 @@ const TeacherDetails = ({ navigation }) => {
             color: COLORS.greyscale900
           }]}>Teacher Details</Text>
         </View>
-        <TouchableOpacity>
-          <Image
-            source={icons.moreCircle}
-            resizeMode='contain'
-            style={[styles.headerIcon, {
-              tintColor: COLORS.greyscale900
-            }]}
-          />
-        </TouchableOpacity>
       </View>
     )
   }
@@ -172,11 +163,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
     marginLeft: 12
-  },
-  headerIcon: {
-    height: 24,
-    width: 24,
-    tintColor: COLORS.greyscale900
   },
   userInfoContainer: {
     alignItems: "center"

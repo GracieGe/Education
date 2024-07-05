@@ -49,6 +49,32 @@ const BottomTabNavigation = () => {
                     },
                 }}
             />
+
+            <Tab.Screen
+                name="Wallet"
+                component={Wallet}
+                options={{
+                    tabBarIcon: ({ focused }) => {
+                        return (
+                            <View style={{ alignItems: "center" }}>
+                                <Image
+                                    source={focused ? icons.wallet2 : icons.wallet2Outline}
+                                    resizeMode='contain'
+                                    style={{
+                                        height: 24,
+                                        width: 24,
+                                        tintColor: focused ? COLORS.primary : COLORS.gray3,
+                                    }}
+                                />
+                                <Text style={{
+                                    ...FONTS.body4,
+                                    color: focused ? COLORS.primary : COLORS.gray3,
+                                }}>Course</Text>
+                            </View>
+                        )
+                    },
+                }}
+            />
             <Tab.Screen
                 name="Orders"
                 component={Orders}
@@ -68,7 +94,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Orders</Text>
+                                }}>Session</Text>
                             </View>
                         )
                     },
@@ -94,38 +120,13 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Inbox</Text>
+                                }}>Chat</Text>
                             </View>
                         )
                     },
                 }}
             />
 
-            <Tab.Screen
-                name="Wallet"
-                component={Wallet}
-                options={{
-                    tabBarIcon: ({ focused }) => {
-                        return (
-                            <View style={{ alignItems: "center" }}>
-                                <Image
-                                    source={focused ? icons.wallet2 : icons.wallet2Outline}
-                                    resizeMode='contain'
-                                    style={{
-                                        height: 24,
-                                        width: 24,
-                                        tintColor: focused ? COLORS.primary : COLORS.gray3,
-                                    }}
-                                />
-                                <Text style={{
-                                    ...FONTS.body4,
-                                    color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Wallet</Text>
-                            </View>
-                        )
-                    },
-                }}
-            />
             <Tab.Screen
                 name="Profile"
                 component={Profile}

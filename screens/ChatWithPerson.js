@@ -93,22 +93,6 @@ const ChatWithPerson = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={[styles.headerTitle, { color: COLORS.greyscale900 }]}>Yang Liu</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: 'center' }}>
-            <TouchableOpacity>
-              <Image
-                source={icons.call}
-                resizeMode="contain"
-                style={[styles.headerIcon, { tintColor: COLORS.greyscale900 }]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 16 }}>
-              <Image
-                source={icons.moreCircle}
-                resizeMode="contain"
-                style={[styles.headerIcon, { tintColor: COLORS.greyscale900 }]}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
         <View style={styles.chatContainer}>
           <GiftedChat
@@ -173,13 +157,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     tintColor: COLORS.black,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionIcon: {
-    marginRight: 12,
   },
   chatContainer: {
     flex: 1,
