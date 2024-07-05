@@ -121,7 +121,6 @@ const TeacherDetails = ({ navigation }) => {
         </ScrollView>
         <View style={styles.bottomContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("VideoCall")}
             style={styles.document}>
             <Image
               source={icons.document}
@@ -130,7 +129,7 @@ const TeacherDetails = ({ navigation }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("VoiceCall")}
+            onPress={() => navigation.navigate("ChatWithPerson")}
             style={styles.chat}>
             <Image
               source={icons.chatBubble2}

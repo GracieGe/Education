@@ -72,6 +72,7 @@ import GiveTipForDriver from "./GiveTipForDriver";
 import RateTheRestaurant from "./RateTheRestaurant";
 import MyCart from "./MyCart";
 import Orders from "./Orders";
+import ChatWithPerson from "./ChatWithPerson";
 
 export {
     Onboarding1,
@@ -147,5 +148,6 @@ export {
     GiveTipForDriver,
     RateTheRestaurant,
     MyCart,
-    Orders
+    Orders,
+    ChatWithPerson
 }
