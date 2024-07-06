@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { activeOrders } from '../data';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -11,6 +11,10 @@ const ActiveOrders = () => {
   const [orders, setOrders] = useState(activeOrders);
   const refRBSheet = useRef();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setOrders(activeOrders);
+  }, [activeOrders]);
 
   return (
     <View style={[styles.container, {
@@ -40,6 +44,7 @@ const ActiveOrders = () => {
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
                 }]}>{item.name}</Text>
+                <Text style={styles.grade}>{""}| {" "}</Text>
                 <Text style={[styles.address, {
                   color: COLORS.grayscale700,
                 }]}>{item.address}</Text>

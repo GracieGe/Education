@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { completedOrders } from '../data';
 import { SIZES, COLORS } from '../constants';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,10 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 const CompletedOrders = () => {
   const [orders, setOrders] = useState(completedOrders);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setOrders(completedOrders);
+  }, [completedOrders]);
 
   return (
     <View style={[styles.container, {

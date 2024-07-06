@@ -61,18 +61,9 @@ const Orders = ({ navigation }) => {
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
           }]}>
-            My Orders
+            My Sessions
           </Text>
         </View>
-        <TouchableOpacity>
-          <Image
-            source={icons.moreCircle}
-            resizeMode='contain'
-            style={[styles.moreIcon, {
-              tintColor: COLORS.greyscale900
-            }]}
-          />
-        </TouchableOpacity>
       </View>
     )
   }
@@ -122,11 +113,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.black,
     marginLeft: 16
-  },
-  moreIcon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black
   },
 })
 

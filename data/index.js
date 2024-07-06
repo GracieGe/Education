@@ -1741,7 +1741,7 @@ export const activeOrders = [
       id: 1,
       status: "Scheduled",
       date: "15 Feb, 10:00 AM",
-      name: "Margherita Pizza",
+      name: "Chinese",
       image: images.pizza1,
       totalPrice: 29.99,
       address: "123 Main St, Cityville",
@@ -1784,66 +1784,6 @@ export const activeOrders = [
       status: "Paid",
       hasRemindMe: true,
       rating: 4.7
-    },
-    {
-      id: 5,
-      status: "Scheduled",
-      date: "19 Feb, 11:00 AM",
-      name: "Grilled Chicken Salad",
-      image: images.salad3,
-      totalPrice: 49.99,
-      address: "321 Maple St, Suburbia",
-      status: "Paid",
-      hasRemindMe: true,
-      rating: 4.9
-    },
-    {
-      id: 6,
-      status: "Scheduled",
-      date: "20 Feb, 1:00 PM",
-      name: "BBQ Meat Lover's Pizza",
-      image: images.pizza5,
-      totalPrice: 34.99,
-      address: "567 Cedar St, Countryside",
-      status: "Paid",
-      hasRemindMe: true,
-      rating: 4.9
-    },
-    {
-      id: 7,
-      status: "Scheduled",
-      date: "21 Feb, 10:30 AM",
-      name: "Turkey Burger",
-      image: images.hamburger6,
-      totalPrice: 29.99,
-      address: "890 Oakwood Dr, Riverside",
-      status: "Paid",
-      hasRemindMe: true,
-      rating: 4.9
-    },
-    {
-      id: 8,
-      status: "Scheduled",
-      date: "22 Feb, 4:00 PM",
-      name: "Garlic Breadsticks",
-      image: images.bread4,
-      totalPrice: 44.99,
-      address: "123 Pinecone Ln, Lakeside",
-      status: "Paid",
-      hasRemindMe: true,
-      rating: 4.9
-    },
-    {
-      id: 9,
-      status: "Scheduled",
-      date: "23 Feb, 12:00 PM",
-      name: "Mushroom Swiss Burger",
-      image: images.hamburger8,
-      totalPrice: 59.99,
-      address: "456 Redwood Rd, Mountainview",
-      status: "Paid",
-      hasRemindMe: true,
-      rating: 4.6
     },
   ];
   

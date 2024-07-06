@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { COLORS, SIZES, icons, images } from '../constants';
-import { banners, categories, allCourses, teacherProfiles } from '../data';
+import { categories, allCourses, teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import SubHeaderItem from '../components/SubHeaderItem';
@@ -9,7 +9,6 @@ import VerticalCourseCard from '../components/VerticalCourseCard';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 
 const Home = ({ navigation }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   /**
   * render header
@@ -83,37 +82,6 @@ const Home = ({ navigation }) => {
       </TouchableOpacity>
     )
   }
-
-  const renderBannerItem = ({ item }) => (
-    <View style={styles.bannerContainer}>
-      <View style={styles.bannerTopContainer}>
-        <View>
-          <Text style={styles.bannerCompanyName}>{item.companyName}</Text>
-          <Text ></Text>
-        </View>
-
-      </View>
-      <View style={styles.bannerBottomContainer}>
-        <Text style={styles.bannerEmail}>{item.email}</Text>
-        <Text style={styles.bannerAddress}>{item.address}</Text>
-      </View>
-    </View>
-  );
-
-  const keyExtractor = (item) => item.id.toString();
-
-  const handleEndReached = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
-  };
-
-  const renderDot = (index) => {
-    return (
-      <View
-        style={[styles.dot, index === currentIndex ? styles.activeDot : null]}
-        key={index}
-      />
-    );
-  };
 
   /**
    * render courses
@@ -387,29 +355,6 @@ const styles = StyleSheet.create({
     color: COLORS.dark2,
     marginTop: 6
   },
-  bannerItemContainer: {
-    width: "100%",
-    paddingBottom: 10,
-    backgroundColor: COLORS.primary,
-    height: 170,
-    borderRadius: 32,
-  },
-  dotContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#ccc',
-    marginHorizontal: 5,
-  },
-  activeDot: {
-    backgroundColor: COLORS.white,
-  }
 })
 
 export default Home
