@@ -35,16 +35,11 @@ const ActiveOrders = () => {
                   resizeMode='cover'
                   style={styles.serviceImage}
                 />
-                <View style={styles.reviewContainer}>
-                  <FontAwesome name="star" size={12} color="orange" />
-                  <Text style={styles.rating}>{item.rating}</Text>
-                </View>
               </View>
               <View style={styles.detailsRightContainer}>
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
                 }]}>{item.name}</Text>
-                <Text style={styles.grade}>{""}| {" "}</Text>
                 <Text style={[styles.address, {
                   color: COLORS.grayscale700,
                 }]}>{item.address}</Text>
@@ -154,16 +149,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 16
   },
-  dateContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  date: {
-    fontSize: 16,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900
-  },
   statusContainer: {
     width: 54,
     height: 24,
@@ -210,17 +195,6 @@ const styles = StyleSheet.create({
     color: COLORS.grayscale700,
     marginVertical: 6
   },
-  serviceTitle: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-  },
-  serviceText: {
-    fontSize: 12,
-    color: COLORS.primary,
-    fontFamily: "Urbanist Medium",
-    marginTop: 6
-  },
   cancelBtn: {
     width: (SIZES.width - 32) / 2 - 16,
     height: 36,
@@ -260,20 +234,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between"
   },
-  rightContainer: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  remindMeText: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    marginVertical: 4
-  },
-  switch: {
-    marginLeft: 8,
-    transform: [{ scaleX: .8 }, { scaleY: .8 }], // Adjust the size of the switch
-  },
   bottomContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -282,21 +242,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     width: "100%"
   },
-  cancelButton: {
-    width: (SIZES.width - 32) / 2 - 8,
-    backgroundColor: COLORS.tansparentPrimary,
-    borderRadius: 32
-  },
   removeButton: {
     width: (SIZES.width - 32) / 2 - 8,
     backgroundColor: COLORS.primary,
     borderRadius: 32
-  },
-  bottomTitle: {
-    fontSize: 24,
-    fontFamily: "Urbanist SemiBold",
-    color: "red",
-    textAlign: "center",
   },
   bottomSubtitle: {
     fontSize: 22,
@@ -335,38 +284,11 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     textAlign: "center",
   },
-  duration: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    textAlign: "center",
-  },
   priceItemContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: 16,
-
   },
-  reviewContainer: {
-    position: "absolute",
-    top: 6,
-    right: 16,
-    width: 46,
-    height: 20,
-    borderRadius: 16,
-    backgroundColor: COLORS.transparentWhite2,
-    zIndex: 999,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  rating: {
-    fontSize: 12,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.primary,
-    marginLeft: 4
-  },
-
 })
 
 export default ActiveOrders
