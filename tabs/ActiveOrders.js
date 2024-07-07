@@ -5,7 +5,6 @@ import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const ActiveOrders = () => {
   const [orders, setOrders] = useState(activeOrders);
@@ -40,15 +39,12 @@ const ActiveOrders = () => {
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
                 }]}>{item.name}</Text>
-                <Text style={[styles.address, {
+                <Text style={[styles.grade, {
                   color: COLORS.grayscale700,
-                }]}>{item.address}</Text>
-                <View style={styles.priceContainer}>
-                  <View style={styles.priceItemContainer}>
-                    <Text style={styles.totalPrice}>${item.totalPrice}</Text>
-                  </View>
-                  <View style={styles.statusContainer}>
-                    <Text style={styles.statusText}>{item.status}</Text>
+                }]}>{item.grade}</Text>
+                <View style={styles.teacherContainer}>
+                  <View style={styles.teacherItemContainer}>
+                    <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
                   </View>
                 </View>
               </View>
@@ -61,12 +57,12 @@ const ActiveOrders = () => {
               <TouchableOpacity
                 onPress={() => refRBSheet.current.open()}
                 style={styles.cancelBtn}>
-                <Text style={styles.cancelBtnText}>Cancel Order</Text>
+                <Text style={styles.cancelBtnText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("EReceipt")}
-                style={styles.receiptBtn}>
-                <Text style={styles.receiptBtnText}>View E-Receipt</Text>
+                style={styles.completionBtn}>
+                <Text style={styles.completionBtnText}>Confirm Completion</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -149,21 +145,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 16
   },
-  statusContainer: {
-    width: 54,
-    height: 24,
-    borderRadius: 6,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: COLORS.primary,
-    borderWidth: 1
-  },
-  statusText: {
-    fontSize: 10,
-    color: COLORS.primary,
-    fontFamily: "Urbanist Medium",
-  },
   separateLine: {
     width: "100%",
     height: .7,
@@ -189,14 +170,14 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900
   },
-  address: {
+  grade: {
     fontSize: 12,
     fontFamily: "Urbanist Regular",
     color: COLORS.grayscale700,
     marginVertical: 6
   },
   cancelBtn: {
-    width: (SIZES.width - 32) / 2 - 16,
+    width: (SIZES.width - 32) / 2 - 100,
     height: 36,
     borderRadius: 24,
     backgroundColor: "transparent",
@@ -212,7 +193,7 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
   },
-  receiptBtn: {
+  completionBtn: {
     width: (SIZES.width - 32) / 2 - 16,
     height: 36,
     borderRadius: 24,
@@ -224,7 +205,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.4,
     marginBottom: 12
   },
-  receiptBtnText: {
+  completionBtnText: {
     fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.white,
@@ -273,18 +254,18 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginTop: 16
   },
-  priceContainer: {
+  teacherContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 6
   },
-  totalPrice: {
-    fontSize: 18,
+  teacher: {
+    fontSize: 17,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
     textAlign: "center",
   },
-  priceItemContainer: {
+  teacherItemContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: 16,

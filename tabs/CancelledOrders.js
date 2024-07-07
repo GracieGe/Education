@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react
 import React, { useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../constants';
 import { useNavigation } from '@react-navigation/native';
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { cancelledOrders } from '../data';
 
 const CancelledOrders = () => {
@@ -32,24 +31,17 @@ const CancelledOrders = () => {
                   resizeMode='cover'
                   style={styles.serviceImage}
                 />
-                <View style={styles.reviewContainer}>
-                  <FontAwesome name="star" size={12} color="orange" />
-                  <Text style={styles.rating}>{item.rating}</Text>
-                </View>
               </View>
               <View style={styles.detailsRightContainer}>
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
                 }]}>{item.name}</Text>
-                <Text style={[styles.address, {
+                <Text style={[styles.grade, {
                   color: COLORS.grayscale700,
-                }]}>{item.address}</Text>
-                <View style={styles.priceContainer}>
-                  <View style={styles.priceItemContainer}>
-                    <Text style={styles.totalPrice}>${item.totalPrice}</Text>
-                  </View>
-                  <View style={styles.statusContainer}>
-                    <Text style={styles.statusText}>{item.status}</Text>
+                }]}>{item.grade}</Text>
+                <View style={styles.teacherContainer}>
+                  <View style={styles.teacherItemContainer}>
+                    <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
                   </View>
                 </View>
               </View>
@@ -61,8 +53,8 @@ const CancelledOrders = () => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => navigation.navigate("FoodDetails")}
-                style={styles.receiptBtn}>
-                <Text style={styles.receiptBtnText}>View</Text>
+                style={styles.viewBtn}>
+                <Text style={styles.viewBtnText}>View</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -84,31 +76,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     marginBottom: 16
-  },
-  dateContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  date: {
-    fontSize: 16,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900
-  },
-  statusContainer: {
-    width: 54,
-    height: 24,
-    borderRadius: 6,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: COLORS.primary,
-    borderWidth: 1
-  },
-  statusText: {
-    fontSize: 10,
-    color: COLORS.primary,
-    fontFamily: "Urbanist Medium",
   },
   separateLine: {
     width: "100%",
@@ -135,41 +102,13 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900
   },
-  address: {
+  grade: {
     fontSize: 12,
     fontFamily: "Urbanist Regular",
     color: COLORS.grayscale700,
     marginVertical: 6
   },
-  serviceTitle: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-  },
-  serviceText: {
-    fontSize: 12,
-    color: COLORS.primary,
-    fontFamily: "Urbanist Medium",
-    marginTop: 6
-  },
-  cancelBtn: {
-    width: (SIZES.width - 32) / 2 - 16,
-    height: 36,
-    borderRadius: 24,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 6,
-    borderColor: COLORS.primary,
-    borderWidth: 1.4,
-    marginBottom: 12
-  },
-  cancelBtnText: {
-    fontSize: 16,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.primary,
-  },
-  receiptBtn: {
+  viewBtn: {
     width: (SIZES.width - 32) - 12,
     height: 36,
     borderRadius: 24,
@@ -181,7 +120,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.4,
     marginBottom: 12
   },
-  receiptBtnText: {
+  viewBtnText: {
     fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.white,
@@ -191,113 +130,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between"
   },
-  rightContainer: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  remindMeText: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    marginVertical: 4
-  },
-  switch: {
-    marginLeft: 8,
-    transform: [{ scaleX: .8 }, { scaleY: .8 }], // Adjust the size of the switch
-  },
-  bottomContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 12,
-    paddingHorizontal: 16,
-    width: "100%"
-  },
-  cancelButton: {
-    width: (SIZES.width - 32) / 2 - 8,
-    backgroundColor: COLORS.tansparentPrimary,
-    borderRadius: 32
-  },
-  removeButton: {
-    width: (SIZES.width - 32) / 2 - 8,
-    backgroundColor: COLORS.primary,
-    borderRadius: 32
-  },
-  bottomTitle: {
-    fontSize: 24,
-    fontFamily: "Urbanist SemiBold",
-    color: "red",
-    textAlign: "center",
-  },
-  bottomSubtitle: {
-    fontSize: 22,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900,
-    textAlign: "center",
-    marginVertical: 12
-  },
-  selectedCancelContainer: {
-    marginVertical: 24,
-    paddingHorizontal: 36,
-    width: "100%"
-  },
-  cancelTitle: {
-    fontSize: 18,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.greyscale900,
-    textAlign: "center",
-  },
-  cancelSubtitle: {
-    fontSize: 14,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    textAlign: "center",
-    marginVertical: 8,
-    marginTop: 16
-  },
-  priceContainer: {
+  teacherContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 6
   },
-  totalPrice: {
-    fontSize: 18,
+  teacher: {
+    fontSize: 17,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
     textAlign: "center",
   },
-  duration: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    textAlign: "center",
-  },
-  priceItemContainer: {
+  teacherItemContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: 16,
-
   },
-  reviewContainer: {
-    position: "absolute",
-    top: 6,
-    right: 16,
-    width: 46,
-    height: 20,
-    borderRadius: 16,
-    backgroundColor: COLORS.transparentWhite2,
-    zIndex: 999,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  rating: {
-    fontSize: 12,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.primary,
-    marginLeft: 4
-  },
-
 })
 
 export default CancelledOrders

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SIZES, images } from '../constants';
 import Header from '../components/Header';
@@ -8,6 +8,7 @@ import Rating from '../components/Rating';
 import Button from '../components/Button';
 
 const RateTheDriver = ({ navigation }) => {
+  const [inputText, setInputText] = useState('');
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -22,26 +23,24 @@ const RateTheDriver = ({ navigation }) => {
             />
             <Text style={[styles.rateName, {
               color: COLORS.greyscale900
-            }]}>Le's rate your driver's delivery service</Text>
+            }]}>Le's rate your teacher's teaching session</Text>
             <Text style={[styles.rateText, {
               color: COLORS.grayscale700,
             }]}>
-              How was the delivery of your order from Big Garden Salad?
+              How was the delivery of your teacher from this course?
             </Text>
             <Rating color="orange" size={40} />
             <View style={[styles.separateLine, {
               backgroundColor: COLORS.grayscale200
             }]} />
-            <Text style={[styles.viewSubtitle, {
-              color: COLORS.grayscale700,
-            }]}>
-              Haven't received your order ?
-            </Text>
-            <TouchableOpacity>
-              <Text style={styles.driverName}>
-                Call your driver?
-              </Text>
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Enter your feedback..."
+              placeholderTextColor={COLORS.grayscale700}
+              multiline
+            />
           </View>
         </ScrollView>
       </View>
@@ -62,6 +61,7 @@ const RateTheDriver = ({ navigation }) => {
     </SafeAreaView>
   )
 };
+
 
 const styles = StyleSheet.create({
   area: {
@@ -101,17 +101,16 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: COLORS.grayscale200
   },
-  viewSubtitle: {
+  input: {
+    width: "100%",
+    backgroundColor: COLORS.grayscale100,
+    borderRadius: 12,
+    padding: 10,
     fontSize: 16,
     fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    textAlign: "center",
+    color: COLORS.blue2,
+    textAlign: "left",
     marginVertical: 12
-  },
-  driverName: {
-    fontSize: 16,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.primary,
   },
   bottomContainer: {
     position: "absolute",
