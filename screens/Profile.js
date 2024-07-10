@@ -124,12 +124,12 @@ const Profile = ({ navigation }) => {
         />
         <SettingsItem
           icon={icons.wallet2Outline}
-          name="Payment"
-          onPress={() => navigation.navigate("SettingsPayment")}
+          name="Purchase History"
+          onPress={() => navigation.navigate("PurchaseHistory")}
         />
         <SettingsItem
           icon={icons.shieldOutline}
-          name="Security"
+          name="Account"
           onPress={() => navigation.navigate("SettingsSecurity")}
         />
         <TouchableOpacity

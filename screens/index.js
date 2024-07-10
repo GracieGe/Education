@@ -15,7 +15,7 @@ import CreateNewPIN from "./CreateNewPIN";
 import Fingerprint from "./Fingerprint";
 import EditProfile from "./EditProfile";
 import SettingsNotifications from "./SettingsNotifications";
-import SettingsPayment from "./SettingsPayment";
+import PurchaseHistory from "./PurchaseHistory";
 import AddNewCard from "./AddNewCard";
 import SettingsSecurity from "./SettingsSecurity";
 import ChangePIN from "./ChangePIN";
@@ -91,7 +91,7 @@ export {
     Fingerprint,
     EditProfile,
     SettingsNotifications,
-    SettingsPayment,
+    PurchaseHistory,
     AddNewCard,
     SettingsSecurity,
     ChangePIN,

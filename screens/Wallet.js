@@ -22,7 +22,7 @@ const Wallet = ({ navigation }) => {
           />
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>My Wallet</Text>
+          }]}>My Courses</Text>
         </View>
         <TouchableOpacity>
           <Image
