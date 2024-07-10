@@ -27,7 +27,6 @@ import InviteFriends from "./InviteFriends";
 import HelpCenter from "./HelpCenter";
 import CustomerService from "./CustomerService";
 import EReceipt from "./EReceipt";
-import Call from "./Call";
 import Chat from "./Chat";
 import Notifications from "./Notifications";
 import Search from "./Search";
@@ -104,7 +103,6 @@ export {
     HelpCenter,
     CustomerService,
     EReceipt,
-    Call,
     Chat,
     Notifications,
     Search,

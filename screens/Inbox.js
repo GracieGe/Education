@@ -4,11 +4,10 @@ import { COLORS, SIZES, icons, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Feather from "react-native-vector-icons/Feather";
-import { Calls, Chats } from '../tabs';
+import { Chats } from '../tabs';
 
 const renderScene = SceneMap({
   first: Chats,
-  second: Calls,
 });
 
 // Inbox tabs
@@ -17,8 +16,7 @@ const Inbox = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'first', title: 'Chats' },
-    { key: 'second', title: 'Calls' },
+    { key: 'first', title: 'Messages' },
   ]);
 
   const renderTabBar = (props) => (
@@ -56,7 +54,7 @@ const Inbox = () => {
           />
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>Inbox</Text>
+          }]}>Chat</Text>
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity>
