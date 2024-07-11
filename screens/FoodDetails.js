@@ -5,10 +5,6 @@ import AutoSlider from '../components/AutoSlider';
 import { ScrollView } from 'react-native-virtualized-view';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { drink, foodMenu, menu } from '../data';
-import FoodMenuCard from '../components/FoodMenuCard';
-import MenuCard from '../components/MenuCard';
-import DrinkCard from '../components/DrinkCard';
 import Button from '../components/Button';
 import SocialIcon from '../components/SocialIcon';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -18,11 +14,7 @@ const FoodDetails = ({ navigation }) => {
 
   // Slider images
   const sliderImages = [
-    images.pizza1,
-    images.pizza2,
-    images.pizza3,
-    images.pizza4,
-    images.pizza5,
+    images.courses1,
   ];
 
   // render header
@@ -71,20 +63,6 @@ const FoodDetails = ({ navigation }) => {
     const [selectedFoodMenu, setSelectedFoodMenu] = useState(null);
     const [selectedDrinkMenu, setSelectedDrinkMenu] = useState(null);
 
-    // Function to handle menu selection
-    const handleMenuSelect = (menuId) => {
-      setSelectedMenu(menuId);
-    };
-
-    // Function to handle menu selection
-    const handleFoodMenuSelect = (menuId) => {
-      setSelectedFoodMenu(menuId);
-    };
-
-    // Function to handle menu selection
-    const handleDrinkMenuSelect = (menuId) => {
-      setSelectedDrinkMenu(menuId);
-    };
 
     return (
       <View style={styles.contentContainer}>
@@ -93,7 +71,7 @@ const FoodDetails = ({ navigation }) => {
           style={styles.headerTitleContainer}>
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>Big Garden Salad</Text>
+          }]}>Chinese | Senior One</Text>
           <Image
             source={icons.arrowRight}
             resizeMode='contain'
@@ -129,44 +107,19 @@ const FoodDetails = ({ navigation }) => {
           backgroundColor: COLORS.grayscale200
         }]} />
         <TouchableOpacity
-          onPress={() => navigation.navigate("FoodDetailsOffers")}
           style={styles.locationContainer}>
           <View style={styles.locationLeftContainer}>
             <MaterialIcons name="location-on" size={20} color={COLORS.primary} />
             <Text style={[styles.locationDistance, {
               color: COLORS.greyscale900
-            }]}>2.4 Km</Text>
+            }]}>¥200/h</Text>
           </View>
-          <Image
-            source={icons.arrowRight}
-            resizeMode='contain'
-            style={[styles.arrowRightIcon, {
-              tintColor: COLORS.greyscale900
-            }]}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("FoodDetailsOffers")}
-          style={styles.deliverContainer}>
-          <Text style={[styles.deliverText,
-          {
-            marginLeft: 26,
-            color: COLORS.grayscale700,
-          }]}>Deliver Now | {" "}</Text>
-          <Image
-            source={icons.moto}
-            resizeMode='contain'
-            style={styles.motoIcon}
-          />
-          <Text style={[styles.deliverText, {
-            color: COLORS.grayscale700,
-          }]}>$ 2.00</Text>
         </TouchableOpacity>
         <View style={[styles.separateLine, {
           backgroundColor: COLORS.grayscale200
         }]} />
         <TouchableOpacity
-          onPress={() => navigation.navigate("FoodDetailsOffers")}
+          onPress={() => navigation.navigate("AllTeacherProfiles")}
           style={styles.offerContainer}>
           <View style={styles.offerLeftContainer}>
             <Image
@@ -176,7 +129,7 @@ const FoodDetails = ({ navigation }) => {
             />
             <Text style={[styles.discountText, {
               color: COLORS.greyscale900,
-            }]}>Offers are available</Text>
+            }]}>Teaching Staff</Text>
           </View>
           <Image
             source={icons.arrowRight}
@@ -189,79 +142,6 @@ const FoodDetails = ({ navigation }) => {
         <View style={[styles.separateLine, {
           backgroundColor: COLORS.grayscale200
         }]} />
-
-        {/* Available for your */}
-        <Text style={[styles.subtitle, {
-          color: COLORS.greyscale900
-        }]}>For You</Text>
-        <View style={{
-          backgroundColor: COLORS.secondaryWhite,
-        }}>
-          <FlatList
-            data={foodMenu}
-            keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <FoodMenuCard
-                id={item.id}
-                image={item.image}
-                name={item.name}
-                price={item.price}
-                isBestSeller={item.isBestSeller}
-                isSelected={selectedMenu === item.id}
-                onSelect={handleMenuSelect}
-              />
-            )}
-          />
-        </View>
-        {/* Available Menu for you */}
-        <Text style={[styles.subtitle, {
-          color: COLORS.greyscale900
-        }]}>Menu</Text>
-        <View style={{
-          backgroundColor: COLORS.secondaryWhite,
-        }}>
-          <FlatList
-            data={menu}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <MenuCard
-                id={item.id}
-                image={item.image}
-                name={item.name}
-                price={item.price}
-                isNew={item.isNew}
-                isSelected={selectedFoodMenu === item.id}
-                onSelect={handleFoodMenuSelect}
-              />
-            )}
-          />
-        </View>
-
-        {/* Available Drink for you */}
-        <Text style={[styles.subtitle, {
-          color: COLORS.greyscale900
-        }]}>Drink</Text>
-        <View style={{
-          backgroundColor: COLORS.secondaryWhite,
-        }}>
-          <FlatList
-            data={drink}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <DrinkCard
-                id={item.id}
-                image={item.image}
-                name={item.name}
-                price={item.price}
-                isPromo={item.isPromo}
-                isSelected={selectedDrinkMenu === item.id}
-                onSelect={handleDrinkMenuSelect}
-              />
-            )}
-          />
-        </View>
       </View>
     )
   }
@@ -280,7 +160,7 @@ const FoodDetails = ({ navigation }) => {
         borderTopColor: COLORS.white,
       }]}>
         <Button
-          title="Order Now"
+          title="Buy Now"
           filled
           style={styles.bookingBtn}
           onPress={() => navigation.navigate("FoodDetailsAddItem")}
@@ -462,7 +342,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
-    marginHorizontal: 8
+    marginHorizontal: 8,
+    marginBottom: 15,
+    marginVertical: 16
   },
   deliverContainer: {
     flexDirection: "row",

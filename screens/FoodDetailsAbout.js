@@ -4,13 +4,11 @@ import { COLORS, SIZES, FONTS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
-import { mapStandardStyle } from '../data/mapData';
 
 const FoodDetailsAbout = () => {
   const [expanded, setExpanded] = useState(false);
 
-  const description = `Indulge in the freshest medley of flavors with our Big Garden Salad! Crisp greens, ripe tomatoes, crunchy cucumbers, and an array of vibrant vegetables come together in a harmony of taste and texture. Tossed with your choice of zesty dressing, every bite is a symphony of freshness that will tantalize your taste buds. Whether you're looking for a light lunch or a refreshing side dish, our Big Garden Salad is the perfect choice for health-conscious foodies and salad enthusiasts alike. Savor the goodness of nature's bounty – order yours today!`
+  const description = `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
@@ -18,7 +16,7 @@ const FoodDetailsAbout = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Big Garden Salad" />
+        <Header title="Chinese | Senior One" />
         <ScrollView
           contentContainerStyle={{ marginVertical: 16 }}
           showsVerticalScrollIndicator={false}>
@@ -33,80 +31,6 @@ const FoodDetailsAbout = () => {
               {expanded ? 'View Less' : 'View More'}
             </Text>
           </TouchableOpacity>
-          <View style={{ marginVertical: 12 }}>
-            <View style={styles.viewTimeContainer}>
-              <Text style={[styles.viewTimeLeft, {
-                color: COLORS.greyscale900,
-              }]}>Monday - Friday:</Text>
-              <Text style={styles.viewTimeRight}>10:00 - 22:00</Text>
-            </View>
-            <View style={styles.viewTimeContainer}>
-              <Text style={[styles.viewTimeLeft, {
-                color: COLORS.greyscale900,
-              }]}>Saturyday - Sunday:</Text>
-              <Text style={styles.viewTimeRight}>12:00 - 22:00</Text>
-            </View>
-          </View>
-          <View style={styles.separateLine} />
-          <Text style={[styles.viewSubtitle, {
-            color: COLORS.greyscale900,
-          }]}>Address</Text>
-
-          <View style={styles.foodItemContainer}>
-            <Image
-              source={icons.pin}
-              resizeMode='contain'
-              style={styles.locationIcon}
-            />
-            <Text style={[styles.locationText, {
-              color: COLORS.grayscale700,
-            }]}>6993 Meadow Valley Terrace, New York</Text>
-          </View>
-
-          <View style={[styles.locationMapContainer, {
-            backgroundColor: COLORS.white,
-          }]}>
-            <MapView
-              style={styles.mapContainer}
-              provider={PROVIDER_GOOGLE}
-              customMapStyle={mapStandardStyle}
-              userInterfaceStyle="dark"
-              initialRegion={{
-                latitude: 48.8566,
-                longitude: 2.3522,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}>
-              <Marker
-                coordinate={{
-                  latitude: 48.8566,
-                  longitude: 2.3522,
-                }}
-                image={icons.mapsOutline}
-                title="Move"
-                description="Address"
-                onPress={() => console.log("Move to another screen")}
-              >
-                <Callout tooltip>
-                  <View>
-                    <View style={styles.bubble}>
-                      <Text
-                        style={{
-                          ...FONTS.body4,
-                          fontWeight: 'bold',
-                          color: COLORS.black,
-                        }}
-                      >
-                        User Address
-                      </Text>
-                    </View>
-                    <View style={styles.arrowBorder} />
-                    <View style={styles.arrow} />
-                  </View>
-                </Callout>
-              </Marker>
-            </MapView>
-          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
