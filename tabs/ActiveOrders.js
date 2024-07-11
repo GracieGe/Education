@@ -33,7 +33,7 @@ const ActiveOrders = () => {
                   source={item.image}
                   resizeMode='cover'
                   style={styles.serviceImage}
-                />
+                />             
               </View>
               <View style={styles.detailsRightContainer}>
                 <Text style={[styles.name, {
@@ -49,6 +49,14 @@ const ActiveOrders = () => {
                 </View>
               </View>
             </View>
+            <View style={styles.additionalContainer}>
+              <Text style={[styles.grade, {
+                color: COLORS.grayscale700,
+              }]}>Time: {item.time}</Text>
+              <Text style={[styles.grade, {
+                color: COLORS.grayscale700,
+              }]}>Location: {item.location}</Text>
+            </View>
             <View style={[styles.separateLine, {
               marginVertical: 10,
               backgroundColor: COLORS.grayscale200,
@@ -58,6 +66,11 @@ const ActiveOrders = () => {
                 onPress={() => refRBSheet.current.open()}
                 style={styles.cancelBtn}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {}}
+                style={styles.recordBtn}>
+                <Text style={styles.recordBtnText}>Record</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("EReceipt")}
@@ -269,6 +282,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 16,
+  },
+  recordBtn: {
+    width: (SIZES.width - 32) / 2 - 100,
+    height: 36,
+    borderRadius: 24,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 6,
+    borderColor: COLORS.primary,
+    borderWidth: 1.4,
+    marginBottom: 12
+  },
+  recordBtnText: {
+    fontSize: 16,
+    fontFamily: "Urbanist SemiBold",
+    color: COLORS.white,
+  },
+  additionalContainer: {
+    marginLeft: 12, 
   },
 })
 

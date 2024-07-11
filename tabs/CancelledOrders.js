@@ -46,6 +46,14 @@ const CancelledOrders = () => {
                 </View>
               </View>
             </View>
+            <View style={styles.additionalContainer}>
+              <Text style={[styles.grade, {
+                color: COLORS.grayscale700,
+              }]}>Time: {item.time}</Text>
+              <Text style={[styles.grade, {
+                color: COLORS.grayscale700,
+              }]}>Location: {item.location}</Text>
+            </View>
             <View style={[styles.separateLine, {
               marginVertical: 10,
               backgroundColor: COLORS.grayscale200,
@@ -145,6 +153,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 16,
+  },
+  additionalContainer: {
+    marginLeft: 12, 
   },
 })
 

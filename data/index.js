@@ -1660,7 +1660,8 @@ export const activeOrders = [
     {
       id: 1,
       status: "Scheduled",
-      date: "15 Feb, 10:00 AM",
+      time: "2024/09/24 8:00-10:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
@@ -1670,7 +1671,8 @@ export const activeOrders = [
     {
       id: 2,
       status: "Scheduled",
-      date: "16 Feb, 2:00 PM",
+      time: "2024/09/26 14:00-16:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
@@ -1680,7 +1682,8 @@ export const activeOrders = [
     {
       id: 3,
       status: "Scheduled",
-      date: "17 Feb, 9:00 AM",
+      time: "2024/09/30 10:00-13:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
@@ -1690,7 +1693,8 @@ export const activeOrders = [
     {
       id: 4,
       status: "Scheduled",
-      date: "18 Feb, 3:00 PM",
+      time: "2024/10/05 10:00-12:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
@@ -1703,7 +1707,8 @@ export const activeOrders = [
     {
       id: 1,
       status: "Completed",
-      date: "12 Feb, 11:30 AM",
+      time: "2024/09/20 10:00-12:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
@@ -1716,7 +1721,8 @@ export const activeOrders = [
     {
       id: 1,
       status: "Cancelled",
-      date: "12 Feb, 11:30 AM",
+      time: "2024/09/22 12:00-14:00",
+      location: "xxx",
       name: "Chinese",
       image: images.courses1,
       teacher: "Yang Liu",
