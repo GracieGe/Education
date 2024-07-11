@@ -66,15 +66,6 @@ const Inbox = () => {
               }]}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={icons.moreCircle}
-              resizeMode='contain'
-              style={[styles.moreCircleIcon, {
-                tintColor: COLORS.greyscale900
-              }]}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     )
