@@ -13,7 +13,7 @@ const TransactionHistory = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Transaction History" />
+        <Header title="All Purchase History" />
         <ScrollView
           contentContainerStyle={{ marginVertical: 16 }}
           showsVerticalScrollIndicator={false}>
@@ -27,7 +27,6 @@ const TransactionHistory = ({ navigation }) => {
                 date={item.date}
                 type={item.type}
                 amount={item.amount}
-                onPress={() => navigation.navigate("EReceipt")}
               />
             )}
           />

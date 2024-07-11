@@ -72,6 +72,7 @@ import RateTheRestaurant from "./RateTheRestaurant";
 import MyCart from "./MyCart";
 import Orders from "./Orders";
 import ChatWithPerson from "./ChatWithPerson";
+import AboutUs from "./AboutUs";
 
 export {
     Onboarding1,
@@ -147,5 +148,6 @@ export {
     RateTheRestaurant,
     MyCart,
     Orders,
-    ChatWithPerson
+    ChatWithPerson,
+    AboutUs
 }

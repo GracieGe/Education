@@ -430,92 +430,12 @@ export const userAddresses = [
 export const transactionHistory = [
     {
         id: "1",
-        image: images.user1,
-        name: "Daniel Austin",
+        image: images.courses1,
+        name: "Chinese",
         date: "Dec 20, 2024 | 10:00 AM",
-        type: "Taxi Expense",
-        amount: "$14"
+        type: "Senior One",
+        amount: "¥400"
     },
-    {
-        id: "2",
-        image: images.user2,
-        name: "Top Up Wallet",
-        date: "Dec 16, 2024 | 13:34 PM",
-        type: "Top Up",
-        amount: "$80"
-    },
-    {
-        id: "3",
-        image: images.user3,
-        name: "Sarah Wilson",
-        date: "Dec 14, 2024 | 11:39 AM",
-        type: "Taxi Expense",
-        amount: "$32"
-    },
-    {
-        id: "4",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 10, 2024 | 09:32 AM",
-        type: "Top Up",
-        amount: "$112"
-    },
-    {
-        id: "5",
-        image: images.user5,
-        name: "Benny Spanbauleur",
-        date: "Dec 09, 2024 | 10:08 AM",
-        type: "Taxi Expense",
-        amount: "$43"
-    },
-    {
-        id: "6",
-        image: images.user6,
-        name: "Roselle Dorrence",
-        date: "Dec 08, 2024 | 09:12 AM",
-        type: "Taxi Expense",
-        amount: "$22"
-    },
-    {
-        id: "7",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 08, 2024 | 16:28 PM",
-        type: "Top Up",
-        amount: "$200"
-    },
-    {
-        id: "8",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 07, 2024 | 15:12 PM",
-        type: "Top Up",
-        amount: "$120"
-    },
-    {
-        id: "9",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 07, 2024 | 22:12 PM",
-        type: "Top Up",
-        amount: "$20"
-    },
-    {
-        id: "10",
-        image: images.user8,
-        name: "Lucky Luck",
-        date: "Dec 06, 2024 | 10:08 AM",
-        type: "Taxi Expense",
-        amount: "$12"
-    },
-    {
-        id: "11",
-        image: images.user2,
-        name: "Jennifer Lucie",
-        date: "Dec 03, 2024 | 11:48 AM",
-        type: "Top Up",
-        amount: "$45"
-    }
 ];
 
 export const banners = [

@@ -1,22 +1,21 @@
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, StatusBar } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, icons, images } from '../constants';
 import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
-// Chat with customer service
 const CustomerService = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
 
   const handleInputText = (text) => {
-    setInputMessage(text)
+    setInputMessage(text);
   };
 
   const renderMessage = (props) => {
-    const { currentMessage } = props
+    const { currentMessage } = props;
 
     if (currentMessage.user._id === 1) {
       return (
@@ -38,12 +37,12 @@ const CustomerService = ({ navigation }) => {
             }}
             textStyle={{
               right: {
-                color: COLORS.white, // Change the text color for the sender here
+                color: COLORS.white,
               },
             }}
           />
         </View>
-      )
+      );
     } else {
       return (
         <View
@@ -76,28 +75,23 @@ const CustomerService = ({ navigation }) => {
             }}
           />
         </View>
-      )
+      );
     }
-    return <Bubble {...props} />
-  }
-
-  /***
-   * Implementing chat functionnality
-   */
+  };
 
   const submitHandler = () => {
-    const message = {
-      _id: Math.random().toString(36).substring(7),
-      text: inputMessage,
-      createdAt: new Date(),
-      user: { _id: 1 },
+    if (inputMessage.trim().length > 0) {
+      const message = {
+        _id: Math.random().toString(36).substring(7),
+        text: inputMessage,
+        createdAt: new Date(),
+        user: { _id: 1 },
+      };
+      setMessages((previousMessage) => GiftedChat.append(previousMessage, [message]));
+      setInputMessage("");
     }
-    setMessages((previousMessage) =>
-      GiftedChat.append(previousMessage, [message])
-    );
+  };
 
-    setInputMessage("")
-  }
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: COLORS.white }]}>
       <StatusBar hidden={true} />
@@ -117,26 +111,6 @@ const CustomerService = ({ navigation }) => {
               color: COLORS.greyscale900
             }]}>Customer Service</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: 'center' }}>
-            <TouchableOpacity>
-              <Image
-                source={icons.call}
-                resizeMode="contain"
-                style={[styles.headerIcon, {
-                  tintColor: COLORS.greyscale900
-                }]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 16 }}>
-              <Image
-                source={icons.moreCircle}
-                resizeMode="contain"
-                style={[styles.headerIcon, {
-                  tintColor: COLORS.greyscale900
-                }]}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
         <View style={styles.chatContainer}>
           <GiftedChat
@@ -147,12 +121,8 @@ const CustomerService = ({ navigation }) => {
             renderMessage={renderMessage}
           />
         </View>
-        <View style={[styles.inputContainer, {
-          backgroundColor: COLORS.white
-        }]}>
-          <View style={[styles.inputMessageContainer, {
-            backgroundColor: COLORS.grayscale100,
-          }]}>
+        <View style={[styles.inputContainer, { backgroundColor: COLORS.white }]}>
+          <View style={[styles.inputMessageContainer, { backgroundColor: COLORS.grayscale100 }]}>
             <TextInput
               style={styles.input}
               value={inputMessage}
@@ -166,14 +136,14 @@ const CustomerService = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={styles.microContainer}>
-            <MaterialCommunityIcons name="microphone" size={24} color={COLORS.white} />
+          <TouchableOpacity style={styles.sendContainer} onPress={submitHandler}>
+            <MaterialCommunityIcons name="send" size={24} color={COLORS.white} />
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -194,19 +164,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.black,
-    marginLeft: 22
+    marginLeft: 22,
   },
   headerIcon: {
     height: 24,
     width: 24,
-    tintColor: COLORS.black
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionIcon: {
-    marginRight: 12,
+    tintColor: COLORS.black,
   },
   chatContainer: {
     flex: 1,
@@ -216,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: COLORS.white,
     paddingVertical: 8,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   inputMessageContainer: {
     flex: 1,
@@ -226,7 +189,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginRight: 12,
     borderRadius: 12,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   attachmentIconContainer: {
     marginRight: 12,
@@ -236,14 +199,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
-  microContainer: {
+  sendContainer: {
     height: 48,
     width: 48,
     borderRadius: 49,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-  }
+  },
 });
 
 export default CustomerService;

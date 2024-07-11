@@ -34,7 +34,6 @@ const PurchaseHistory = ({ navigation }) => {
     return (
       <View>
         <SectionHeader
-          title="Transaction History"
           subtitle="See All"
           onPress={() => navigation.navigate("TransactionHistory")}
         />
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "flex-start"
   },
   backButton: {
     padding: 10,
@@ -92,7 +91,8 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    marginLeft: 4,
   },
   logo: {
     height: 32,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
-    marginLeft: 12
+    marginLeft: 4
   },
   headerIcon: {
     height: 24,

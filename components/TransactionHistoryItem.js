@@ -53,13 +53,6 @@ const TransactionHistoryItem = ({
                     <Text style={[styles.type, {
                         color: COLORS.grayscale700
                     }]}>{type}</Text>
-                    <Image
-                        source={type === "Taxi Expense" ? icons.arrowUpSquare : icons.arrowDownSquare}
-                        resizeMode='contain'
-                        style={[styles.typeIcon, {
-                            tintColor: type === "Taxi Expense" ? COLORS.red : COLORS.blue
-                        }]}
-                    />
                 </View>
             </View>
         </TouchableOpacity>
@@ -79,9 +72,9 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     avatar: {
-        width: 54,
-        height: 54,
-        borderRadius: 999,
+        width: 50,
+        height: 50,
+        borderRadius: 0,
         marginRight: 12
     },
     name: {
@@ -114,7 +107,7 @@ const styles = StyleSheet.create({
         fontFamily: "Urbanist Regular",
         fontSize: 14,
         color: COLORS.grayscale700,
-        marginRight: 12
+        textAlign: "right",
     },
     typeIcon: {
         width: 16,

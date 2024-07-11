@@ -28,15 +28,6 @@ const Profile = ({ navigation }) => {
             color: COLORS.greyscale900
           }]}>Profile</Text>
         </View>
-        <TouchableOpacity>
-          <Image
-            source={icons.moreCircle}
-            resizeMode='contain'
-            style={[styles.headerIcon, {
-              tintColor: COLORS.greyscale900
-            }]}
-          />
-        </TouchableOpacity>
       </TouchableOpacity>
     )
   }
@@ -97,11 +88,6 @@ const Profile = ({ navigation }) => {
 
     return (
       <View style={styles.settingsContainer}>
-        <SettingsItem
-          icon={icons.cartOutline}
-          name="My Cart"
-          onPress={() => navigation.navigate("MyCart")}
-        />
         <SettingsItem
           icon={icons.bell3}
           name="My Notification"
@@ -192,13 +178,13 @@ const Profile = ({ navigation }) => {
         />
         <SettingsItem
           icon={icons.infoCircle}
-          name="Help Center"
-          onPress={() => navigation.navigate("HelpCenter")}
+          name="Customer Service"
+          onPress={() => navigation.navigate("CustomerService")}
         />
         <SettingsItem
-          icon={icons.people4}
-          name="Invite Friends"
-          onPress={() => navigation.navigate("InviteFriends")}
+          icon={icons.moreCircle}
+          name="About Us"
+          onPress={() => navigation.navigate("AboutUs")}
         />
         <TouchableOpacity
           onPress={() => refRBSheet.current.open()}

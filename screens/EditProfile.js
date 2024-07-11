@@ -218,16 +218,9 @@ const EditProfile = ({ navigation }) => {
               id="nickname"
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['nickname']}
-              placeholder="Nickname"
+              placeholder="Age"
               placeholderTextColor={COLORS.black}
             />
-            <Input
-              id="email"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['email']}
-              placeholder="Email"
-              placeholderTextColor={COLORS.black}
-              keyboardType="email-address" />
             <View style={{
               width: SIZES.width - 32
             }}>
@@ -278,7 +271,7 @@ const EditProfile = ({ navigation }) => {
             </View>
             <View>
               <RNPickerSelect
-                placeholder={{ label: 'Select', value: '' }}
+                placeholder={{ label: 'Gender', value: '' }}
                 items={genderOptions}
                 onValueChange={(value) => handleGenderChange(value)}
                 value={selectedGender}
@@ -293,7 +286,8 @@ const EditProfile = ({ navigation }) => {
                     width: SIZES.width - 32,
                     alignItems: 'center',
                     backgroundColor: COLORS.greyscale500,
-                    borderRadius: 16
+                    borderRadius: 16,
+                    marginVertical: 8,
                   },
                   inputAndroid: {
                     fontSize: 16,
@@ -305,7 +299,8 @@ const EditProfile = ({ navigation }) => {
                     width: SIZES.width - 32,
                     alignItems: 'center',
                     backgroundColor: COLORS.greyscale500,
-                    borderRadius: 16
+                    borderRadius: 16,
+                    marginVertical: 8,
                   },
                 }}
               />
@@ -314,7 +309,7 @@ const EditProfile = ({ navigation }) => {
               id="occupation"
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['occupation']}
-              placeholder="Occupation"
+              placeholder="Grade"
               placeholderTextColor={COLORS.black}
             />
           </View>
@@ -381,7 +376,7 @@ const styles = StyleSheet.create({
     height: 52,
     width: SIZES.width - 32,
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 8,
     backgroundColor: COLORS.greyscale500,
   },
   downIcon: {
@@ -414,7 +409,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     fontSize: 18,
     justifyContent: "space-between",
-    marginTop: 4,
+    marginVertical: 8,
     backgroundColor: COLORS.greyscale500,
     flexDirection: "row",
     alignItems: "center",
@@ -448,7 +443,7 @@ const styles = StyleSheet.create({
     height: 58,
     width: SIZES.width - 32,
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 8,
     backgroundColor: COLORS.greyscale500,
   }
 });
@@ -464,7 +459,8 @@ const pickerSelectStyles = StyleSheet.create({
     width: SIZES.width - 32,
     alignItems: 'center',
     backgroundColor: COLORS.greyscale500,
-    borderRadius: 16
+    borderRadius: 16,
+    marginVertical: 8,
   },
   inputAndroid: {
     fontSize: 16,
@@ -476,7 +472,8 @@ const pickerSelectStyles = StyleSheet.create({
     width: SIZES.width - 32,
     alignItems: 'center',
     backgroundColor: COLORS.greyscale500,
-    borderRadius: 16
+    borderRadius: 16,
+    marginVertical: 8,
   },
 });
 
