@@ -1724,4 +1724,17 @@ export const activeOrders = [
       hasRemindMe: false,
     },
   ];
+
+    export const myCourses = [
+        {
+          id: 1,
+          status: "Scheduled",
+          date: "15 Feb, 10:00 AM",
+          name: "Chinese",
+          image: images.courses1,
+          teacher: "Yang Liu",
+          grade: "Senior One",
+          hasRemindMe: true,
+        },
+  ];
   

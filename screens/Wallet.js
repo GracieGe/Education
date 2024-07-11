@@ -1,112 +1,139 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
-import React from 'react';
-import { COLORS, SIZES, icons, images } from '../constants';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { myCourses } from '../data';
+import { SIZES, COLORS, images } from '../constants';
+import RBSheet from "react-native-raw-bottom-sheet";
+import Button from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SectionHeader from '../components/SectionHeader';
-import { transactionHistory } from '../data';
-import TransactionHistoryItem from '../components/TransactionHistoryItem';
-import { ScrollView } from 'react-native-virtualized-view';
 
-const Wallet = ({ navigation }) => {
-  /**
-   * render header
+const Wallet = () => {
+  const [orders, setOrders] = useState(myCourses);
+  const refRBSheet = useRef();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setOrders(myCourses);
+  }, [myCourses]);
+
+    /**
+   * Render header
    */
-  const renderHeader = () => {
-    return (
-      <TouchableOpacity style={styles.headerContainer}>
-        <View style={styles.headerLeft}>
-          <Image
-            source={images.logo}
-            resizeMode='contain'
-            style={styles.logo}
-          />
-          <Text style={[styles.headerTitle, {
-            color: COLORS.greyscale900
-          }]}>My Courses</Text>
-        </View>
-        <TouchableOpacity>
-          <Image
-            source={icons.moreCircle}
-            resizeMode='contain'
-            style={[styles.headerIcon, {
-              tintColor: COLORS.greyscale900
-            }]}
-          />
+    const renderHeader = () => {
+      return (
+        <TouchableOpacity style={styles.headerContainer}>
+          <View style={styles.headerLeft}>
+            <Image
+              source={images.logo}
+              resizeMode='contain'
+              style={styles.logo}
+            />
+            <Text style={[styles.headerTitle, {
+              color: COLORS.greyscale900
+            }]}>My Courses</Text>
+          </View>
         </TouchableOpacity>
-      </TouchableOpacity>
-    )
-  }
+      )
+    }
 
-  /**
-   * render wallet card
-   */
-  const renderWalletCard = () => {
-    return (
-      <View style={styles.cardContainer}>
-        <View style={styles.topCardContainer}>
-          <View style={styles.topCardLeftContainer}>
-            <Text style={styles.cardHolderName}>Andrew Ainsley</Text>
-            <Text style={styles.cardNumber}>•••• •••• •••• ••••</Text>
-          </View>
-          <View style={styles.topCardRightContainer}>
-            <Text style={styles.cardType}>VISA</Text>
-            <Image
-              source={icons.masterCardLogo}
-              resizeMode='contain'
-              style={styles.cardLogo}
-            />
-          </View>
-        </View>
-        <Text style={styles.balanceText}>Your balance</Text>
-        <View style={styles.bottomCardContainer}>
-          <Text style={styles.amountNumber}>$957,5</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("TopupEwalletAmount")}
-            style={styles.topupBtn}>
-            <Image
-              source={icons.arrowDownSquare}
-              resizeMode='contain'
-              style={styles.arrowDown}
-            />
-            <Text style={styles.topupBtnText}>Top Up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
-  };
-
-  const renderTransactionHistory = () => {
-    return (
-      <View>
-        <SectionHeader
-          title="Transaction History"
-          subtitle="See All"
-          onPress={() => navigation.navigate("TransactionHistory")}
-        />
+  return (
+    <SafeAreaView style={styles.area}>
+      <View style={styles.container}>
+      {renderHeader()}
         <FlatList
-          data={transactionHistory.slice(0, 6)}
+          data={orders}
           keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <TransactionHistoryItem
-              image={item.image}
-              name={item.name}
-              date={item.date}
-              type={item.type}
-              amount={item.amount}
-            />
+            <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
+              <View style={styles.detailsContainer}>
+                <View>
+                  <Image
+                    source={item.image}
+                    resizeMode='cover'
+                    style={styles.serviceImage}
+                  />
+                </View>
+                <View style={styles.detailsRightContainer}>
+                  <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.name}</Text>
+                  <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>{item.grade}</Text>
+                  <View style={styles.teacherContainer}>
+                    <View style={styles.teacherItemContainer}>
+                      <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={() => refRBSheet.current.open()}
+                  style={styles.cancelBtn}>
+                  <Text style={styles.cancelBtnText}>Select Teacher</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("EReceipt")}
+                  style={styles.completionBtn}>
+                  <Text style={styles.completionBtnText}>Book Slots</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           )}
         />
-      </View>
-    )
-  }
-  return (
-    <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
-      <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        {renderHeader()}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {renderWalletCard()}
-          {renderTransactionHistory()}
-        </ScrollView>
+        <RBSheet
+          ref={refRBSheet}
+          closeOnDragDown={true}
+          closeOnPressMask={false}
+          height={332}
+          customStyles={{
+            wrapper: {
+              backgroundColor: "rgba(0,0,0,0.5)",
+            },
+            draggableIcon: {
+              backgroundColor: COLORS.greyscale300,
+            },
+            container: {
+              borderTopRightRadius: 32,
+              borderTopLeftRadius: 32,
+              height: 332,
+              backgroundColor: COLORS.white,
+              alignItems: "center",
+              width: "100%"
+            }
+          }}>
+          <Text style={[styles.bottomSubtitle, { color: COLORS.red }]}>Cancel Order</Text>
+          <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
+          <View style={styles.selectedCancelContainer}>
+            <Text style={[styles.cancelTitle, { color: COLORS.greyscale900 }]}>
+              Are you sure you want to cancel your order?
+            </Text>
+            <Text style={[styles.cancelSubtitle, { color: COLORS.grayscale700 }]}>
+              Only 80% of the money you can refund from your payment according to our policy.
+            </Text>
+          </View>
+          <View style={styles.bottomContainer}>
+            <Button
+              title="Cancel"
+              style={{
+                width: (SIZES.width - 32) / 2 - 8,
+                backgroundColor: COLORS.tansparentPrimary,
+                borderRadius: 32,
+                borderColor: COLORS.tansparentPrimary
+              }}
+              textColor={COLORS.primary}
+              onPress={() => refRBSheet.current.close()}
+            />
+            <Button
+              title="Yes, Cancel"
+              filled
+              style={styles.removeButton}
+              onPress={() => {
+                refRBSheet.current.close();
+                navigation.navigate("CancelOrder");
+              }}
+            />
+          </View>
+        </RBSheet>
       </View>
     </SafeAreaView>
   )
@@ -115,17 +142,18 @@ const Wallet = ({ navigation }) => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.white
+    backgroundColor: COLORS.tertiaryWhite,
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
-    padding: 16
+    padding: 16,
+    backgroundColor: COLORS.tertiaryWhite,
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   headerLeft: {
     flexDirection: "row",
@@ -149,81 +177,137 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: SIZES.width - 32,
-    borderRadius: 32,
-    marginTop: 16,
-    height: 212,
-    backgroundColor: COLORS.primary,
-    padding: 16
-  },
-  topCardContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  topCardLeftContainer: {
-    marginTop: 6
-  },
-  topCardRightContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 22
-  },
-  cardHolderName: {
-    fontSize: 22,
-    color: COLORS.white,
-    fontFamily: "Urbanist Bold",
-  },
-  cardNumber: {
-    fontSize: 20,
-    color: COLORS.white,
-    fontFamily: "Urbanist SemiBold",
-  },
-  cardType: {
-    fontSize: 26,
-    color: COLORS.white,
-    fontFamily: "extraBoldItalic",
-  },
-  cardLogo: {
-    height: 52,
-    width: 52,
-    marginLeft: 6
-  },
-  balanceText: {
-    fontSize: 18,
-    color: COLORS.white,
-    fontFamily: "Urbanist Medium",
-  },
-  bottomCardContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 22
-  },
-  amountNumber: {
-    fontSize: 42,
-    color: COLORS.white,
-    fontFamily: "Urbanist Bold",
-  },
-  topupBtn: {
-    width: 132,
-    height: 42,
-    backgroundColor: COLORS.white,
     borderRadius: 18,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    marginBottom: 16,
+  },
+  separateLine: {
+    width: "100%",
+    height: 0.7,
+    backgroundColor: COLORS.greyScale800,
+    marginVertical: 12,
+  },
+  detailsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  serviceImage: {
+    width: 88,
+    height: 88,
+    borderRadius: 16,
+    marginHorizontal: 12,
+  },
+  detailsRightContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  name: {
+    fontSize: 17,
+    fontFamily: "Urbanist Bold",
+    color: COLORS.greyscale900,
+  },
+  grade: {
+    fontSize: 12,
+    fontFamily: "Urbanist Regular",
+    color: COLORS.grayscale700,
+    marginVertical: 6,
+  },
+  cancelBtn: {
+    width: (SIZES.width - 32) / 2 - 20,
+    height: 36,
+    borderRadius: 24,
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
+    marginTop: 6,
+    borderColor: COLORS.primary,
+    borderWidth: 1.4,
+    marginBottom: 12,
   },
-  arrowDown: {
-    width: 16,
-    height: 16,
-    tintColor: COLORS.black
-  },
-  topupBtnText: {
+  cancelBtnText: {
     fontSize: 16,
-    color: COLORS.black,
     fontFamily: "Urbanist SemiBold",
-    marginLeft: 12
-  }
+    color: COLORS.primary,
+  },
+  completionBtn: {
+    width: (SIZES.width - 32) / 2 - 16,
+    height: 36,
+    borderRadius: 24,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 6,
+    borderColor: COLORS.primary,
+    borderWidth: 1.4,
+    marginBottom: 12,
+  },
+  completionBtnText: {
+    fontSize: 16,
+    fontFamily: "Urbanist SemiBold",
+    color: COLORS.white,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  bottomContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 12,
+    paddingHorizontal: 16,
+    width: "100%",
+  },
+  removeButton: {
+    width: (SIZES.width - 32) / 2 - 8,
+    backgroundColor: COLORS.primary,
+    borderRadius: 32,
+  },
+  bottomSubtitle: {
+    fontSize: 22,
+    fontFamily: "Urbanist Bold",
+    color: COLORS.greyscale900,
+    textAlign: "center",
+    marginVertical: 12,
+  },
+  selectedCancelContainer: {
+    marginVertical: 24,
+    paddingHorizontal: 36,
+    width: "100%",
+  },
+  cancelTitle: {
+    fontSize: 18,
+    fontFamily: "Urbanist SemiBold",
+    color: COLORS.greyscale900,
+    textAlign: "center",
+  },
+  cancelSubtitle: {
+    fontSize: 14,
+    fontFamily: "Urbanist Regular",
+    color: COLORS.grayscale700,
+    textAlign: "center",
+    marginVertical: 8,
+    marginTop: 16,
+  },
+  teacherContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 6,
+  },
+  teacher: {
+    fontSize: 17,
+    fontFamily: "Urbanist SemiBold",
+    color: COLORS.primary,
+    textAlign: "center",
+  },
+  teacherItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 16,
+  },
 })
 
-export default Wallet
+export default Wallet;
