@@ -1,11 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { COLORS, SIZES, icons } from '../constants';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const VerticalCourseCard = ({
-    name,
-    image,
+    courseName,
     grade,
     price,
     rating,
@@ -17,34 +16,22 @@ const VerticalCourseCard = ({
     return (
         <TouchableOpacity
             onPress={onPress}
-            style={[styles.container, {
-                backgroundColor: COLORS.white
-            }]}>
-            <Image
-                source={image}
-                resizeMode='cover'
-                style={styles.image}
-            />
-            <Text style={[styles.name, {
-                color: COLORS.greyscale900,
-            }]}>{name}</Text>
+            style={[styles.container, { backgroundColor: COLORS.white }]}>
+            <Text style={styles.name}>{courseName}</Text>
             <View style={styles.viewContainer}>
-                <Text style={[styles.location, {
-                    color: COLORS.grayscale700,
-                }]}>{grade}  | {" "}</Text>
+                <Text style={styles.location}>{grade}  | {" "}</Text>
                 <FontAwesome name="star" size={14} color="rgb(250, 159, 28)" />
-                <Text style={[styles.location, {
-                    color: COLORS.grayscale700,
-                }]}>{" "}{rating}  ({numReviews})</Text>
+                <Text style={styles.location}>{" "}{rating}  ({numReviews})</Text>
             </View>
             <View style={styles.bottomPriceContainer}>
                 <View style={styles.priceContainer}>
-                    <Text style={styles.price}>{price}</Text>
+                    <Text style={styles.price}>¥{price}</Text>
                 </View>
                 <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
-                    <Image
-                        source={isFavourite ? icons.heart2 : icons.heart2Outline}
-                        resizeMode='contain'
+                    <FontAwesome
+                        name={isFavourite ? "heart" : "heart-o"}
+                        size={16}
+                        color={COLORS.red}
                         style={styles.heartIcon}
                     />
                 </TouchableOpacity>
@@ -62,11 +49,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         marginBottom: 12,
         marginRight: 8
-    },
-    image: {
-        width: "100%",
-        height: 140,
-        borderRadius: 16
     },
     name: {
         fontSize: 16,
@@ -97,28 +79,8 @@ const styles = StyleSheet.create({
         color: COLORS.primary,
         marginRight: 8
     },
-    duration: {
-        fontSize: 10,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.primary,
-        marginRight: 8
-    },
-    durationText: {
-        fontSize: 14,
-        fontFamily: "Urbanist Regular",
-        color: COLORS.grayscale700
-    },
     heartIcon: {
-        width: 16,
-        height: 16,
-        tintColor: COLORS.red,
         marginLeft: 6
-    },
-    rating: {
-        fontSize: 12,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.white,
-        marginLeft: 4
     },
     viewContainer: {
         flexDirection: "row",
@@ -126,4 +88,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default VerticalCourseCard
+export default VerticalCourseCard;
