@@ -294,12 +294,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-  greeeting: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: "gray",
-    marginBottom: 4
-  },
   title: {
     fontSize: 20,
     fontFamily: "Urbanist Bold",
@@ -343,17 +337,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Urbanist Regular",
     marginHorizontal: 8
-  },
-  userAvatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 999
-  },
-  firstName: {
-    fontSize: 16,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.dark2,
-    marginTop: 6
   },
 })
 
