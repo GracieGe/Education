@@ -8,7 +8,7 @@ import OrderSummaryCard from '../components/OrderSummaryCard';
 import Button from '../components/Button';
 
 const CheckoutOrders = ({ route, navigation }) => {
-  const { courseData, count } = route.params;
+  const { courseData, count, notes } = route.params;
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -49,7 +49,7 @@ const CheckoutOrders = ({ route, navigation }) => {
               <Text style={[styles.viewLeft, {
                 color: COLORS.grayscale700
               }]}>Note</Text>
-              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$24.00</Text>
+              <Text style={[styles.notesText, { color: COLORS.greyscale900 }]}>{notes}</Text>
             </View>
             <View style={[styles.separateLine, {
               backgroundColor: COLORS.grayscale200
@@ -115,6 +115,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.greyscale900
+  },
+  notesText: {
+    fontSize: 14,
+    fontFamily: "Urbanist Regular",
+    color: COLORS.greyscale900,
+    flex: 1,
+    marginLeft: 10
   },
   separateLine: {
     width: "100%",

@@ -10,6 +10,7 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
     const { courseId } = route.params; 
     const [courseData, setCourseData] = useState({ courseName: '', grade: '', description: '' });
     const [count, setCount] = useState(1);
+    const [notes, setNotes] = useState('');
 
     useEffect(() => {
         const fetchCourseData = async () => {
@@ -126,6 +127,9 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
                         borderColor: COLORS.grayscale200,
                     }]}
                     multiline={true}
+                    value={notes}
+                    onChangeText={setNotes}
+                    blurOnSubmit={false}
                 />
             </View>
         )
@@ -135,7 +139,7 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
         <View style={[styles.area, { backgroundColor: COLORS.white }]}>
             <StatusBar hidden />
             {renderHeader()}
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="always">
                 {renderImage()}
                 {renderContent()}
             </ScrollView>
@@ -143,7 +147,7 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
                 title="Add To Basket"
                 filled
                 style={styles.btn}
-                onPress={() => navigation.navigate("CheckoutOrders", { courseData, count })}
+                onPress={() => navigation.navigate("CheckoutOrders", { courseData, count, notes })}
             />
         </View>
     )

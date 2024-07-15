@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
 import React, { useState } from 'react'; // Import useState hook
 import { COLORS } from '../constants';
 
