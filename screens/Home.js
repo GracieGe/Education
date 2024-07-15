@@ -8,6 +8,7 @@ import SubHeaderItem from '../components/SubHeaderItem';
 import VerticalCourseCard from '../components/VerticalCourseCard';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 import axios from 'axios';
+import config from '../config';
 
 const Home = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
@@ -22,7 +23,7 @@ const Home = ({ navigation }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:5001/api/categories');
+      const response = await axios.get('${config.API_URL}/api/categories');
       setCategories([{ categoryId: 'all', categoryName: 'All' }, ...response.data]);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -31,7 +32,7 @@ const Home = ({ navigation }) => {
 
   const fetchCourses = async (categoryId = 'all') => {
     try {
-      const url = `http://10.0.2.2:5001/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
+      const url = `${config.API_URL}/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
       console.log('Fetching courses with URL:', url);
       const response = await axios.get(url);
       console.log('Courses fetched:', response.data);
