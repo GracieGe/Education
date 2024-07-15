@@ -52,7 +52,7 @@ import CategoryHamburger from "./CategoryHamburger";
 import CategoryMeat from "./CategoryMeat";
 import CategoryPizza from "./CategoryPizza";
 import Favourite from "./Favourite";
-import FoodDetails from "./FoodDetails";
+import CourseDetails from "./CourseDetails";
 import FoodReviews from "./FoodReviews";
 import FoodDetailsAbout from "./FoodDetailsAbout";
 import FoodDetailsOffers from "./FoodDetailsOffers";
@@ -129,7 +129,7 @@ export {
     CategoryMeat,
     CategoryPizza,
     Favourite,
-    FoodDetails,
+    CourseDetails,
     FoodReviews,
     FoodDetailsAbout,
     FoodDetailsOffers,

@@ -9,7 +9,7 @@ import Button from '../components/Button';
 import SocialIcon from '../components/SocialIcon';
 import RBSheet from "react-native-raw-bottom-sheet";
 
-const FoodDetails = ({ navigation }) => {
+const CourseDetails = ({ navigation }) => {
   const refRBSheet = useRef();
 
   // Slider images
@@ -432,4 +432,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FoodDetails
+export default CourseDetails
