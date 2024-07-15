@@ -169,15 +169,15 @@ const CourseDetails = ({ route, navigation }) => {
         {renderImage()}
         {renderContent()}
       </ScrollView>
-      <View style={[styles.bookBottomContainer, {
+      <View style={[styles.buyBottomContainer, {
         backgroundColor: COLORS.white,
         borderTopColor: COLORS.white,
       }]}>
         <Button
           title="Buy Now"
           filled
-          style={styles.bookingBtn}
-          onPress={() => navigation.navigate("FoodDetailsAddItem")}
+          style={styles.buyBtn}
+          onPress={() => navigation.navigate("CourseDetailsAddItem")}
         />
       </View>
     </View>
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     color: COLORS.greyscale900,
     marginHorizontal: 16
   },
-  bookBottomContainer: {
+  buyBottomContainer: {
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.white,
     borderTopWidth: 1,
   },
-  bookingBtn: {
+  buyBtn: {
     width: SIZES.width - 32
   },
   separateLine: {

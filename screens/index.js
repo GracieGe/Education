@@ -56,7 +56,7 @@ import CourseDetails from "./CourseDetails";
 import FoodReviews from "./FoodReviews";
 import CourseDescription from "./CourseDescription";
 import FoodDetailsOffers from "./FoodDetailsOffers";
-import FoodDetailsAddItem from "./FoodDetailsAddItem";
+import CourseDetailsAddItem from "./CourseDetailsAddItem";
 import CheckoutOrders from "./CheckoutOrders";
 import CheckoutOrdersAddress from "./CheckoutOrdersAddress";
 import SearchingDriver from "./SearchingDriver";
@@ -133,7 +133,7 @@ export {
     FoodReviews,
     CourseDescription,
     FoodDetailsOffers,
-    FoodDetailsAddItem,
+    CourseDetailsAddItem,
     CheckoutOrders,
     CheckoutOrdersAddress,
     SearchingDriver,

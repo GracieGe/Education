@@ -1,23 +1,23 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, StatusBar } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { COLORS, SIZES, icons, images, socials } from '../constants';
-import AutoSlider from '../components/AutoSlider';
+import React, { useEffect, useState } from 'react';
+import { COLORS, SIZES, icons, images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
-import RBSheet from "react-native-raw-bottom-sheet";
-import SocialIcon from '../components/SocialIcon';
 import Button from '../components/Button';
 
-const FoodDetailsAddItem = ({ navigation }) => {
-    const refRBSheet = useRef();
+const CourseDetailsAddItem = ({ navigation }) => {
 
-    // Slider images
-    const sliderImages = [
-        images.pizza1,
-        images.pizza2,
-        images.pizza3,
-        images.pizza4,
-        images.pizza5,
-    ];
+    const renderImage = () => {
+        return (
+          <View>
+            <Image
+              source={images.courses1}
+              resizeMode='cover'
+              style={{ width: SIZES.width, height: 350 }} 
+            />
+            <View style={styles.separateLine} />
+          </View>
+        );
+      }
 
     // render header
     const renderHeader = () => {
@@ -41,15 +41,6 @@ const FoodDetailsAddItem = ({ navigation }) => {
                             source={isFavorite ? icons.heart2 : icons.heart2Outline}
                             resizeMode='contain'
                             style={styles.bookmarkIcon}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.sendIconContainer}
-                        onPress={() => refRBSheet.current.open()}>
-                        <Image
-                            source={icons.send2}
-                            resizeMode='contain'
-                            style={styles.sendIcon}
                         />
                     </TouchableOpacity>
                 </View>
@@ -82,7 +73,7 @@ const FoodDetailsAddItem = ({ navigation }) => {
                 <Text style={[styles.headerContentTitle, {
                     color:  COLORS.greyscale900,
                 }]}>
-                    Mixed Vegetable Salad
+                    Chinese | Senior One
                 </Text>
                 <View style={[styles.separateLine, {
                     marginVertical: 12,
@@ -111,7 +102,7 @@ const FoodDetailsAddItem = ({ navigation }) => {
                 </View>
 
                 <TextInput
-                    placeholder='Note to Restaurant (optional)'
+                    placeholder='Note to the order (optional)'
                     placeholderTextColor={COLORS.grayscale700}
                     style={[styles.input, {
                         backgroundColor: COLORS.tertiaryWhite,
@@ -126,9 +117,9 @@ const FoodDetailsAddItem = ({ navigation }) => {
     return (
         <View style={[styles.area, { backgroundColor: COLORS.white }]}>
             <StatusBar hidden />
-            <AutoSlider images={sliderImages} />
             {renderHeader()}
             <ScrollView showsVerticalScrollIndicator={false}>
+                {renderImage()}
                 {renderContent()}
             </ScrollView>
             <Button
@@ -137,78 +128,6 @@ const FoodDetailsAddItem = ({ navigation }) => {
                 style={styles.btn}
                 onPress={() => navigation.navigate("CheckoutOrders")}
             />
-            <RBSheet
-                ref={refRBSheet}
-                closeOnDragDown={true}
-                closeOnPressMask={true}
-                height={360}
-                customStyles={{
-                    wrapper: {
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                    },
-                    draggableIcon: {
-                        backgroundColor: COLORS.grayscale200,
-                    },
-                    container: {
-                        borderTopRightRadius: 32,
-                        borderTopLeftRadius: 32,
-                        height: 360,
-                        backgroundColor: COLORS.white,
-                        alignItems: "center",
-                    }
-                }}>
-                <Text style={[styles.bottomTitle, {
-                    color: COLORS.greyscale900
-                }]}>Share</Text>
-                <View style={[styles.separateLine, {
-                    backgroundColor: COLORS.grayscale200,
-                    marginVertical: 12
-                }]} />
-                <View style={styles.socialContainer}>
-                    <SocialIcon
-                        icon={socials.whatsapp}
-                        name="WhatsApp"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.twitter}
-                        name="X"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.facebook}
-                        name="Facebook"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.instagram}
-                        name="Instagram"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                </View>
-                <View style={styles.socialContainer}>
-                    <SocialIcon
-                        icon={socials.yahoo}
-                        name="Yahoo"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.titktok}
-                        name="Tiktok"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.messenger}
-                        name="Chat"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                    <SocialIcon
-                        icon={socials.wechat}
-                        name="Wechat"
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                </View>
-            </RBSheet>
         </View>
     )
 };
@@ -217,11 +136,6 @@ const styles = StyleSheet.create({
     area: {
         flex: 1,
         backgroundColor: COLORS.white
-    },
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.white,
-        padding: 16
     },
     headerContainer: {
         width: SIZES.width - 32,
@@ -243,14 +157,6 @@ const styles = StyleSheet.create({
         height: 24,
         tintColor: COLORS.white
     },
-    sendIcon: {
-        width: 24,
-        height: 24,
-        tintColor: COLORS.white
-    },
-    sendIconContainer: {
-        marginLeft: 8
-    },
     iconContainer: {
         flexDirection: "row",
         alignItems: "center"
@@ -262,20 +168,6 @@ const styles = StyleSheet.create({
         width: SIZES.width - 32,
         height: 1,
         backgroundColor: COLORS.grayscale200
-    },
-    bottomTitle: {
-        fontSize: 24,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.black,
-        textAlign: "center",
-        marginTop: 12
-    },
-    socialContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginVertical: 12,
-        width: SIZES.width - 32
     },
     headerContentTitle: {
         fontSize: 28,
@@ -293,12 +185,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 14,
         fontFamily: "Urbanist SemiBold",
-    },
-    subItemContainer: {
-        width: SIZES.width - 32,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
     },
     addItemContainer: {
         flexDirection: "row",
@@ -345,4 +231,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default FoodDetailsAddItem
+export default CourseDetailsAddItem
