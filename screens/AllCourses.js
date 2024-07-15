@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
 import VerticalCourseCard from '../components/VerticalCourseCard';
 import axios from 'axios';
+import config from '../config';
 
 const AllCourses = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
@@ -20,7 +21,7 @@ const AllCourses = ({ navigation }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:5001/api/categories');
+      const response = await axios.get(`${config.API_URL}/api/categories`);
       setCategories([{ categoryId: 'all', categoryName: 'All' }, ...response.data]);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -29,7 +30,7 @@ const AllCourses = ({ navigation }) => {
 
   const fetchCourses = async (categoryId = 'all') => {
     try {
-      const url = `http://10.0.2.2:5001/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
+      const url = `${config.API_URL}/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
       console.log('Fetching courses with URL:', url);
       const response = await axios.get(url);
       console.log('Courses fetched:', response.data);
