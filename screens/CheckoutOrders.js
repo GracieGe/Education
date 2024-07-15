@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, icons, images } from '../constants';
+import { COLORS, SIZES, images } from '../constants';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
 import OrderSummaryCard from '../components/OrderSummaryCard';
@@ -125,116 +125,10 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900
   },
-  addressContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  addressLeftContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  addressLeftContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  view1: {
-    height: 52,
-    width: 52,
-    borderRadius: 26,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.tansparentPrimary,
-  },
-  view2: {
-    height: 38,
-    width: 38,
-    borderRadius: 19,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.primary,
-  },
-  locationIcon: {
-    height: 20,
-    width: 20,
-    tintColor: COLORS.white
-  },
-  viewView: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  homeTitle: {
-    fontSize: 18,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900
-  },
-  defaultView: {
-    width: 64,
-    height: 26,
-    borderRadius: 6,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.tansparentPrimary,
-    marginHorizontal: 12
-  },
-  defaultTitle: {
-    fontSize: 12,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.primary,
-  },
-  addressTitle: {
-    fontSize: 14,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.grayscale700,
-    marginVertical: 4
-  },
-  viewAddress: {
-    marginHorizontal: 16
-  },
-  arrowRightIcon: {
-    height: 16,
-    width: 16,
-    tintColor: COLORS.greyscale900
-  },
   orderSummaryView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
-  },
-  addItemView: {
-    width: 78,
-    height: 26,
-    borderRadius: 32,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: COLORS.primary,
-    borderWidth: 1.4,
-  },
-  addItemText: {
-    fontSize: 12,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.primary,
-  },
-  viewItemTypeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  viewLeftItemTypeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  walletIcon: {
-    height: 24,
-    width: 24,
-    tintColor: COLORS.primary,
-    marginRight: 16
-  },
-  viewItemTypeTitle: {
-    fontSize: 14,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.grayscale700,
-    marginRight: 16
   },
   placeOrderButton: {
     marginBottom: 12,

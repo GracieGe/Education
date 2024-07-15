@@ -80,11 +80,6 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         color: COLORS.primary
     },
-    editPencilIcon: {
-        height: 20,
-        width: 20,
-        tintColor: COLORS.primary
-    }
 })
 
 export default OrderSummaryCard;
