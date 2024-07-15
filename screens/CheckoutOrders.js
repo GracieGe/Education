@@ -7,7 +7,8 @@ import { ScrollView } from 'react-native-virtualized-view';
 import OrderSummaryCard from '../components/OrderSummaryCard';
 import Button from '../components/Button';
 
-const CheckoutOrders = ({ navigation }) => {
+const CheckoutOrders = ({ route, navigation }) => {
+  const { courseData, count } = route.params;
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -31,9 +32,10 @@ const CheckoutOrders = ({ navigation }) => {
               backgroundColor:  COLORS.grayscale200
             }]} />
             <OrderSummaryCard
-              name="Chinese | Senior One."
-              image={images. courses1}
-              price="$12.00"
+              name={`${courseData.courseName} | ${courseData.grade}`}
+              image={images.courses1}
+              price={`¥${courseData.price}/h`}
+              quantity={count}
               onPress={() => console.log("Clicked")}
             />
             <View style={[styles.separateLine, {
@@ -56,12 +58,12 @@ const CheckoutOrders = ({ navigation }) => {
               <Text style={[styles.viewLeft, {
                 color: COLORS.grayscale700
               }]}>Total</Text>
-              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$24.00</Text>
+              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>¥{courseData.price * count}</Text>
             </View>
           </View>
         </ScrollView>
         <Button
-          title="Place Order - $24.00"
+          title={`Place Order - ¥${courseData.price * count}`}
           filled
           onPress={() => navigation.navigate("PaymentMethods")}
           style={styles.placeOrderButton}

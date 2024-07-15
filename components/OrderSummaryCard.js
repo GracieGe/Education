@@ -2,9 +2,10 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import React, { useState } from 'react'; // Import useState hook
 import { COLORS } from '../constants';
 
-const OrderSummaryCard = ({ name, image, price, onPress }) => {
+const OrderSummaryCard = ({ name, image, price, quantity, onPress }) => {
     // State variable to hold the quantity value
-    const [quantity, setQuantity] = useState("1x");
+    const [inputValue, setInputValue] = useState(`${quantity}x`);
+
 
     return (
         <View style={styles.container}>
@@ -26,8 +27,8 @@ const OrderSummaryCard = ({ name, image, price, onPress }) => {
                     placeholder='1x'
                     placeholderTextColor={COLORS.primary}
                     style={styles.input}
-                    value={quantity} 
-                    onChangeText={(text) => setQuantity(text)}
+                    value={inputValue}
+                    onChangeText={(text) => setInputValue(text)}
                 />
             </View>
         </View>
@@ -69,11 +70,12 @@ const styles = StyleSheet.create({
         flex: 1
     },
     input: {
-        height: 32,
-        width: 32,
+        height: 40,
+        width: 40,
         borderRadius: 6,
         justifyContent: "center",
         alignItems: "center",
+        textAlign: "center",
         paddingLeft: 6,
         borderColor: COLORS.primary,
         borderWidth: 1.4,

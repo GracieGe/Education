@@ -9,6 +9,7 @@ import config from '../config';
 const CourseDetailsAddItem = ({ route, navigation }) => {
     const { courseId } = route.params; 
     const [courseData, setCourseData] = useState({ courseName: '', grade: '', description: '' });
+    const [count, setCount] = useState(1);
 
     useEffect(() => {
         const fetchCourseData = async () => {
@@ -69,7 +70,6 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
     // render content
     const renderContent = () => {
         const [expanded, setExpanded] = useState(false);
-        const [count, setCount] = useState(1); // Initial count value
 
         const description = courseData.description || "No description available.";
         const toggleExpanded = () => {
@@ -143,7 +143,7 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
                 title="Add To Basket"
                 filled
                 style={styles.btn}
-                onPress={() => navigation.navigate("CheckoutOrders")}
+                onPress={() => navigation.navigate("CheckoutOrders", { courseData, count })}
             />
         </View>
     )
