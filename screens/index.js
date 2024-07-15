@@ -54,7 +54,7 @@ import CategoryPizza from "./CategoryPizza";
 import Favourite from "./Favourite";
 import CourseDetails from "./CourseDetails";
 import FoodReviews from "./FoodReviews";
-import FoodDetailsAbout from "./FoodDetailsAbout";
+import CourseDescription from "./CourseDescription";
 import FoodDetailsOffers from "./FoodDetailsOffers";
 import FoodDetailsAddItem from "./FoodDetailsAddItem";
 import CheckoutOrders from "./CheckoutOrders";
@@ -131,7 +131,7 @@ export {
     Favourite,
     CourseDetails,
     FoodReviews,
-    FoodDetailsAbout,
+    CourseDescription,
     FoodDetailsOffers,
     FoodDetailsAddItem,
     CheckoutOrders,

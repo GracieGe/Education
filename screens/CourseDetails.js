@@ -1,21 +1,41 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, StatusBar } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { COLORS, SIZES, icons, images, socials } from '../constants';
-import AutoSlider from '../components/AutoSlider';
+import React, { useEffect, useState } from 'react';
+import { COLORS, SIZES, icons, images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import Fontisto from "react-native-vector-icons/Fontisto";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Button from '../components/Button';
-import SocialIcon from '../components/SocialIcon';
-import RBSheet from "react-native-raw-bottom-sheet";
+import axios from 'axios';
+import config from '../config';
 
-const CourseDetails = ({ navigation }) => {
-  const refRBSheet = useRef();
+const CourseDetails = ({ route, navigation }) => {
+  const { courseId } = route.params; 
+  const [courseData, setCourseData] = useState(null);
 
-  // Slider images
-  const sliderImages = [
-    images.courses1,
-  ];
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const response = await axios.get(`${config.API_URL}/api/courses/${courseId}`);
+        setCourseData(response.data);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+      }
+    };
+
+    fetchCourseData();
+  }, [courseId]);
+
+  const renderImage = () => {
+    return (
+      <View>
+        <Image
+          source={images.courses1}
+          resizeMode='cover'
+          style={{ width: SIZES.width, height: 350 }} 
+        />
+        <View style={styles.separateLine} />
+      </View>
+    );
+  }
 
   // render header
   const renderHeader = () => {
@@ -41,15 +61,6 @@ const CourseDetails = ({ navigation }) => {
               style={styles.bookmarkIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconContainer}
-            onPress={() => refRBSheet.current.open()}>
-            <Image
-              source={icons.send2}
-              resizeMode='contain'
-              style={styles.sendIcon}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     )
@@ -59,19 +70,18 @@ const CourseDetails = ({ navigation }) => {
    * render content
    */
   const renderContent = () => {
-    const [selectedMenu, setSelectedMenu] = useState(null);
-    const [selectedFoodMenu, setSelectedFoodMenu] = useState(null);
-    const [selectedDrinkMenu, setSelectedDrinkMenu] = useState(null);
-
+    if (!courseData) {
+      return <Text>Loading...</Text>;
+    }
 
     return (
       <View style={styles.contentContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("FoodDetailsAbout")}
+          onPress={() => navigation.navigate("CourseDescription", { courseId: courseData.courseId })}
           style={styles.headerTitleContainer}>
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>Chinese | Senior One</Text>
+          }]}>{`${courseData.courseName} | ${courseData.grade}`}</Text>
           <Image
             source={icons.arrowRight}
             resizeMode='contain'
@@ -84,16 +94,32 @@ const CourseDetails = ({ navigation }) => {
           backgroundColor: COLORS.grayscale200
         }]} />
         <TouchableOpacity
+          style={styles.priceContainer}>
+          <View style={styles.priceLeftContainer}>
+            <Image
+              source={icons.wallet}
+              resizeMode='contain'
+              style={styles.walletIcon}
+            />
+            <Text style={[styles.priceNumber, {
+              color: COLORS.greyscale900
+            }]}>{`¥${courseData.price}/h`}</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={[styles.separateLine, {
+          backgroundColor: COLORS.grayscale200
+        }]} />
+        <TouchableOpacity
           onPress={() => navigation.navigate("FoodReviews")}
           style={styles.reviewContainer}>
           <View style={styles.reviewLeftContainer}>
             <Fontisto name="star" size={20} color="orange" />
             <Text style={[styles.avgRating, {
               color: COLORS.greyscale900
-            }]}>4.8</Text>
+            }]}>{courseData.rating}</Text>
             <Text style={[styles.numReview, {
               color: COLORS.grayscale700
-            }]}>(1.2k reviews)</Text>
+            }]}>{`(${courseData.numReviews} reviews)`}</Text>
           </View>
           <Image
             source={icons.arrowRight}
@@ -107,27 +133,15 @@ const CourseDetails = ({ navigation }) => {
           backgroundColor: COLORS.grayscale200
         }]} />
         <TouchableOpacity
-          style={styles.locationContainer}>
-          <View style={styles.locationLeftContainer}>
-            <MaterialIcons name="location-on" size={20} color={COLORS.primary} />
-            <Text style={[styles.locationDistance, {
-              color: COLORS.greyscale900
-            }]}>¥200/h</Text>
-          </View>
-        </TouchableOpacity>
-        <View style={[styles.separateLine, {
-          backgroundColor: COLORS.grayscale200
-        }]} />
-        <TouchableOpacity
           onPress={() => navigation.navigate("AllTeacherProfiles")}
-          style={styles.offerContainer}>
-          <View style={styles.offerLeftContainer}>
+          style={styles.teacherContainer}>
+          <View style={styles.teacherLeftContainer}>
             <Image
-              source={icons.discount}
+              source={icons.users}
               resizeMode='contain'
-              style={styles.discountIcon}
+              style={styles.teacherIcon}
             />
-            <Text style={[styles.discountText, {
+            <Text style={[styles.teacherText, {
               color: COLORS.greyscale900,
             }]}>Teaching Staff</Text>
           </View>
@@ -150,9 +164,9 @@ const CourseDetails = ({ navigation }) => {
     <View style={[styles.area,
     { backgroundColor:COLORS.white }]}>
       <StatusBar hidden />
-      <AutoSlider images={sliderImages} />
       {renderHeader()}
       <ScrollView showsVerticalScrollIndicator={false}>
+        {renderImage()}
         {renderContent()}
       </ScrollView>
       <View style={[styles.bookBottomContainer, {
@@ -166,80 +180,6 @@ const CourseDetails = ({ navigation }) => {
           onPress={() => navigation.navigate("FoodDetailsAddItem")}
         />
       </View>
-
-      <RBSheet
-        ref={refRBSheet}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        height={360}
-        customStyles={{
-          wrapper: {
-            backgroundColor: "rgba(0,0,0,0.5)",
-          },
-          draggableIcon: {
-            backgroundColor: COLORS.grayscale200,
-          },
-          container: {
-            borderTopRightRadius: 32,
-            borderTopLeftRadius: 32,
-            height: 360,
-            backgroundColor: COLORS.white,
-            alignItems: "center",
-          }
-        }}
-      >
-        <Text style={[styles.bottomTitle, {
-          color: COLORS.greyscale900
-        }]}>Share</Text>
-        <View style={[styles.separateLine, {
-          backgroundColor: COLORS.grayscale200,
-          marginVertical: 12
-        }]} />
-        <View style={styles.socialContainer}>
-          <SocialIcon
-            icon={socials.whatsapp}
-            name="WhatsApp"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.twitter}
-            name="X"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.facebook}
-            name="Facebook"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.instagram}
-            name="Instagram"
-            onPress={() => refRBSheet.current.close()}
-          />
-        </View>
-        <View style={styles.socialContainer}>
-          <SocialIcon
-            icon={socials.yahoo}
-            name="Yahoo"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.titktok}
-            name="Tiktok"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.messenger}
-            name="Chat"
-            onPress={() => refRBSheet.current.close()}
-          />
-          <SocialIcon
-            icon={socials.wechat}
-            name="Wechat"
-            onPress={() => refRBSheet.current.close()}
-          />
-        </View>
-      </RBSheet>
     </View>
   )
 };
@@ -269,14 +209,6 @@ const styles = StyleSheet.create({
     height: 24,
     tintColor: COLORS.white
   },
-  sendIcon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.white
-  },
-  sendIconContainer: {
-    marginLeft: 8
-  },
   iconContainer: {
     flexDirection: "row",
     alignItems: "center"
@@ -301,11 +233,6 @@ const styles = StyleSheet.create({
     tintColor: COLORS.greyscale900,
     marginVertical: 12
   },
-  separateLine: {
-    width: "100%",
-    height: 1,
-    backgroundColor: COLORS.grayscale200
-  },
   reviewContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -328,17 +255,17 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Medium",
     color: COLORS.grayscale700
   },
-  locationContainer: {
+  priceContainer: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
     justifyContent: "space-between"
   },
-  locationLeftContainer: {
+  priceLeftContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
-  locationDistance: {
+  priceNumber: {
     fontSize: 16,
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
@@ -346,49 +273,32 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginVertical: 16
   },
-  deliverContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12
-  },
-  deliverText: {
-    fontSize: 16,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.grayscale700,
-    marginHorizontal: 8
-  },
-  motoIcon: {
-    width: 20,
-    height: 20,
+  walletIcon: {
+    height: 16,
+    width: 16,
     tintColor: COLORS.primary
   },
-  offerContainer: {
+  teacherContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
     marginVertical: 2
   },
-  offerLeftContainer: {
+  teacherLeftContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
-  discountIcon: {
+  teacherIcon: {
     height: 20,
     width: 20,
     tintColor: COLORS.primary
   },
-  discountText: {
-    fontSize: 18,
+  teacherText: {
+    fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.greyscale900,
     marginHorizontal: 16
-  },
-  subtitle: {
-    fontSize: 22,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900,
-    marginVertical: 12
   },
   bookBottomContainer: {
     position: "absolute",
@@ -414,21 +324,7 @@ const styles = StyleSheet.create({
   separateLine: {
     width: SIZES.width - 32,
     height: 1,
-    backgroundColor: COLORS.grayscale200
-  },
-  bottomTitle: {
-    fontSize: 24,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.black,
-    textAlign: "center",
-    marginTop: 12
-  },
-  socialContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 12,
-    width: SIZES.width - 32
+    backgroundColor: COLORS.grayscale200,
   },
 })
 

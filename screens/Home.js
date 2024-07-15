@@ -163,7 +163,7 @@ const Home = ({ navigation }) => {
                 price={item.price}
                 rating={item.rating}
                 numReviews={item.numReviews}
-                onPress={() => navigation.navigate("CourseDetails")}
+                onPress={() => navigation.navigate("CourseDetails", { courseId: item.courseId })}
               />
             )}
           />
