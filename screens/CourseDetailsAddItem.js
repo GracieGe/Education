@@ -3,8 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { COLORS, SIZES, icons, images } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import Button from '../components/Button';
+import axios from 'axios';
+import config from '../config';
 
-const CourseDetailsAddItem = ({ navigation }) => {
+const CourseDetailsAddItem = ({ route, navigation }) => {
+    const { courseId } = route.params; 
+    const [courseData, setCourseData] = useState({ courseName: '', grade: '', description: '' });
+
+    useEffect(() => {
+        const fetchCourseData = async () => {
+            try {
+                const response = await axios.get(`${config.API_URL}/api/courses/${courseId}`);
+                setCourseData(response.data);
+            } catch (error) {
+                console.error('Error fetching course data:', error);
+            }
+        };
+
+        fetchCourseData();
+    }, [courseId]);
 
     const renderImage = () => {
         return (
@@ -54,7 +71,7 @@ const CourseDetailsAddItem = ({ navigation }) => {
         const [expanded, setExpanded] = useState(false);
         const [count, setCount] = useState(1); // Initial count value
 
-        const description = `Indulge in the freshest medley of flavors with our Big Garden Salad! Crisp greens, ripe tomatoes, crunchy cucumbers, and an array of vibrant vegetables come together in a harmony of taste and texture. Tossed with your choice of zesty dressing, every bite is a symphony of freshness that will tantalize your taste buds. Whether you're looking for a light lunch or a refreshing side dish, our Big Garden Salad is the perfect choice for health-conscious foodies and salad enthusiasts alike. Savor the goodness of nature's bounty – order yours today!`
+        const description = courseData.description || "No description available.";
         const toggleExpanded = () => {
             setExpanded(!expanded);
         };
@@ -73,7 +90,7 @@ const CourseDetailsAddItem = ({ navigation }) => {
                 <Text style={[styles.headerContentTitle, {
                     color:  COLORS.greyscale900,
                 }]}>
-                    Chinese | Senior One
+                    {`${courseData.courseName} | ${courseData.grade}`}
                 </Text>
                 <View style={[styles.separateLine, {
                     marginVertical: 12,

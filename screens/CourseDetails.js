@@ -177,7 +177,7 @@ const CourseDetails = ({ route, navigation }) => {
           title="Buy Now"
           filled
           style={styles.buyBtn}
-          onPress={() => navigation.navigate("CourseDetailsAddItem")}
+          onPress={() => navigation.navigate("CourseDetailsAddItem", { courseId: courseData.courseId })}
         />
       </View>
     </View>

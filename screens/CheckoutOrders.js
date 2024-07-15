@@ -22,148 +22,32 @@ const CheckoutOrders = ({ navigation }) => {
           <View style={[styles.summaryContainer, {
             backgroundColor: COLORS.white,
           }]}>
-            <Text style={[styles.summaryTitle, {
-              color: COLORS.greyscale900
-            }]}>Deliver To</Text>
-            <View style={[styles.separateLine, {
-              backgroundColor: COLORS.grayscale200
-            }]} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("CheckoutOrdersAddress")}
-              style={styles.addressContainer}>
-              <View style={styles.addressLeftContainer}>
-                <View style={styles.view1}>
-                  <View style={styles.view2}>
-                    <Image
-                      source={icons.location2}
-                      resizeMode='contain'
-                      style={styles.locationIcon}
-                    />
-                  </View>
-                </View>
-                <View style={styles.viewAddress}>
-                  <View style={styles.viewView}>
-                    <Text style={[styles.homeTitle, {
-                      color: COLORS.greyscale900
-                    }]}>Home</Text>
-                    <View style={styles.defaultView}>
-                      <Text style={styles.defaultTitle}>Default</Text>
-                    </View>
-                  </View>
-                  <Text style={[styles.addressTitle, {
-                    color: COLORS.grayscale700
-                  }]}>
-                    Time Square NYC, Nanhattan</Text>
-                </View>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                resizeMode='contain'
-                style={[styles.arrowRightIcon, {
-                  tintColor: COLORS.greyscale900
-                }]}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.summaryContainer, {
-            backgroundColor: COLORS.white,
-          }]}>
             <View style={styles.orderSummaryView}>
               <Text style={[styles.summaryTitle, {
                 color: COLORS.greyscale900
               }]}>Order Summary</Text>
-              <TouchableOpacity style={styles.addItemView}>
-                <Text style={styles.addItemText}>Add Items</Text>
-              </TouchableOpacity>
             </View>
             <View style={[styles.separateLine, {
               backgroundColor:  COLORS.grayscale200
             }]} />
             <OrderSummaryCard
-              name="Mixed Vegetable Sal..."
-              image={images.salad1}
+              name="Chinese | Senior One."
+              image={images. courses1}
               price="$12.00"
               onPress={() => console.log("Clicked")}
             />
             <View style={[styles.separateLine, {
               backgroundColor: COLORS.grayscale200
             }]} />
-            <OrderSummaryCard
-              name="Special Pasta Salad"
-              image={images.salad2}
-              price="$8.00"
-              onPress={() => console.log("Clicked")}
-            />
-            <View style={[styles.separateLine, {
-              backgroundColor: COLORS.grayscale200
-            }]} />
-            <OrderSummaryCard
-              name="Fresh Avocado Juice"
-              image={images.salad3}
-              price="$4.00"
-              onPress={() => console.log("Clicked")}
-            />
           </View>
-          <View style={[styles.summaryContainer, {
-            backgroundColor: COLORS.white,
-          }]}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("PaymentMethods")}
-              style={styles.viewItemTypeContainer}>
-              <View style={styles.viewLeftItemTypeContainer}>
-                <Image
-                  source={icons.wallet2}
-                  resizeMode='contain'
-                  style={styles.walletIcon}
-                />
-                <Text style={[styles.viewItemTypeTitle, {
-                  color: COLORS.grayscale700,
-                }]}>Payment Methods</Text>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                resizeMode='contain'
-                style={styles.arrowRightIcon}
-              />
-            </TouchableOpacity>
-            <View style={[styles.separateLine, {
-              backgroundColor: COLORS.grayscale200
-            }]} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("AddPromo")}
-              style={styles.viewItemTypeContainer}>
-              <View style={styles.viewLeftItemTypeContainer}>
-                <Image
-                  source={icons.discount}
-                  resizeMode='contain'
-                  style={styles.walletIcon}
-                />
-                <Text style={[styles.viewItemTypeTitle, {
-                  color: COLORS.grayscale700,
-                }]}>Get Discounts</Text>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                resizeMode='contain'
-                style={styles.arrowRightIcon}
-              />
-            </TouchableOpacity>
-          </View>
-
           <View style={[styles.summaryContainer, {
             backgroundColor: COLORS.white,
           }]}>
             <View style={styles.view}>
               <Text style={[styles.viewLeft, {
                 color: COLORS.grayscale700
-              }]}>Subtitle</Text>
+              }]}>Note</Text>
               <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$24.00</Text>
-            </View>
-            <View style={styles.view}>
-              <Text style={[styles.viewLeft, {
-                color: COLORS.grayscale700
-              }]}>Delivery Fee</Text>
-              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$2.00</Text>
             </View>
             <View style={[styles.separateLine, {
               backgroundColor: COLORS.grayscale200
@@ -172,14 +56,14 @@ const CheckoutOrders = ({ navigation }) => {
               <Text style={[styles.viewLeft, {
                 color: COLORS.grayscale700
               }]}>Total</Text>
-              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$26.00</Text>
+              <Text style={[styles.viewRight, { color: COLORS.greyscale900 }]}>$24.00</Text>
             </View>
           </View>
         </ScrollView>
         <Button
-          title="Place Order - $26.00"
+          title="Place Order - $24.00"
           filled
-          onPress={() => navigation.navigate("CheckoutOrdersCompleted")}
+          onPress={() => navigation.navigate("PaymentMethods")}
           style={styles.placeOrderButton}
         />
       </View>

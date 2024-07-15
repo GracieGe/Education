@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react'; // Import useState hook
-import { COLORS, icons } from '../constants';
+import { COLORS } from '../constants';
 
 const OrderSummaryCard = ({ name, image, price, onPress }) => {
     // State variable to hold the quantity value
@@ -26,16 +26,9 @@ const OrderSummaryCard = ({ name, image, price, onPress }) => {
                     placeholder='1x'
                     placeholderTextColor={COLORS.primary}
                     style={styles.input}
-                    value={quantity} // Bind TextInput value to state variable
-                    onChangeText={(text) => setQuantity(text)} // Handle text input changes
+                    value={quantity} 
+                    onChangeText={(text) => setQuantity(text)}
                 />
-                <TouchableOpacity onPress={onPress}>
-                    <Image
-                        source={icons.editPencil}
-                        resizeMode='contain'
-                        style={styles.editPencilIcon}
-                    />
-                </TouchableOpacity>
             </View>
         </View>
     )
