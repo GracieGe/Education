@@ -11,15 +11,27 @@ import axios from 'axios';
 
 const Home = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
+    fetchCategories();
     fetchCourses();
   }, []);
 
-  const fetchCourses = async () => {
+  const fetchCategories = async () => {
     try {
-      const url = 'http://10.0.2.2:5001/api/courses';
+      const response = await axios.get('http://10.0.2.2:5001/api/categories');
+      setCategories([{ categoryId: 'all', categoryName: 'All' }, ...response.data]);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchCourses = async (categoryId = 'all') => {
+    try {
+      const url = `http://10.0.2.2:5001/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
       console.log('Fetching courses with URL:', url);
       const response = await axios.get(url);
       console.log('Courses fetched:', response.data);
@@ -29,6 +41,11 @@ const Home = ({ navigation }) => {
       console.error('Error fetching courses:', error);
       setLoading(false);
     }
+  };
+
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId);
+    fetchCourses(categoryId);
   };
 
   const renderHeader = () => {
@@ -90,10 +107,32 @@ const Home = ({ navigation }) => {
     );
   };
 
+  const renderCategoryItem = ({ item }) => (
+    <TouchableOpacity
+      style={{
+        backgroundColor: selectedCategory === item.categoryId ? COLORS.primary : "transparent",
+        padding: 10,
+        marginVertical: 5,
+        borderColor: COLORS.primary,
+        borderWidth: 1.3,
+        borderRadius: 24,
+        marginRight: 12,
+        flex: 1,
+        alignItems: 'center',
+      }}
+      onPress={() => handleCategorySelect(item.categoryId)}>
+      <Text style={{
+        color: selectedCategory === item.categoryId ? COLORS.white : COLORS.primary
+      }}>{item.categoryName}</Text>
+    </TouchableOpacity>
+  );
+
   const renderCourses = () => {
     if (loading) {
       return <Text>Loading...</Text>;
     }
+
+    const displayedCourses = courses.slice(0, 6);
 
     return (
       <View>
@@ -102,11 +141,20 @@ const Home = ({ navigation }) => {
           navTitle="See all"
           onPress={() => navigation.navigate("AllCourses")}
         />
+        <FlatList
+          data={categories}
+          keyExtractor={item => item.categoryId.toString()}
+          numColumns={3}
+          renderItem={renderCategoryItem}
+          scrollEnabled={false}
+          // contentContainerStyle={{ justifyContent: 'space-between' }}
+        />
         <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
           <FlatList
-            data={courses}
+            data={displayedCourses}
             keyExtractor={item => item.courseId.toString()}
             numColumns={2}
+            columnWrapperStyle={{ justifyContent: 'space-between' }}
             renderItem={({ item }) => (
               <VerticalCourseCard
                 courseName={item.courseName}
@@ -135,7 +183,7 @@ const Home = ({ navigation }) => {
           <FlatList
             data={teacherProfiles}
             keyExtractor={item => item.id.toString()}
-            numColumns={1} 
+            numColumns={1}
             renderItem={({ item }) => (
               <HorizontalTeacherProfile
                 key={item.id}
@@ -147,7 +195,7 @@ const Home = ({ navigation }) => {
                 onPress={() => navigation.navigate("TeacherDetails")}
               />
             )}
-          />  
+          />
         </View>
       </View>
     )

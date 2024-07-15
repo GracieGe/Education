@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import React, { useState } from 'react';
-import { COLORS, SIZES, icons } from '../constants';
+import { COLORS, SIZES } from '../constants';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const VerticalCourseCard = ({
@@ -17,6 +17,12 @@ const VerticalCourseCard = ({
         <TouchableOpacity
             onPress={onPress}
             style={[styles.container, { backgroundColor: COLORS.white }]}>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={{ uri: null }} 
+                    style={styles.image}
+                />
+            </View>
             <Text style={styles.name}>{courseName}</Text>
             <View style={styles.viewContainer}>
                 <Text style={styles.location}>{grade}  | {" "}</Text>
@@ -25,7 +31,7 @@ const VerticalCourseCard = ({
             </View>
             <View style={styles.bottomPriceContainer}>
                 <View style={styles.priceContainer}>
-                    <Text style={styles.price}>¥{price}</Text>
+                    <Text style={styles.price}>¥{price}/h</Text>
                 </View>
                 <TouchableOpacity onPress={() => setIsFavourite(!isFavourite)}>
                     <FontAwesome
@@ -49,6 +55,20 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         marginBottom: 12,
         marginRight: 8
+    },
+    imageContainer: {
+        width: "100%",
+        height: 140,
+        borderRadius: 16,
+        backgroundColor: COLORS.lightGray, 
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    image: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 16,
+        resizeMode: "cover"
     },
     name: {
         fontSize: 16,
