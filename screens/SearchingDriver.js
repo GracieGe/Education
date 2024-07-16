@@ -11,7 +11,7 @@ const SearchingDriver = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Searching Driver" />
+        <Header title="Payment Result" />
         <ScrollView
           showsVerticalScrollIndicator={false}>
           <View style={styles.contentContainer}>
@@ -23,12 +23,12 @@ const SearchingDriver = ({ navigation }) => {
             <Text style={[styles.driverTitle, {
               color: COLORS.greyscale900
             }]}>
-              Finding you a nearby driver...
+              Payment Successful
             </Text>
             <Text style={[styles.driverSubtitle, {
               color: COLORS.grayscale700,
             }]}>
-              This may take a few seconds...
+              Congratulations!
             </Text>
           </View>
 
@@ -37,7 +37,7 @@ const SearchingDriver = ({ navigation }) => {
               <View style={styles.view3}>
                 <View style={styles.view4}>
                   <Image
-                    source={images.user4}
+                    source={images.courses1}
                     resizeMode='contain'
                     style={styles.userAvatar}
                   />
@@ -49,12 +49,12 @@ const SearchingDriver = ({ navigation }) => {
         </ScrollView>
         <View style={styles.slideBtnView}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("TrackDriver")}
+            onPress={() => navigation.navigate("Home")}
             style={styles.slideBtn}>
             <View style={styles.slideCloseBtn}>
               <MaterialCommunityIcons name="close" size={24} color={COLORS.primary} />
             </View>
-            <Text style={styles.slideText}>{">>"} Slide to Cancel</Text>
+            <Text style={styles.slideText}>{">>"} Back to home page</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   slideBtn: {
     backgroundColor: COLORS.primary,
-    width: 178,
+    width: 210,
     height: 52,
     borderRadius: 48,
     alignItems: "center",

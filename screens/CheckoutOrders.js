@@ -65,7 +65,7 @@ const CheckoutOrders = ({ route, navigation }) => {
         <Button
           title={`Place Order - ¥${courseData.price * count}`}
           filled
-          onPress={() => navigation.navigate("PaymentMethods")}
+          onPress={() => navigation.navigate("PaymentMethods", { courseData, count, notes })}
           style={styles.placeOrderButton}
         />
       </View>

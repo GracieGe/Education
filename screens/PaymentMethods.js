@@ -1,23 +1,54 @@
-import { View, Text, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import axios from 'axios';
 import { COLORS, SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
 import PaymentMethodItem from '../components/PaymentMethodItem';
 import Button from '../components/Button';
+import config from '../config';
 
-const PaymentMethods = ({ navigation }) => {
+const PaymentMethods = ({ route, navigation }) => {
+  const { courseData, count, notes } = route.params; 
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // Handle checkbox
+  const userId = 1;
+  const usedHours = 0;
+
+  console.log("Received params:", { courseData, count, notes });
+
   const handleCheckboxPress = (itemTitle) => {
-    if (selectedItem === itemTitle) {
-      // If the clicked item is already selected, deselect it
-      setSelectedItem(null);
-    } else {
-      // Otherwise, select the clicked item
-      setSelectedItem(itemTitle);
+    setSelectedItem(itemTitle === selectedItem ? null : itemTitle);
+  };
+
+  const handleOrderSubmit = async () => {
+    console.log("Order data being sent:", {
+      userId,
+      usedHours,
+      courseId: courseData.courseId,
+      purchasedHours: count,
+      remainingHours: count,
+      amount: courseData.price * count,
+      note: notes,
+    });
+
+    try {
+      const response = await axios.post(`${config.API_URL}/api/orders`, {
+        userId,
+        courseId: courseData.courseId,
+        purchasedHours: count,
+        amount: courseData.price * count,
+        note: notes,
+      });
+
+      if (response.status === 201) {
+        navigation.navigate("SearchingDriver");
+      } else {
+        console.error('Error creating order:', response.status);
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
     }
   };
 
@@ -26,10 +57,9 @@ const PaymentMethods = ({ navigation }) => {
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
         <Header title="Payment Methods" />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={[styles.title, {
-            color: COLORS.greyscale900
-          }]}>Select the payment method
-            you want to use.</Text>
+          <Text style={[styles.title, { color: COLORS.greyscale900 }]}>
+            Select the payment method you want to use.
+          </Text>
           <PaymentMethodItem
             checked={selectedItem === 'Paypal'}
             onPress={() => handleCheckboxPress('Paypal')}
@@ -71,7 +101,7 @@ const PaymentMethods = ({ navigation }) => {
           title="Continue"
           filled
           style={styles.continueBtn}
-          onPress={() => { navigation.navigate("SearchingDriver") }}
+          onPress={handleOrderSubmit}
         />
       </View>
     </SafeAreaView>
@@ -104,4 +134,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default PaymentMethods
+export default PaymentMethods;
