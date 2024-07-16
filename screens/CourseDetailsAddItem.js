@@ -129,7 +129,6 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
                     multiline={true}
                     value={notes}
                     onChangeText={setNotes}
-                    blurOnSubmit={false}
                 />
             </View>
         )
@@ -139,7 +138,7 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
         <View style={[styles.area, { backgroundColor: COLORS.white }]}>
             <StatusBar hidden />
             {renderHeader()}
-            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="always">
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {renderImage()}
                 {renderContent()}
             </ScrollView>
