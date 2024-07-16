@@ -43,6 +43,12 @@ const Wallet = () => {
     );
   };
 
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No orders found.</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.container}>
@@ -51,6 +57,7 @@ const Wallet = () => {
           data={orders}
           keyExtractor={item => item.orderId.toString()}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={renderEmptyComponent}
           renderItem={({ item }) => (
             <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
               <View style={styles.detailsContainer}>
