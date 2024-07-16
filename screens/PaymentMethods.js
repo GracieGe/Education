@@ -15,6 +15,24 @@ const PaymentMethods = ({ route, navigation }) => {
 
   const userId = 1;
   const usedHours = 0;
+  const formatDate = (date) => {
+    const padTo2Digits = (num) => num.toString().padStart(2, '0');
+    return (
+      date.getFullYear() +
+      '-' +
+      padTo2Digits(date.getMonth() + 1) +
+      '-' +
+      padTo2Digits(date.getDate()) +
+      ' ' +
+      padTo2Digits(date.getHours()) +
+      ':' +
+      padTo2Digits(date.getMinutes()) +
+      ':' +
+      padTo2Digits(date.getSeconds())
+    );
+  };
+
+  const timeOfPurchase = formatDate(new Date());
 
   console.log("Received params:", { courseData, count, notes });
 
@@ -31,6 +49,7 @@ const PaymentMethods = ({ route, navigation }) => {
       remainingHours: count,
       amount: courseData.price * count,
       note: notes,
+      timeOfPurchase,
     });
 
     try {
@@ -40,6 +59,7 @@ const PaymentMethods = ({ route, navigation }) => {
         purchasedHours: count,
         amount: courseData.price * count,
         note: notes,
+        timeOfPurchase,
       });
 
       if (response.status === 201) {

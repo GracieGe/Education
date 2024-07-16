@@ -1,68 +1,80 @@
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
-import { myCourses } from '../data';
+import axios from 'axios';
 import { SIZES, COLORS, images } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import config from '../config';
 
 const Wallet = () => {
-  const [orders, setOrders] = useState(myCourses);
+  const [orders, setOrders] = useState([]);
   const refRBSheet = useRef();
   const navigation = useNavigation();
+  const userId = 1; 
 
   useEffect(() => {
-    setOrders(myCourses);
-  }, [myCourses]);
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(`${config.API_URL}/api/orders/user/${userId}/orders`);
+        console.log('Fetched orders:', response.data); 
+        setOrders(response.data);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
 
-    /**
-   * Render header
-   */
-    const renderHeader = () => {
-      return (
-        <TouchableOpacity style={styles.headerContainer}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={images.logo}
-              resizeMode='contain'
-              style={styles.logo}
-            />
-            <Text style={[styles.headerTitle, {
-              color: COLORS.greyscale900
-            }]}>My Courses</Text>
-          </View>
-        </TouchableOpacity>
-      )
-    }
+  const renderHeader = () => {
+    return (
+      <TouchableOpacity style={styles.headerContainer}>
+        <View style={styles.headerLeft}>
+          <Image
+            source={images.logo}
+            resizeMode='contain'
+            style={styles.logo}
+          />
+          <Text style={[styles.headerTitle, { color: COLORS.greyscale900 }]}>My Courses</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.container}>
-      {renderHeader()}
+        {renderHeader()}
         <FlatList
           data={orders}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.orderId.toString()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
               <View style={styles.detailsContainer}>
                 <View>
                   <Image
-                    source={item.image}
+                    source={images.courses1} 
                     resizeMode='cover'
                     style={styles.serviceImage}
                   />
                 </View>
                 <View style={styles.detailsRightContainer}>
-                  <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.name}</Text>
+                  <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.courseName}</Text>
                   <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>{item.grade}</Text>
                   <View style={styles.teacherContainer}>
                     <View style={styles.teacherItemContainer}>
-                      <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
+                      <Text style={styles.teacher}>Selected Teacher: N/A</Text>
                     </View>
                   </View>
                 </View>
+              </View>
+              <View style={styles.additionalContainer}>
+                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Purchased Hours: {item.purchasedHours}</Text>
+                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Used Hours: {item.usedHours}</Text>
+                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Remaining Hours: {item.remainingHours}</Text>
               </View>
               <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
               <View style={styles.buttonContainer}>
@@ -136,7 +148,7 @@ const Wallet = () => {
         </RBSheet>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -308,6 +320,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 16,
   },
-})
+  additionalContainer: {
+    marginLeft: 12, 
+  },
+});
 
 export default Wallet;
