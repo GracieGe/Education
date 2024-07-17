@@ -54,7 +54,7 @@ const Home = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <View style={styles.viewLeft}>
           <Image
-            source={images.user2}
+            source={images.user1}
             resizeMode='contain'
             style={styles.userIcon}
           />
