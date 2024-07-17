@@ -42,7 +42,7 @@ import Address from "./Address";
 import AddNewAddress from "./AddNewAddress";
 import Home from "./Home";
 import Inbox from "./Inbox";
-import Wallet from "./Wallet";
+import Course from "./Course";
 import Profile from "./Profile";
 import Categories from "./Categories";
 import AllCourses from "./AllCourses";
@@ -119,7 +119,7 @@ export {
     AddNewAddress,
     Home,
     Inbox,
-    Wallet,
+    Course,
     Profile,
     Categories,
     AllCourses,

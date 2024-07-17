@@ -2,7 +2,7 @@ import { View, Platform, Image, Text } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS, FONTS, icons } from '../constants';
-import { Home, Inbox, Orders, Profile, Wallet } from '../screens';
+import { Home, Inbox, Orders, Profile, Course } from '../screens';
 
 const Tab = createBottomTabNavigator()
 
@@ -51,8 +51,8 @@ const BottomTabNavigation = () => {
             />
 
             <Tab.Screen
-                name="Wallet"
-                component={Wallet}
+                name="Course"
+                component={Course}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (

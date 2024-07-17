@@ -1,32 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import axios from 'axios';
 import { SIZES, COLORS, images } from '../constants';
-import RBSheet from "react-native-raw-bottom-sheet";
-import Button from '../components/Button';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import config from '../config';
 
-const Wallet = () => {
+const Course = () => {
   const [orders, setOrders] = useState([]);
-  const refRBSheet = useRef();
   const navigation = useNavigation();
   const userId = 1; 
 
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${config.API_URL}/api/orders/user/${userId}/orders`);
+      console.log('Fetched orders:', response.data); 
+      setOrders(response.data);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(`${config.API_URL}/api/orders/user/${userId}/orders`);
-        console.log('Fetched orders:', response.data); 
-        setOrders(response.data);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-      }
-    };
-  
     fetchOrders();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchOrders();
+    }, [])
+  );
 
   const renderHeader = () => {
     return (
@@ -86,7 +89,6 @@ const Wallet = () => {
               <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  onPress={() => refRBSheet.current.open()}
                   style={styles.cancelBtn}>
                   <Text style={styles.cancelBtnText}>Select Teacher</Text>
                 </TouchableOpacity>
@@ -99,60 +101,6 @@ const Wallet = () => {
             </TouchableOpacity>
           )}
         />
-        <RBSheet
-          ref={refRBSheet}
-          closeOnDragDown={true}
-          closeOnPressMask={false}
-          height={332}
-          customStyles={{
-            wrapper: {
-              backgroundColor: "rgba(0,0,0,0.5)",
-            },
-            draggableIcon: {
-              backgroundColor: COLORS.greyscale300,
-            },
-            container: {
-              borderTopRightRadius: 32,
-              borderTopLeftRadius: 32,
-              height: 332,
-              backgroundColor: COLORS.white,
-              alignItems: "center",
-              width: "100%"
-            }
-          }}>
-          <Text style={[styles.bottomSubtitle, { color: COLORS.red }]}>Cancel Order</Text>
-          <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
-          <View style={styles.selectedCancelContainer}>
-            <Text style={[styles.cancelTitle, { color: COLORS.greyscale900 }]}>
-              Are you sure you want to cancel your order?
-            </Text>
-            <Text style={[styles.cancelSubtitle, { color: COLORS.grayscale700 }]}>
-              Only 80% of the money you can refund from your payment according to our policy.
-            </Text>
-          </View>
-          <View style={styles.bottomContainer}>
-            <Button
-              title="Cancel"
-              style={{
-                width: (SIZES.width - 32) / 2 - 8,
-                backgroundColor: COLORS.tansparentPrimary,
-                borderRadius: 32,
-                borderColor: COLORS.tansparentPrimary
-              }}
-              textColor={COLORS.primary}
-              onPress={() => refRBSheet.current.close()}
-            />
-            <Button
-              title="Yes, Cancel"
-              filled
-              style={styles.removeButton}
-              onPress={() => {
-                refRBSheet.current.close();
-                navigation.navigate("CancelOrder");
-              }}
-            />
-          </View>
-        </RBSheet>
       </View>
     </SafeAreaView>
   );
@@ -188,11 +136,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
     marginLeft: 12
-  },
-  headerIcon: {
-    height: 24,
-    width: 24,
-    tintColor: COLORS.greyscale900
   },
   cardContainer: {
     width: SIZES.width - 32,
@@ -272,45 +215,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  bottomContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 12,
-    paddingHorizontal: 16,
-    width: "100%",
-  },
-  removeButton: {
-    width: (SIZES.width - 32) / 2 - 8,
-    backgroundColor: COLORS.primary,
-    borderRadius: 32,
-  },
-  bottomSubtitle: {
-    fontSize: 22,
-    fontFamily: "Urbanist Bold",
-    color: COLORS.greyscale900,
-    textAlign: "center",
-    marginVertical: 12,
-  },
-  selectedCancelContainer: {
-    marginVertical: 24,
-    paddingHorizontal: 36,
-    width: "100%",
-  },
-  cancelTitle: {
-    fontSize: 18,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.greyscale900,
-    textAlign: "center",
-  },
-  cancelSubtitle: {
-    fontSize: 14,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.grayscale700,
-    textAlign: "center",
-    marginVertical: 8,
-    marginTop: 16,
-  },
   teacherContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -332,4 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Wallet;
+export default Course;
