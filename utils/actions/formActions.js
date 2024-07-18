@@ -39,5 +39,5 @@ export const validateInput = (inputId, inputValue) => {
     } else if (inputId === 'cvv') {
         return validateCVV(inputId, inputValue);
     }
-    return null; // 表示没有错误
+    return null; 
 }

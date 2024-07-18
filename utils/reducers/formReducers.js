@@ -8,7 +8,7 @@ export const reducer = (state, action) => {
 
     const updatedValidities = {
         ...state.inputValidities,
-        [inputId]: validationResult ? false : true, // 如果 validationResult 有错误，则设为 false
+        [inputId]: validationResult ? false : true, 
     }
 
     let updatedFormIsValid = true
