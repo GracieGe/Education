@@ -34,22 +34,22 @@ export const validateEmail = (id,value)=>{
     return validationResult && validationResult[id]
 }
 
-export const validatePassword = (id,value)=>{
-    const constraints = {
-        presence : {
-            allowEmpty:false
-        }
-    };
+export const validatePassword = (id, value) => {
+  const constraints = {
+    presence: {
+      allowEmpty: false
+    }
+  };
 
-    if(value !== ""){
-        constraints.length = {
-            minimum: 6,
-            message: "must be at least 6 characters"
-        }
-    };
+  if (value !== "") {
+    constraints.format = {
+      pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$/,
+      message: "must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+    }
+  }
 
-    const validationResult = validate({ [id]: value}, {[id]: constraints});
-    return validationResult && validationResult[id];
+  const validationResult = validate({ [id]: value }, { [id]: constraints });
+  return validationResult && validationResult[id];
 }
 
 export const validateCreditCardNumber = (id, value) => {

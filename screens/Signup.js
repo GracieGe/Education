@@ -33,11 +33,11 @@ const Signup = ({ navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue)
-      dispatchFormState({ inputId, validationResult: result, inputValue })
+      const result = validateInput(inputId, inputValue);
+      dispatchFormState({ inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-  )
+  );
 
   useEffect(() => {
     if (error) {
@@ -47,6 +47,19 @@ const Signup = ({ navigation }) => {
 
   const toggleUserType = (type) => {
     setUserType((prevType) => (prevType === type ? null : type));
+  };
+
+  const signupHandler = () => {
+    const emailValid = formState.inputValidities.email;
+    const passwordValid = formState.inputValidities.password;
+    const isFormValid = emailValid && passwordValid && userType && isChecked;
+  
+    if (!isFormValid) {
+      Alert.alert('Invalid input', 'Please fill out all fields correctly.');
+      return;
+    }
+  
+    navigation.navigate("FillYourProfile");
   };
 
   return (
@@ -130,7 +143,7 @@ const Signup = ({ navigation }) => {
           <Button
             title="Sign Up"
             filled
-            onPress={() => navigation.navigate("FillYourProfile")}
+            onPress={signupHandler}
             style={styles.button}
           />
         </ScrollView>
