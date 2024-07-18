@@ -8,8 +8,6 @@ import { validateInput } from '../utils/actions/formActions';
 import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
-import SocialButton from '../components/SocialButton';
-import OrSeparator from '../components/OrSeparator';
 
 const isTestMode = true;
 
@@ -31,6 +29,7 @@ const Signup = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isChecked, setChecked] = useState(false);
+  const [userType, setUserType] = useState(null);
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
@@ -46,19 +45,8 @@ const Signup = ({ navigation }) => {
     }
   }, [error])
 
-  // implementing apple authentication
-  const appleAuthHandler = () => {
-    console.log("Apple Authentication")
-  };
-
-  // implementing facebook authentication
-  const facebookAuthHandler = () => {
-    console.log("Facebook Authentication")
-  };
-
-  // Implementing google authentication
-  const googleAuthHandler = () => {
-    console.log("Google Authentication")
+  const toggleUserType = (type) => {
+    setUserType((prevType) => (prevType === type ? null : type));
   };
 
   return (
@@ -95,6 +83,31 @@ const Signup = ({ navigation }) => {
             icon={icons.padlock}
             secureTextEntry={true}
           />
+          <Text style={styles.label}>I am a:</Text>
+          <View style={styles.radioContainer}>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => toggleUserType('student')}
+            >
+              <CheckBox
+                value={userType === 'student'}
+                onValueChange={() => toggleUserType('student')}
+                tintColors={{ true: COLORS.primary, false: 'gray' }}
+              />
+              <Text style={styles.radioText}>Student</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => toggleUserType('teacher')}
+            >
+              <CheckBox
+                value={userType === 'teacher'}
+                onValueChange={() => toggleUserType('teacher')}
+                tintColors={{ true: COLORS.primary, false: 'gray' }}
+              />
+              <Text style={styles.radioText}>Teacher</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.checkBoxContainer}>
             <View style={{ flexDirection: 'row' }}>
               <CheckBox
@@ -120,24 +133,6 @@ const Signup = ({ navigation }) => {
             onPress={() => navigation.navigate("FillYourProfile")}
             style={styles.button}
           />
-          <View>
-            <OrSeparator text="or continue with" />
-            <View style={styles.socialBtnContainer}>
-              <SocialButton
-                icon={icons.appleLogo}
-                onPress={appleAuthHandler}
-                tintColor={COLORS.black}
-              />
-              <SocialButton
-                icon={icons.facebook}
-                onPress={facebookAuthHandler}
-              />
-              <SocialButton
-                icon={icons.google}
-                onPress={googleAuthHandler}
-              />
-            </View>
-          </View>
         </ScrollView>
         <View style={styles.bottomContainer}>
           <Text style={[styles.bottomLeft, {
@@ -174,22 +169,36 @@ const styles = StyleSheet.create({
     marginVertical: 32
   },
   title: {
-    fontSize: 28,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.black,
-    textAlign: "center"
-  },
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
     fontSize: 26,
     fontFamily: "Urbanist Bold",
     color: COLORS.black,
     textAlign: "center",
     marginBottom: 22
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: "Urbanist-Regular",
+    color: COLORS.black,
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  radioOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 12,
+  },
+  radioText: {
+    fontSize: 16,
+    fontFamily: "Urbanist-Regular",
+    color: COLORS.black,
+    marginLeft: 3,
   },
   checkBoxContainer: {
     flexDirection: "row",
@@ -208,18 +217,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Urbanist Regular",
     color: COLORS.black,
-  },
-  socialTitle: {
-    fontSize: 19.25,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 26
-  },
-  socialBtnContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
   bottomContainer: {
     flexDirection: "row",

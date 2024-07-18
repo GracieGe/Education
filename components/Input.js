@@ -86,6 +86,9 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist Regular",
     fontSize: 14,
     paddingTop: 0,
+    paddingBottom: 0,
+    textAlignVertical: 'center',
+    marginVertical: Platform.OS === 'ios' ? 0 : -2,
   },
   errorContainer: {
     marginVertical: 4,
