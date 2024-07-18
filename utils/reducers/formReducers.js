@@ -8,16 +8,13 @@ export const reducer = (state, action) => {
 
     const updatedValidities = {
         ...state.inputValidities,
-        [inputId]: validationResult,
+        [inputId]: validationResult ? false : true, // 如果 validationResult 有错误，则设为 false
     }
 
     let updatedFormIsValid = true
 
     for (const key in updatedValidities) {
-        if (updatedValidities[key] !== undefined) {
-            updatedFormIsValid = false
-            break
-        }
+        updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
 
     return {

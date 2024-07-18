@@ -33,11 +33,11 @@ const Signup = ({ navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue);
-      dispatchFormState({ inputId, validationResult: result, inputValue });
+        const result = validateInput(inputId, inputValue);
+        dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-  );
+);
 
   useEffect(() => {
     if (error) {
@@ -53,14 +53,14 @@ const Signup = ({ navigation }) => {
     const emailValid = formState.inputValidities.email;
     const passwordValid = formState.inputValidities.password;
     const isFormValid = emailValid && passwordValid && userType && isChecked;
-  
+
     if (!isFormValid) {
-      Alert.alert('Invalid input', 'Please fill out all fields correctly.');
-      return;
+        Alert.alert('Invalid input', 'Please fill out all fields correctly.');
+        return;
     }
-  
+
     navigation.navigate("FillYourProfile");
-  };
+};
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>

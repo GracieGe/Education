@@ -25,18 +25,19 @@ export const validateInput = (inputId, inputValue) => {
         inputId === 'currentLocation' ||
         inputId === "destination" 
     ) {
-        return validateString(inputId, inputValue)
+        return validateString(inputId, inputValue);
     } else if (inputId === 'email' || inputId === 'newEmail') {
-        return validateEmail(inputId, inputValue)
+        return validateEmail(inputId, inputValue);
     } else if (inputId === 'password' || inputId === 'confirmPassword' || inputId === 'newPassword' || inputId === 'confirmNewPassword' ) {
-        return validatePassword(inputId, inputValue)
+        return validatePassword(inputId, inputValue);
     } else if (inputId === 'resetToken') {
-        return validateString(inputId, inputValue)
-    }else if(inputId === 'creditCardNumber'){
-        return validateCreditCardNumber(inputId, inputValue)
-    }else if(inputId === 'creditCardExpiryDate'){
-        return validateExpiryDate(inputId, inputValue)
-    }else if(inputId === 'cvv'){
-        return validateCVV(inputId, inputValue)
+        return validateString(inputId, inputValue);
+    } else if (inputId === 'creditCardNumber') {
+        return validateCreditCardNumber(inputId, inputValue);
+    } else if (inputId === 'creditCardExpiryDate') {
+        return validateExpiryDate(inputId, inputValue);
+    } else if (inputId === 'cvv') {
+        return validateCVV(inputId, inputValue);
     }
+    return null; // 表示没有错误
 }
