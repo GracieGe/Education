@@ -5,9 +5,11 @@ import {
     validateCreditCardNumber,
     validateExpiryDate,
     validateCVV
-} from '../ValidationConstraints'
+} from '../ValidationConstraints';
 
 export const validateInput = (inputId, inputValue) => {
+    let validationResult;
+
     if (
         inputId === 'fullName' ||
         inputId === 'location' ||
@@ -23,21 +25,24 @@ export const validateInput = (inputId, inputValue) => {
         inputId === 'link' || 
         inputId === "occupation" ||
         inputId === 'currentLocation' ||
-        inputId === "destination" 
+        inputId === "destination"
     ) {
-        return validateString(inputId, inputValue);
+        validationResult = validateString(inputId, inputValue);
     } else if (inputId === 'email' || inputId === 'newEmail') {
-        return validateEmail(inputId, inputValue);
-    } else if (inputId === 'password' || inputId === 'confirmPassword' || inputId === 'newPassword' || inputId === 'confirmNewPassword' ) {
-        return validatePassword(inputId, inputValue);
+        validationResult = validateEmail(inputId, inputValue);
+    } else if (inputId === 'password' || inputId === 'confirmPassword' || inputId === 'newPassword' || inputId === 'confirmNewPassword') {
+        validationResult = validatePassword(inputId, inputValue);
     } else if (inputId === 'resetToken') {
-        return validateString(inputId, inputValue);
+        validationResult = validateString(inputId, inputValue);
     } else if (inputId === 'creditCardNumber') {
-        return validateCreditCardNumber(inputId, inputValue);
+        validationResult = validateCreditCardNumber(inputId, inputValue);
     } else if (inputId === 'creditCardExpiryDate') {
-        return validateExpiryDate(inputId, inputValue);
+        validationResult = validateExpiryDate(inputId, inputValue);
     } else if (inputId === 'cvv') {
-        return validateCVV(inputId, inputValue);
+        validationResult = validateCVV(inputId, inputValue);
+    } else {
+        validationResult = null;
     }
-    return null; 
+
+    return validationResult ? validationResult.join(', ') : null;
 }

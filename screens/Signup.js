@@ -50,17 +50,17 @@ const Signup = ({ navigation }) => {
   };
 
   const signupHandler = () => {
-    const emailValid = formState.inputValidities.email;
-    const passwordValid = formState.inputValidities.password;
+    const emailValid = formState.inputValidities.email === null; // null 表示无错误
+    const passwordValid = formState.inputValidities.password === null; // null 表示无错误
     const isFormValid = emailValid && passwordValid && userType && isChecked;
-
+  
     if (!isFormValid) {
-        Alert.alert('Invalid input', 'Please fill out all fields correctly.');
-        return;
+      Alert.alert('Invalid input', 'Please fill out all fields correctly.');
+      return;
     }
-
+  
     navigation.navigate("FillYourProfile");
-};
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
