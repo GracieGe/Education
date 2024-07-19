@@ -214,18 +214,17 @@ const FillYourProfile = ({ navigation }) => {
               placeholder="Full Name"
               placeholderTextColor={COLORS.gray} />
             <Input
-              id="nickname"
+              id="gender"
               onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['nickname']}
-              placeholder="Nickname"
+              errorText={formState.inputValidities['gender']}
+              placeholder="Gender"
               placeholderTextColor={COLORS.gray} />
             <Input
-              id="email"
+              id="age"
               onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['email']}
-              placeholder="Email"
-              placeholderTextColor={COLORS.gray}
-              keyboardType="email-address" />
+              errorText={formState.inputValidities['age']}
+              placeholder="Age"
+              placeholderTextColor={COLORS.gray} /> 
             <View style={{
               width: SIZES.width - 32
             }}>
@@ -274,6 +273,12 @@ const FillYourProfile = ({ navigation }) => {
                 keyboardType="numeric"
               />
             </View>
+            <Input
+              id="grade"
+              onInputChanged={inputChangedHandler}
+              errorText={formState.inputValidities['grade']}
+              placeholder="Grade"
+              placeholderTextColor={COLORS.gray} />
           </View>
         </ScrollView>
       </View>
