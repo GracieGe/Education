@@ -24,6 +24,7 @@ const initialState = {
     age: isTestMode ? '20' : '',
     grade: isTestMode ? 'Senior One' : '',
     phoneNumber: '',
+    birthday: '', // 添加 birthday 初始值
   },
   inputValidities: {
     fullName: false,
@@ -31,6 +32,7 @@ const initialState = {
     age: false,
     grade: false,
     phoneNumber: false,
+    birthday: false, // 添加 birthday 有效性初始值
   },
   formIsValid: false,
 }
@@ -50,23 +52,23 @@ const FillYourProfile = ({ navigation }) => {
     "YYYY/MM/DD"
   );
 
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [birthday, setBirthday] = useState('');
 
-  const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
+  const handleOnPressBirthday = () => {
+    setOpenStartDatePicker(true);
   };
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
       const result = validateInput(inputId, inputValue)
-      dispatchFormState({ inputId, validationResult: result, inputValue })
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue }) // 添加 type
     },
     [dispatchFormState]
   )
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occured', error)
+      Alert.alert('An error occurred', error)
     }
   }, [error])
 
@@ -90,7 +92,6 @@ const FillYourProfile = ({ navigation }) => {
       }
     });
   };
-
 
   // fetch codes from rescountries api
   useEffect(() => {
@@ -119,7 +120,6 @@ const FillYourProfile = ({ navigation }) => {
 
   // render countries codes modal
   function RenderAreasCodesModal() {
-
     const renderItem = ({ item }) => {
       return (
         <TouchableOpacity
@@ -134,7 +134,6 @@ const FillYourProfile = ({ navigation }) => {
         >
           <Image
             source={{ uri: item.flag }}
-            contentFit='contain'
             style={{
               height: 30,
               width: 30,
@@ -229,26 +228,23 @@ const FillYourProfile = ({ navigation }) => {
                 color: COLORS.gray,
               }}
             />
+            <TouchableOpacity
+              style={[styles.inputBtn, styles.inputContainer]} 
+              onPress={handleOnPressBirthday}
+            >
+              <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>
+                {birthday || 'Birthday'}
+              </Text>
+              <Feather name="calendar" size={24} color={COLORS.grayscale400} />
+            </TouchableOpacity>
             <Input
               id="age"
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['age']}
               placeholder="Age"
-              placeholderTextColor={COLORS.gray} /> 
-            <View style={{
-              width: SIZES.width - 32
-            }}>
-              <TouchableOpacity
-                style={[styles.inputBtn, {
-                  backgroundColor: COLORS.greyscale500,
-                  borderColor: COLORS.greyscale500,
-                }]}
-                onPress={handleOnPressStartDate}
-              >
-                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{startedDate}</Text>
-                <Feather name="calendar" size={24} color={COLORS.grayscale400} />
-              </TouchableOpacity>
-            </View>
+              placeholderTextColor={COLORS.gray} 
+              style={styles.inputContainer}  // 确保这行代码在正确位置
+            /> 
             <View style={[styles.inputContainer, {
               backgroundColor: COLORS.greyscale500,
               borderColor: COLORS.greyscale500,
@@ -266,7 +262,6 @@ const FillYourProfile = ({ navigation }) => {
                 <View style={{ justifyContent: "center", marginLeft: 5 }}>
                   <Image
                     source={{ uri: selectedArea?.flag }}
-                    contentFit="contain"
                     style={styles.flagIcon}
                   />
                 </View>
@@ -281,6 +276,7 @@ const FillYourProfile = ({ navigation }) => {
                 placeholderTextColor={COLORS.gray}
                 selectionColor="#111"
                 keyboardType="numeric"
+                onChangeText={(text) => inputChangedHandler('phoneNumber', text)}
               />
             </View>
             <RNPickerSelect
@@ -303,9 +299,12 @@ const FillYourProfile = ({ navigation }) => {
       <DatePickerModal
         open={openStartDatePicker}
         startDate={startDate}
-        selectedDate={startedDate}
+        selectedDate={birthday}
         onClose={() => setOpenStartDatePicker(false)}
-        onChangeStartDate={(date) => setStartedDate(date)}
+        onChangeStartDate={(date) => {
+          setBirthday(date);
+          inputChangedHandler('birthday', date);
+        }}
       />
       {RenderAreasCodesModal()}
       <View style={styles.bottomContainer}>

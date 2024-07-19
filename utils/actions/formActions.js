@@ -28,7 +28,8 @@ export const validateInput = (inputId, inputValue) => {
         inputId === "destination" ||
         inputId === 'gender' ||      
         inputId === 'age' ||         
-        inputId === 'grade'          
+        inputId === 'grade' ||  
+        inputId === 'birthday'      
     ) {
         validationResult = validateString(inputId, inputValue);
     } else if (inputId === 'email' || inputId === 'newEmail') {
