@@ -12,7 +12,7 @@ export const reducer = (state, action) => {
   
     const updatedValidities = {
       ...state.inputValidities,
-      [inputId]: validationResult || null,  // 保存错误信息字符串或 null
+      [inputId]: validationResult || null,  
     };
   
     let updatedFormIsValid = true;
