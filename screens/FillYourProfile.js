@@ -287,21 +287,10 @@ const FillYourProfile = ({ navigation }) => {
       {RenderAreasCodesModal()}
       <View style={styles.bottomContainer}>
         <Button
-          title="Skip"
-          style={{
-            width: (SIZES.width - 32) / 2 - 8,
-            borderRadius: 32,
-            backgroundColor: COLORS.tansparentPrimary,
-            borderColor: COLORS.tansparentPrimary
-          }}
-          textColor={COLORS.primary}
-          onPress={() => navigation.navigate("CreateNewPIN")}
-        />
-        <Button
           title="Continue"
           filled
           style={styles.continueButton}
-          onPress={() => navigation.navigate("CreateNewPIN")}
+          onPress={() => navigation.navigate("Home")}
         />
       </View>
     </SafeAreaView>
@@ -388,17 +377,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingRight: 8
   },
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
   bottomContainer: {
     position: "absolute",
     bottom: 32,
     right: 16,
     left: 16,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     width: SIZES.width - 32,
     alignItems: "center"
   },
