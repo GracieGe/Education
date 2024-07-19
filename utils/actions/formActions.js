@@ -25,7 +25,10 @@ export const validateInput = (inputId, inputValue) => {
         inputId === 'link' || 
         inputId === "occupation" ||
         inputId === 'currentLocation' ||
-        inputId === "destination"
+        inputId === "destination" ||
+        inputId === 'gender' ||      
+        inputId === 'age' ||         
+        inputId === 'grade'          
     ) {
         validationResult = validateString(inputId, inputValue);
     } else if (inputId === 'email' || inputId === 'newEmail') {

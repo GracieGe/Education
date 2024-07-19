@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, FlatList, TextInput } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { COLORS, SIZES, FONTS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
@@ -20,19 +20,20 @@ const isTestMode = true;
 const initialState = {
   inputValues: {
     fullName: isTestMode ? 'John Doe' : '',
-    email: isTestMode ? 'example@gmail.com' : '',
-    nickname: isTestMode ? "" : "",
-    phoneNumber: ''
+    gender: isTestMode ? 'male' : '',
+    age: isTestMode ? '20' : '',
+    grade: isTestMode ? 'Senior One' : '',
+    phoneNumber: '',
   },
   inputValidities: {
     fullName: false,
-    email: false,
-    nickname: false,
+    gender: false,
+    age: false,
+    grade: false,
     phoneNumber: false,
   },
   formIsValid: false,
 }
-
 
 const FillYourProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -456,4 +457,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FillYourProfile
+export default FillYourProfile;
