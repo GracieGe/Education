@@ -13,6 +13,7 @@ import Input from '../components/Input';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
+import RNPickerSelect from 'react-native-picker-select';
 
 const isTestMode = true;
 
@@ -213,12 +214,20 @@ const FillYourProfile = ({ navigation }) => {
               errorText={formState.inputValidities['fullName']}
               placeholder="Full Name"
               placeholderTextColor={COLORS.gray} />
-            <Input
-              id="gender"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['gender']}
-              placeholder="Gender"
-              placeholderTextColor={COLORS.gray} />
+            <RNPickerSelect
+              onValueChange={(value) => inputChangedHandler('gender', value)}
+              items={[
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' },
+                { label: 'Other', value: 'other' },
+              ]}
+              style={pickerSelectStyles}
+              placeholder={{
+                label: 'Gender',
+                value: null,
+                color: COLORS.gray,
+              }}
+            />
             <Input
               id="age"
               onInputChanged={inputChangedHandler}
@@ -273,12 +282,20 @@ const FillYourProfile = ({ navigation }) => {
                 keyboardType="numeric"
               />
             </View>
-            <Input
-              id="grade"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['grade']}
-              placeholder="Grade"
-              placeholderTextColor={COLORS.gray} />
+            <RNPickerSelect
+              onValueChange={(value) => inputChangedHandler('grade', value)}
+              items={[
+                { label: 'Senior One', value: 'senior one' },
+                { label: 'Senior Two', value: 'senior two' },
+                { label: 'Senior Three', value: 'senior three' },
+              ]}
+              style={pickerSelectStyles}
+              placeholder={{
+                label: 'Grade',
+                value: null,
+                color: COLORS.gray,
+              }}
+            />
           </View>
         </ScrollView>
       </View>
@@ -301,6 +318,33 @@ const FillYourProfile = ({ navigation }) => {
     </SafeAreaView>
   )
 };
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    marginVertical: 12,
+    backgroundColor: COLORS.greyscale500,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30,
+    marginVertical: 12,
+    backgroundColor: COLORS.greyscale500,
+  },
+});
 
 const styles = StyleSheet.create({
   area: {
