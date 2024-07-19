@@ -8,6 +8,8 @@ import { validateInput } from '../utils/actions/formActions';
 import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
+import axios from 'axios';
+import config from '../config';
 
 const isTestMode = true;
 
@@ -23,7 +25,6 @@ const initialState = {
   formIsValid: false,
 }
 
-
 const Signup = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,33 +34,71 @@ const Signup = ({ navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-        const result = validateInput(inputId, inputValue);
-        dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
+      const result = validateInput(inputId, inputValue);
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-);
+  );
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occured', error)
+      Alert.alert('An error occurred', error);
     }
-  }, [error])
+  }, [error]);
 
   const toggleUserType = (type) => {
     setUserType((prevType) => (prevType === type ? null : type));
   };
 
-  const signupHandler = () => {
-    const emailValid = formState.inputValidities.email === null; // null 表示无错误
-    const passwordValid = formState.inputValidities.password === null; // null 表示无错误
+  const formatDate = (date) => {
+    const padTo2Digits = (num) => num.toString().padStart(2, '0');
+    return (
+      date.getFullYear() +
+      '-' +
+      padTo2Digits(date.getMonth() + 1) +
+      '-' +
+      padTo2Digits(date.getDate()) +
+      ' ' +
+      padTo2Digits(date.getHours()) +
+      ':' +
+      padTo2Digits(date.getMinutes()) +
+      ':' +
+      padTo2Digits(date.getSeconds())
+    );
+  };
+
+  const signupHandler = async () => {
+    const emailValid = formState.inputValidities.email === null; 
+    const passwordValid = formState.inputValidities.password === null; 
     const isFormValid = emailValid && passwordValid && userType && isChecked;
-  
+
     if (!isFormValid) {
       Alert.alert('Invalid input', 'Please fill out all fields correctly.');
       return;
     }
-  
-    navigation.navigate("FillYourProfile");
+
+    const userData = {
+      email: formState.inputValues.email,
+      password: formState.inputValues.password,
+      role: userType,
+      timeOfCreation: formatDate(new Date()),
+    };
+
+    console.log('User data being sent:', userData);
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(`${config.API_URL}/api/users/signup`, userData);
+      setIsLoading(false);
+      if (response.status === 201) {
+        navigation.navigate("FillYourProfile");
+      } else {
+        console.error('Error creating user:', response.status);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.message);
+    }
   };
 
   return (
@@ -74,9 +113,7 @@ const Signup = ({ navigation }) => {
               style={styles.logo}
             />
           </View>
-          <Text style={[styles.title, {
-            color: COLORS.black
-          }]}>Create Your Account</Text>
+          <Text style={[styles.title, { color: COLORS.black }]}>Create Your Account</Text>
           <Input
             id="email"
             onInputChanged={inputChangedHandler}
@@ -127,16 +164,14 @@ const Signup = ({ navigation }) => {
                 style={styles.checkbox}
                 value={isChecked}
                 boxType="square"
-                onTintColor={isChecked ? COLORS.primary :  "gray"}
-                onFillColor={isChecked ? COLORS.primary :  "gray"}
+                onTintColor={isChecked ? COLORS.primary : "gray"}
+                onFillColor={isChecked ? COLORS.primary : "gray"}
                 onCheckColor={COLORS.white}
                 onValueChange={setChecked}
                 tintColors={{ true: COLORS.primary, false: "gray" }}
               />
               <View style={{ flex: 1 }}>
-                <Text style={[styles.privacy, {
-                  color: COLORS.black
-                }]}>By continuing you accept our Privacy Policy</Text>
+                <Text style={[styles.privacy, { color: COLORS.black }]}>By continuing you accept our Privacy Policy</Text>
               </View>
             </View>
           </View>
@@ -145,20 +180,18 @@ const Signup = ({ navigation }) => {
             filled
             onPress={signupHandler}
             style={styles.button}
+            isLoading={isLoading}
           />
         </ScrollView>
         <View style={styles.bottomContainer}>
-          <Text style={[styles.bottomLeft, {
-            color: COLORS.black
-          }]}>Already have an account ?</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.bottomRight}>{" "}Sign In</Text>
+          <Text style={[styles.bottomLeft, { color: COLORS.black }]}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.bottomRight}> Sign In</Text>
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -220,7 +253,7 @@ const styles = StyleSheet.create({
     marginVertical: 18,
   },
   checkbox: {
-    marginRight: Platform.OS == "ios" ? 8 : 14,
+    marginRight: Platform.OS === "ios" ? 8 : 14,
     marginLeft: 4,
     height: 16,
     width: 16,
@@ -258,4 +291,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Signup
+export default Signup;
