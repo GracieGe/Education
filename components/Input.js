@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../constants';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Input = (props) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(props.secureTextEntry);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -15,6 +17,10 @@ const Input = (props) => {
 
   const onChangeText = (text) => {
     props.onInputChanged(props.id, text);
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
@@ -41,6 +47,7 @@ const Input = (props) => {
         )}
         <TextInput
           {...props}
+          secureTextEntry={isPasswordVisible && props.secureTextEntry}
           onChangeText={onChangeText}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -49,6 +56,14 @@ const Input = (props) => {
           placeholderTextColor={props.placeholderTextColor}
           autoCapitalize='none'
         />
+        {props.secureTextEntry && (
+          <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
+            <FontAwesome
+              name={isPasswordVisible ? 'eye-slash' : 'eye'}
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       {props.errorText && (
         <View style={styles.errorContainer}>
@@ -89,6 +104,13 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     textAlignVertical: 'center',
     marginVertical: Platform.OS === 'ios' ? 0 : -2,
+  },
+  eyeIconContainer: {
+    padding: 3,
+  },
+  eyeIcon: {
+    fontSize: 20,
+    color: '#808080',
   },
   errorContainer: {
     marginVertical: 4,
