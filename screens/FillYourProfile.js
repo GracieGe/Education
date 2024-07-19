@@ -19,12 +19,12 @@ const isTestMode = true;
 
 const initialState = {
   inputValues: {
-    fullName: isTestMode ? 'John Doe' : '',
-    gender: isTestMode ? 'male' : '',
-    age: isTestMode ? '20' : '',
-    grade: isTestMode ? 'Senior One' : '',
+    fullName: '',
+    gender: '',
+    age: '',
+    grade: '',
     phoneNumber: '',
-    birthday: '', // 添加 birthday 初始值
+    birthday: '',
   },
   inputValidities: {
     fullName: false,
@@ -32,7 +32,7 @@ const initialState = {
     age: false,
     grade: false,
     phoneNumber: false,
-    birthday: false, // 添加 birthday 有效性初始值
+    birthday: false, 
   },
   formIsValid: false,
 }
@@ -61,7 +61,7 @@ const FillYourProfile = ({ navigation }) => {
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
       const result = validateInput(inputId, inputValue)
-      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue }) // 添加 type
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue }) 
     },
     [dispatchFormState]
   )
@@ -243,7 +243,7 @@ const FillYourProfile = ({ navigation }) => {
               errorText={formState.inputValidities['age']}
               placeholder="Age"
               placeholderTextColor={COLORS.gray} 
-              style={styles.inputContainer}  // 确保这行代码在正确位置
+              style={styles.inputContainer}  
             /> 
             <View style={[styles.inputContainer, {
               backgroundColor: COLORS.greyscale500,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: "absolute",
-    bottom: 32,
+    bottom: 22,
     right: 16,
     left: 16,
     flexDirection: "row",
