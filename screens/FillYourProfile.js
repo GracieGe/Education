@@ -47,10 +47,6 @@ const FillYourProfile = ({ navigation }) => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
   const today = new Date();
-  const startDate = getFormatedDate(
-    new Date(today.setDate(today.getDate() + 1)),
-    "YYYY/MM/DD"
-  );
 
   const [birthday, setBirthday] = useState('');
 
@@ -213,7 +209,9 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['fullName']}
               placeholder="Full Name"
-              placeholderTextColor={COLORS.gray} />
+              placeholderTextColor={placeholderStyle.color} 
+              style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
+            />
             <RNPickerSelect
               onValueChange={(value) => inputChangedHandler('gender', value)}
               items={[
@@ -221,18 +219,31 @@ const FillYourProfile = ({ navigation }) => {
                 { label: 'Female', value: 'female' },
                 { label: 'Other', value: 'other' },
               ]}
-              style={pickerSelectStyles}
+              style={{
+                ...pickerSelectStyles,
+                placeholder: placeholderStyle,
+                inputIOS: {
+                  ...pickerSelectStyles.inputIOS,
+                  color: '#111', 
+                  fontSize: placeholderStyle.fontSize,
+                },
+                inputAndroid: {
+                  ...pickerSelectStyles.inputAndroid,
+                  color: '#111', 
+                  fontSize: placeholderStyle.fontSize,
+                },
+              }}
               placeholder={{
                 label: 'Gender',
                 value: null,
-                color: COLORS.gray,
+                color: placeholderStyle.color,
               }}
             />
             <TouchableOpacity
               style={[styles.inputBtn, styles.inputContainer]} 
               onPress={handleOnPressBirthday}
             >
-              <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>
+              <Text style={{ color: birthday ? '#111' : placeholderStyle.color, fontSize: placeholderStyle.fontSize }}>
                 {birthday || 'Birthday'}
               </Text>
               <Feather name="calendar" size={24} color={COLORS.grayscale400} />
@@ -242,8 +253,8 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['age']}
               placeholder="Age"
-              placeholderTextColor={COLORS.gray} 
-              style={styles.inputContainer}  
+              placeholderTextColor={placeholderStyle.color} 
+              style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
             /> 
             <View style={[styles.inputContainer, {
               backgroundColor: COLORS.greyscale500,
@@ -271,9 +282,9 @@ const FillYourProfile = ({ navigation }) => {
               </TouchableOpacity>
               {/* Phone Number Text Input */}
               <TextInput
-                style={styles.input}
+                style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
                 placeholder="Enter your phone number"
-                placeholderTextColor={COLORS.gray}
+                placeholderTextColor={placeholderStyle.color}
                 selectionColor="#111"
                 keyboardType="numeric"
                 onChangeText={(text) => inputChangedHandler('phoneNumber', text)}
@@ -286,11 +297,24 @@ const FillYourProfile = ({ navigation }) => {
                 { label: 'Senior Two', value: 'senior two' },
                 { label: 'Senior Three', value: 'senior three' },
               ]}
-              style={pickerSelectStyles}
+              style={{
+                ...pickerSelectStyles,
+                placeholder: placeholderStyle,
+                inputIOS: {
+                  ...pickerSelectStyles.inputIOS,
+                  color: '#111', 
+                  fontSize: placeholderStyle.fontSize,
+                },
+                inputAndroid: {
+                  ...pickerSelectStyles.inputAndroid,
+                  color: '#111', 
+                  fontSize: placeholderStyle.fontSize,
+                },
+              }}
               placeholder={{
                 label: 'Grade',
                 value: null,
-                color: COLORS.gray,
+                color: placeholderStyle.color,
               }}
             />
           </View>
@@ -298,7 +322,7 @@ const FillYourProfile = ({ navigation }) => {
       </View>
       <DatePickerModal
         open={openStartDatePicker}
-        startDate={startDate}
+        startDate={null}
         selectedDate={birthday}
         onClose={() => setOpenStartDatePicker(false)}
         onChangeStartDate={(date) => {
@@ -346,6 +370,11 @@ const pickerSelectStyles = StyleSheet.create({
   },
 });
 
+const placeholderStyle = {
+  color: COLORS.gray,
+  fontSize: 15,
+};
+
 const styles = StyleSheet.create({
   area: {
     flex: 1,
@@ -378,6 +407,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
+  },
+  inputText: {
+    color: '#111', 
+    fontSize: 16, 
   },
   inputContainer: {
     flexDirection: "row",
