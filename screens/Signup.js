@@ -171,8 +171,11 @@ const Signup = ({ navigation, route }) => {
                 onValueChange={setChecked}
                 tintColors={{ true: COLORS.primary, false: "gray" }}
               />
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.privacy, { color: COLORS.black }]}>By continuing you accept our Privacy Policy</Text>
+              <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Text style={[styles.privacy, { color: COLORS.black }]}>By continuing you accept our </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("SettingsPrivacyPolicy")}>
+                  <Text style={[styles.privacy, styles.privacyLink]}>Privacy Policy</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -264,6 +267,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Urbanist Regular",
     color: COLORS.black,
+  },
+  privacyLink: {
+    color: COLORS.primary,
+    textDecorationLine: 'underline',
   },
   bottomContainer: {
     flexDirection: "row",

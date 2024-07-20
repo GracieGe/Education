@@ -262,7 +262,7 @@ const Profile = () => {
             style={styles.logoutButton}
             onPress={() => {
               refRBSheet.current.close();
-              navigation.navigate("FillYourProfile"); 
+              navigation.navigate("Login"); 
             }}
           />
         </View>

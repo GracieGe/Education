@@ -10,14 +10,12 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
-import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
 import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
 import config from '../config';
 
-const isTestMode = true;
 
 const initialState = {
   inputValues: {
@@ -49,7 +47,6 @@ const FillYourProfile = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
-  const today = new Date();
   const [birthday, setBirthday] = useState('');
 
   const handleOnPressBirthday = () => {
@@ -199,12 +196,23 @@ const FillYourProfile = ({ route, navigation }) => {
       grade: formState.inputValues.grade,
     };
 
+    if (!formState.formIsValid || 
+      !formState.inputValues.fullName ||
+      !formState.inputValues.gender ||
+      !formState.inputValues.age ||
+      !formState.inputValues.phoneNumber ||
+      !formState.inputValues.birthday ||
+      (role === 'student' && !formState.inputValues.grade)) {
+    Alert.alert('Incomplete Form', 'Please fill all the fields before continuing.');
+    return;
+  }
+
     console.log('Profile data being sent:', profileData);
 
     try {
       const response = await axios.post(`${config.API_URL}/api/profiles/create`, { ...profileData, role });
       if (response.status === 201) {
-        Alert.alert('Success', 'Profile created successfully');
+        Alert.alert('Congratulations!', 'Profile created successfully');
         navigation.navigate('Main'); 
       } else {
         console.error('Error creating profile:', response.status);
@@ -346,6 +354,7 @@ const FillYourProfile = ({ route, navigation }) => {
         onChangeStartDate={(date) => {
           setBirthday(date);
           inputChangedHandler('birthday', date.split('/').join('-'));
+          setOpenStartDatePicker(false);
         }}
       />
       {RenderAreasCodesModal()}
