@@ -25,7 +25,7 @@ const initialState = {
   formIsValid: false,
 }
 
-const Signup = ({ navigation }) => {
+const Signup = ({ navigation, route }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -91,7 +91,8 @@ const Signup = ({ navigation }) => {
       const response = await axios.post(`${config.API_URL}/api/users/signup`, userData);
       setIsLoading(false);
       if (response.status === 201) {
-        navigation.navigate("FillYourProfile");
+        const { userId, role } = response.data;
+        navigation.navigate("FillYourProfile", { userId, role });
       } else {
         console.error('Error creating user:', response.status);
       }

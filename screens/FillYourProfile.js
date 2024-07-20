@@ -14,6 +14,8 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
 import RNPickerSelect from 'react-native-picker-select';
+import axios from 'axios';
+import config from '../config';
 
 const isTestMode = true;
 
@@ -32,12 +34,13 @@ const initialState = {
     age: false,
     grade: false,
     phoneNumber: false,
-    birthday: false, 
+    birthday: false,
   },
   formIsValid: false,
 }
 
-const FillYourProfile = ({ navigation }) => {
+const FillYourProfile = ({ route, navigation }) => {
+  const { userId, role } = route.params; 
   const [image, setImage] = useState(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -47,7 +50,6 @@ const FillYourProfile = ({ navigation }) => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
   const today = new Date();
-
   const [birthday, setBirthday] = useState('');
 
   const handleOnPressBirthday = () => {
@@ -56,17 +58,17 @@ const FillYourProfile = ({ navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue)
-      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue }) 
+      const result = validateInput(inputId, inputValue);
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-  )
+  );
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occurred', error)
+      Alert.alert('An error occurred', error);
     }
-  }, [error])
+  }, [error]);
 
   // Image Profile handler
   const pickImage = () => {
@@ -112,7 +114,7 @@ const FillYourProfile = ({ navigation }) => {
           }
         }
       })
-  }, [])
+  }, []);
 
   // render countries codes modal
   function RenderAreasCodesModal() {
@@ -182,11 +184,34 @@ const FillYourProfile = ({ navigation }) => {
     )
   }
 
-  const handleContinue = () => {
-    if (formState.formIsValid) {
-      navigation.navigate("Main");
-    } else {
-      Alert.alert('Incomplete Form', 'Please fill all the fields before continuing.');
+  const handleContinue = async () => {
+    const formatDate = (date) => {
+      return date.replace(/\//g, '-');
+    };
+
+    const profileData = {
+      userId,
+      fullName: formState.inputValues.fullName,
+      gender: formState.inputValues.gender,
+      age: formState.inputValues.age,
+      phoneNum: formState.inputValues.phoneNumber,
+      birthday: formatDate(formState.inputValues.birthday),
+      grade: formState.inputValues.grade,
+    };
+
+    console.log('Profile data being sent:', profileData);
+
+    try {
+      const response = await axios.post(`${config.API_URL}/api/profiles/create`, { ...profileData, role });
+      if (response.status === 201) {
+        Alert.alert('Success', 'Profile created successfully');
+        navigation.navigate('Main'); 
+      } else {
+        console.error('Error creating profile:', response.status);
+      }
+    } catch (err) {
+      console.error('Error creating profile:', err.message);
+      Alert.alert('Error', 'Failed to create profile');
     }
   };
 
@@ -217,7 +242,7 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['fullName']}
               placeholder="Full Name"
-              placeholderTextColor={styles.placeholderStyle.color} 
+              placeholderTextColor={styles.placeholderStyle.color}
               style={[styles.inputText, styles.inputPadding]}
             />
             <RNPickerSelect
@@ -241,7 +266,7 @@ const FillYourProfile = ({ navigation }) => {
               }}
             />
             <TouchableOpacity
-              style={[styles.inputBtn, styles.inputContainer]} 
+              style={[styles.inputBtn, styles.inputContainer]}
               onPress={handleOnPressBirthday}
             >
               <Text style={[{ color: birthday ? '#111' : styles.placeholderStyle.color, fontSize: styles.placeholderStyle.fontSize, fontFamily: styles.placeholderStyle.fontFamily }, styles.inputPadding]}>
@@ -254,9 +279,9 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['age']}
               placeholder="Age"
-              placeholderTextColor={styles.placeholderStyle.color} 
+              placeholderTextColor={styles.placeholderStyle.color}
               style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
-            /> 
+            />
             <View style={[styles.inputContainer, {
               backgroundColor: COLORS.greyscale500,
               borderColor: COLORS.greyscale500,
@@ -281,7 +306,6 @@ const FillYourProfile = ({ navigation }) => {
                   <Text style={{ color: "#111", fontSize: 12 }}>{selectedArea?.callingCode}</Text>
                 </View>
               </TouchableOpacity>
-              {/* Phone Number Text Input */}
               <TextInput
                 style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
                 placeholder="Enter your phone number"
@@ -291,24 +315,26 @@ const FillYourProfile = ({ navigation }) => {
                 onChangeText={(text) => inputChangedHandler('phoneNumber', text)}
               />
             </View>
-            <RNPickerSelect
-              onValueChange={(value) => inputChangedHandler('grade', value)}
-              items={[
-                { label: 'Senior One', value: 'senior one' },
-                { label: 'Senior Two', value: 'senior two' },
-                { label: 'Senior Three', value: 'senior three' },
-              ]}
-              style={{
-                inputIOS: styles.pickerInput,
-                inputAndroid: styles.pickerInput,
-                placeholder: styles.placeholderStyle
-              }}
-              placeholder={{
-                label: 'Grade',
-                value: null,
-                color: styles.placeholderStyle.color,
-              }}
-            />
+            {role === 'student' && (
+              <RNPickerSelect
+                onValueChange={(value) => inputChangedHandler('grade', value)}
+                items={[
+                  { label: 'Senior One', value: 'Senior One' },
+                  { label: 'Senior Two', value: 'Senior Two' },
+                  { label: 'Senior Three', value: 'Senior Three' },
+                ]}
+                style={{
+                  inputIOS: styles.pickerInput,
+                  inputAndroid: styles.pickerInput,
+                  placeholder: styles.placeholderStyle
+                }}
+                placeholder={{
+                  label: 'Grade',
+                  value: null,
+                  color: styles.placeholderStyle.color,
+                }}
+              />
+            )}
           </View>
         </ScrollView>
       </View>
@@ -319,7 +345,7 @@ const FillYourProfile = ({ navigation }) => {
         onClose={() => setOpenStartDatePicker(false)}
         onChangeStartDate={(date) => {
           setBirthday(date);
-          inputChangedHandler('birthday', date);
+          inputChangedHandler('birthday', date.split('/').join('-'));
         }}
       />
       {RenderAreasCodesModal()}
@@ -369,8 +395,8 @@ const styles = StyleSheet.create({
     right: 0,
   },
   inputText: {
-    color: '#111', 
-    fontSize: 16, 
+    color: '#111',
+    fontSize: 16,
   },
   inputContainer: {
     flexDirection: "row",
@@ -437,7 +463,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
   inputPadding: {
-    paddingLeft: 8, 
+    paddingLeft: 8,
   },
   bottomContainer: {
     position: "absolute",
@@ -467,6 +493,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 9999
   }
-})
+});
 
 export default FillYourProfile;
