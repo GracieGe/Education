@@ -182,6 +182,14 @@ const FillYourProfile = ({ navigation }) => {
     )
   }
 
+  const handleContinue = () => {
+    if (formState.formIsValid) {
+      navigation.navigate("Main");
+    } else {
+      Alert.alert('Incomplete Form', 'Please fill all the fields before continuing.');
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
@@ -320,7 +328,7 @@ const FillYourProfile = ({ navigation }) => {
           title="Continue"
           filled
           style={styles.continueButton}
-          onPress={() => navigation.navigate("Home")}
+          onPress={handleContinue}
         />
       </View>
     </SafeAreaView>

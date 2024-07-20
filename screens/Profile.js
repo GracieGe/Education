@@ -8,9 +8,11 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import SettingsItem from '../components/SettingsItem';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
 
-const Profile = ({ navigation }) => {
+const Profile = () => {
   const refRBSheet = useRef();
+  const navigation = useNavigation();
 
   /**
    * Render header
@@ -258,7 +260,10 @@ const Profile = ({ navigation }) => {
             title="Yes, Logout"
             filled
             style={styles.logoutButton}
-            onPress={() => refRBSheet.current.close()}
+            onPress={() => {
+              refRBSheet.current.close();
+              navigation.navigate("FillYourProfile"); 
+            }}
           />
         </View>
       </RBSheet>
