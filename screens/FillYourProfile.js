@@ -209,8 +209,8 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['fullName']}
               placeholder="Full Name"
-              placeholderTextColor={placeholderStyle.color} 
-              style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
+              placeholderTextColor={styles.placeholderStyle.color} 
+              style={[styles.inputText, styles.inputPadding]}
             />
             <RNPickerSelect
               onValueChange={(value) => inputChangedHandler('gender', value)}
@@ -220,30 +220,23 @@ const FillYourProfile = ({ navigation }) => {
                 { label: 'Other', value: 'other' },
               ]}
               style={{
-                ...pickerSelectStyles,
-                placeholder: placeholderStyle,
-                inputIOS: {
-                  ...pickerSelectStyles.inputIOS,
-                  color: '#111', 
-                  fontSize: placeholderStyle.fontSize,
-                },
-                inputAndroid: {
-                  ...pickerSelectStyles.inputAndroid,
-                  color: '#111', 
-                  fontSize: placeholderStyle.fontSize,
-                },
+                inputIOS: [styles.pickerInput, styles.inputPadding],
+                inputAndroid: [styles.pickerInput, styles.inputPadding],
+                placeholder: styles.placeholderStyle,
               }}
               placeholder={{
                 label: 'Gender',
                 value: null,
-                color: placeholderStyle.color,
+                color: styles.placeholderStyle.color,
+                fontSize: styles.placeholderStyle.fontSize,
+                fontFamily: styles.placeholderStyle.fontFamily
               }}
             />
             <TouchableOpacity
               style={[styles.inputBtn, styles.inputContainer]} 
               onPress={handleOnPressBirthday}
             >
-              <Text style={{ color: birthday ? '#111' : placeholderStyle.color, fontSize: placeholderStyle.fontSize }}>
+              <Text style={[{ color: birthday ? '#111' : styles.placeholderStyle.color, fontSize: styles.placeholderStyle.fontSize, fontFamily: styles.placeholderStyle.fontFamily }, styles.inputPadding]}>
                 {birthday || 'Birthday'}
               </Text>
               <Feather name="calendar" size={24} color={COLORS.grayscale400} />
@@ -253,8 +246,8 @@ const FillYourProfile = ({ navigation }) => {
               onInputChanged={inputChangedHandler}
               errorText={formState.inputValidities['age']}
               placeholder="Age"
-              placeholderTextColor={placeholderStyle.color} 
-              style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
+              placeholderTextColor={styles.placeholderStyle.color} 
+              style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
             /> 
             <View style={[styles.inputContainer, {
               backgroundColor: COLORS.greyscale500,
@@ -282,9 +275,9 @@ const FillYourProfile = ({ navigation }) => {
               </TouchableOpacity>
               {/* Phone Number Text Input */}
               <TextInput
-                style={[styles.inputText, { fontSize: placeholderStyle.fontSize }]}
+                style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
                 placeholder="Enter your phone number"
-                placeholderTextColor={placeholderStyle.color}
+                placeholderTextColor={styles.placeholderStyle.color}
                 selectionColor="#111"
                 keyboardType="numeric"
                 onChangeText={(text) => inputChangedHandler('phoneNumber', text)}
@@ -298,23 +291,14 @@ const FillYourProfile = ({ navigation }) => {
                 { label: 'Senior Three', value: 'senior three' },
               ]}
               style={{
-                ...pickerSelectStyles,
-                placeholder: placeholderStyle,
-                inputIOS: {
-                  ...pickerSelectStyles.inputIOS,
-                  color: '#111', 
-                  fontSize: placeholderStyle.fontSize,
-                },
-                inputAndroid: {
-                  ...pickerSelectStyles.inputAndroid,
-                  color: '#111', 
-                  fontSize: placeholderStyle.fontSize,
-                },
+                inputIOS: styles.pickerInput,
+                inputAndroid: styles.pickerInput,
+                placeholder: styles.placeholderStyle
               }}
               placeholder={{
                 label: 'Grade',
                 value: null,
-                color: placeholderStyle.color,
+                color: styles.placeholderStyle.color,
               }}
             />
           </View>
@@ -341,38 +325,6 @@ const FillYourProfile = ({ navigation }) => {
       </View>
     </SafeAreaView>
   )
-};
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    marginVertical: 12,
-    backgroundColor: COLORS.greyscale500,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
-    marginVertical: 12,
-    backgroundColor: COLORS.greyscale500,
-  },
-});
-
-const placeholderStyle = {
-  color: COLORS.gray,
-  fontSize: 15,
 };
 
 const styles = StyleSheet.create({
@@ -458,6 +410,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingRight: 8
+  },
+  pickerInput: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    marginVertical: 12,
+    backgroundColor: COLORS.greyscale500,
+  },
+  placeholderStyle: {
+    color: COLORS.gray,
+    fontSize: 15,
+    fontFamily: 'System',
+  },
+  inputPadding: {
+    paddingLeft: 8, 
   },
   bottomContainer: {
     position: "absolute",
