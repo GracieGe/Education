@@ -1,15 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, Image, Alert, TouchableOpacity, Platform } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SIZES, icons, images } from '../constants';
 import Header from '../components/Header';
-import { reducer } from '../utils/reducers/formReducers';
-import { validateInput } from '../utils/actions/formActions';
 import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
-import SocialButton from '../components/SocialButton';
-import OrSeparator from '../components/OrSeparator';
 
 const isTestMode = true;
 
@@ -18,25 +14,24 @@ const initialState = {
     email: isTestMode ? 'example@gmail.com' : '',
     password: isTestMode ? '**********' : '',
   },
-  inputValidities: {
-    email: false,
-    password: false
-  },
-  formIsValid: false,
 }
 
-
 const Login = ({ navigation }) => {
-  const [formState, dispatchFormState] = useReducer(reducer, initialState);
+  const [formState, setFormState] = useState(initialState);
   const [error, setError] = useState(null);
   const [isChecked, setChecked] = useState(false);
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue)
-      dispatchFormState({ inputId, validationResult: result, inputValue })
+      setFormState(prevState => ({
+        ...prevState,
+        inputValues: {
+          ...prevState.inputValues,
+          [inputId]: inputValue,
+        }
+      }));
     },
-    [dispatchFormState]
+    []
   );
 
   useEffect(() => {
@@ -44,21 +39,6 @@ const Login = ({ navigation }) => {
       Alert.alert('An error occured', error)
     }
   }, [error]);
-
-  // Implementing apple authentication
-  const appleAuthHandler = () => {
-    console.log("Apple Authentication")
-  };
-
-  // Implementing facebook authentication
-  const facebookAuthHandler = () => {
-    console.log("Facebook Authentication")
-  };
-
-  // Implementing google authentication
-  const googleAuthHandler = () => {
-    console.log("Google Authentication")
-  };
 
   return (
     <SafeAreaView style={[styles.area, {
@@ -82,7 +62,6 @@ const Login = ({ navigation }) => {
           <Input
             id="email"
             onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities['email']}
             placeholder="Email"
             placeholderTextColor={COLORS.black}
             icon={icons.email}
@@ -90,7 +69,6 @@ const Login = ({ navigation }) => {
           />
           <Input
             onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities['password']}
             autoCapitalize="none"
             id="password"
             placeholder="Password"
@@ -129,22 +107,6 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
           <View>
 
-            <OrSeparator text="or continue with" />
-            <View style={styles.socialBtnContainer}>
-              <SocialButton
-                icon={icons.appleLogo}
-                onPress={appleAuthHandler}
-                tintColor={COLORS.black}
-              />
-              <SocialButton
-                icon={icons.facebook}
-                onPress={facebookAuthHandler}
-              />
-              <SocialButton
-                icon={icons.google}
-                onPress={googleAuthHandler}
-              />
-            </View>
           </View>
         </ScrollView>
         <View style={styles.bottomContainer}>
@@ -182,17 +144,6 @@ const styles = StyleSheet.create({
     marginVertical: 32
   },
   title: {
-    fontSize: 28,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.black,
-    textAlign: "center"
-  },
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
     fontSize: 26,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.black,
@@ -216,18 +167,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Urbanist Regular",
     color: COLORS.black,
-  },
-  socialTitle: {
-    fontSize: 19.25,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 26
-  },
-  socialBtnContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
   bottomContainer: {
     flexDirection: "row",
