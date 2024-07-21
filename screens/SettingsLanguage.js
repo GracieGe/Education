@@ -5,120 +5,43 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
 import LanguageItem from '../components/LanguageItem';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 // select language
 const SettingsLanguage = () => {
+  const { t } = useTranslation();
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const handleCheckboxPress = (itemTitle) => {
+  const handleCheckboxPress = (itemTitle, langCode) => {
     if (selectedItem === itemTitle) {
       // If the clicked item is already selected, deselect it
       setSelectedItem(null);
     } else {
       // Otherwise, select the clicked item
       setSelectedItem(itemTitle);
+      i18n.changeLanguage(langCode);
     }
   };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Language & Region" />
+        <Header title={t('languageRegion')} />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={[styles.title, { color: COLORS.black }]}>Suggested</Text>
+          <Text style={[styles.title, { color: COLORS.black }]}>{t('chooseLanguage')}</Text>
           <View style={{ marginTop: 12 }}>
             <LanguageItem
-              checked={selectedItem === 'English (US)'}
-              name="English (US)"
-              onPress={() => handleCheckboxPress('English (US)')}
+              checked={selectedItem === 'English'}
+              name="English"
+              onPress={() => handleCheckboxPress('English', 'en')}
             />
             <LanguageItem
-              checked={selectedItem === 'English (UK)'}
-              name="English (UK)"
-              onPress={() => handleCheckboxPress('English (UK)')}
+            checked={selectedItem === '中文'}
+            name="中文"
+            onPress={() => handleCheckboxPress('中文', 'zh')}
             />
           </View>
-          <Text style={[styles.title, { color: COLORS.black }]}>Others</Text>
-          <LanguageItem
-            checked={selectedItem === 'Mandarin'}
-            name="Mandarin"
-            onPress={() => handleCheckboxPress('Mandarin')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Hindi'}
-            name="Hindi"
-            onPress={() => handleCheckboxPress('Hindi')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Spanish'}
-            name="Spanish"
-            onPress={() => handleCheckboxPress('Spanish')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'French'}
-            name="French"
-            onPress={() => handleCheckboxPress('French')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Arabic'}
-            name="Arabic"
-            onPress={() => handleCheckboxPress('Arabic')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Bengali'}
-            name="Bengali"
-            onPress={() => handleCheckboxPress('Bengali')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Russian'}
-            name="Russian"
-            onPress={() => handleCheckboxPress('Russian')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Indonesia'}
-            name="Indonesia"
-            onPress={() => handleCheckboxPress('Indonesia')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Chinese'}
-            name="Chinese"
-            onPress={() => handleCheckboxPress('Chinese')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Vietnamese'}
-            name="Vietnamese"
-            onPress={() => handleCheckboxPress('Vietnamese')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Marathi'}
-            name="Marathi"
-            onPress={() => handleCheckboxPress('Marathi')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Yue Chinese (Cantonese)'}
-            name="Yue Chinese (Cantonese)"
-            onPress={() => handleCheckboxPress('Yue Chinese (Cantonese)')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Southern Min (Hokkien)'}
-            name="Southern Min (Hokkien)"
-            onPress={() => handleCheckboxPress('Southern Min (Hokkien)')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Persian (Farsi)'}
-            name="Persian (Farsi)"
-            onPress={() => handleCheckboxPress('Persian (Farsi)')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Polish'}
-            name="Polish"
-            onPress={() => handleCheckboxPress('Polish')}
-          />
-          <LanguageItem
-            checked={selectedItem === 'Kannada'}
-            name="Kannada"
-            onPress={() => handleCheckboxPress('Kannada')}
-          />
         </ScrollView>
       </View>
     </SafeAreaView>

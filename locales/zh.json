@@ -1,0 +1,20 @@
+{
+    "profile": "个人资料",
+    "languageRegion": "语言与地区",
+    "darkMode": "深色模式",
+    "logout": "退出登录",
+    "areYouSureLogout": "你确定要退出登录吗？",
+    "cancel": "取消",
+    "yesLogout": "是的，退出",
+    "notification": "通知",
+    "address": "地址",
+    "editProfile": "编辑资料",
+    "purchaseHistory": "购买历史",
+    "account": "账户",
+    "privacyPolicy": "隐私政策",
+    "customerService": "客户服务",
+    "aboutUs": "关于我们",
+    "myNotification": "我的通知",
+    "languageRegionSettings": "语言和地区设置",
+    "chooseLanguage": "选择你的语言:"
+  }

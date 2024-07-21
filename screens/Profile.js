@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Switch } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { COLORS, SIZES, icons, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
@@ -9,10 +9,37 @@ import SettingsItem from '../components/SettingsItem';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 const Profile = () => {
+  const { t } = useTranslation();
   const refRBSheet = useRef();
   const navigation = useNavigation();
+
+  const getCurrentLanguage = () => {
+    const lang = i18n.language;
+    switch (lang) {
+      case 'en':
+        return 'English';
+      case 'zh':
+        return '中文';
+      default:
+        return 'English';
+    }
+  };
+
+  const [currentLanguage, setCurrentLanguage] = useState(getCurrentLanguage());
+
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      setCurrentLanguage(getCurrentLanguage());
+    };
+    i18n.on('languageChanged', handleLanguageChanged);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, []);
 
   /**
    * Render header
@@ -28,7 +55,7 @@ const Profile = () => {
           />
           <Text style={[styles.headerTitle, {
             color: COLORS.greyscale900
-          }]}>Profile</Text>
+          }]}>{t('profile')}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -92,32 +119,32 @@ const Profile = () => {
       <View style={styles.settingsContainer}>
         <SettingsItem
           icon={icons.bell3}
-          name="My Notification"
+          name={t('myNotification')}
           onPress={() => navigation.navigate("Notifications")}
         />
         <SettingsItem
           icon={icons.location2Outline}
-          name="Address"
+          name={t('address')}
           onPress={() => navigation.navigate("Address")}
         />
         <SettingsItem
           icon={icons.userOutline}
-          name="Edit Profile"
+          name={t('editProfile')}
           onPress={() => navigation.navigate("EditProfile")}
         />
         <SettingsItem
           icon={icons.bell2}
-          name="Notification"
+          name={t('notification')}
           onPress={() => navigation.navigate("SettingsNotifications")}
         />
         <SettingsItem
           icon={icons.wallet2Outline}
-          name="Purchase History"
+          name={t('purchaseHistory')}
           onPress={() => navigation.navigate("PurchaseHistory")}
         />
         <SettingsItem
           icon={icons.shieldOutline}
-          name="Account"
+          name={t('account')}
           onPress={() => navigation.navigate("SettingsSecurity")}
         />
         <TouchableOpacity
@@ -133,12 +160,12 @@ const Profile = () => {
             />
             <Text style={[styles.settingsName, {
               color: COLORS.greyscale900
-            }]}>Language & Region</Text>
+            }]}>{t('languageRegion')}</Text>
           </View>
           <View style={styles.rightContainer}>
             <Text style={[styles.rightLanguage, {
               color: COLORS.greyscale900
-            }]}>English (US)</Text>
+            }]}>{currentLanguage}</Text>
             <Image
               source={icons.arrowRight}
               resizeMode='contain'
@@ -160,7 +187,7 @@ const Profile = () => {
             />
             <Text style={[styles.settingsName, {
               color: COLORS.greyscale900
-            }]}>Dark Mode</Text>
+            }]}>{t('darkMode')}</Text>
           </View>
           <View style={styles.rightContainer}>
             <Switch
@@ -175,17 +202,17 @@ const Profile = () => {
         </TouchableOpacity>
         <SettingsItem
           icon={icons.lockedComputerOutline}
-          name="Privacy Policy"
+          name={t('privacyPolicy')}
           onPress={() => navigation.navigate("SettingsPrivacyPolicy")}
         />
         <SettingsItem
           icon={icons.infoCircle}
-          name="Customer Service"
+          name={t('customerService')}
           onPress={() => navigation.navigate("CustomerService")}
         />
         <SettingsItem
           icon={icons.moreCircle}
-          name="About Us"
+          name={t('aboutUs')}
           onPress={() => navigation.navigate("AboutUs")}
         />
         <TouchableOpacity
@@ -201,7 +228,7 @@ const Profile = () => {
             />
             <Text style={[styles.logoutName, {
               color: "red"
-            }]}>Logout</Text>
+            }]}>{t('logout')}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -237,16 +264,16 @@ const Profile = () => {
           }
         }}
       >
-        <Text style={styles.bottomTitle}>Logout</Text>
+        <Text style={styles.bottomTitle}>{t('logout')}</Text>
         <View style={[styles.separateLine, {
           backgroundColor: COLORS.grayscale200,
         }]} />
         <Text style={[styles.bottomSubtitle, {
           color: COLORS.black
-        }]}>Are you sure you want to log out?</Text>
+        }]}>{t('areYouSureLogout')}</Text>
         <View style={styles.bottomContainer}>
           <Button
-            title="Cancel"
+            title={t('cancel')}
             style={{
               width: (SIZES.width - 32) / 2 - 8,
               backgroundColor: COLORS.tansparentPrimary,
@@ -257,7 +284,7 @@ const Profile = () => {
             onPress={() => refRBSheet.current.close()}
           />
           <Button
-            title="Yes, Logout"
+            title={t('yesLogout')}
             filled
             style={styles.logoutButton}
             onPress={() => {

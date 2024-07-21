@@ -1,0 +1,20 @@
+{
+    "profile": "Profile",
+    "languageRegion": "Language & Region",
+    "darkMode": "Dark Mode",
+    "logout": "Logout",
+    "areYouSureLogout": "Are you sure you want to log out?",
+    "cancel": "Cancel",
+    "yesLogout": "Yes, Logout",
+    "notification": "Notification",
+    "address": "Address",
+    "editProfile": "Edit Profile",
+    "purchaseHistory": "Purchase History",
+    "account": "Account",
+    "privacyPolicy": "Privacy Policy",
+    "customerService": "Customer Service",
+    "aboutUs": "About Us",
+    "myNotification": "My Notification",
+    "languageRegionSettings": "Language & Region Settings",
+    "chooseLanguage": "Choose your language:"
+  }
