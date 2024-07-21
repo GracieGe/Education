@@ -6,6 +6,9 @@ import Header from '../components/Header';
 import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const isTestMode = true;
 
@@ -20,6 +23,7 @@ const Login = ({ navigation }) => {
   const [formState, setFormState] = useState(initialState);
   const [error, setError] = useState(null);
   const [isChecked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
@@ -36,17 +40,51 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occured', error)
+      Alert.alert('An error occurred', error);
     }
   }, [error]);
 
+  const loginHandler = async () => {
+    const { email, password } = formState.inputValues;
+
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      console.log('Sending login request to:', `${config.API_URL}/api/users/login`);
+      const response = await axios.post(`${config.API_URL}/api/users/login`, { email, password });
+
+      console.log('Response from server:', response);
+
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        console.log('Token:', token);
+        console.log('User:', user);
+
+        if (token && user) {
+          await AsyncStorage.setItem('token', token);
+          await AsyncStorage.setItem('user', JSON.stringify(user));
+          navigation.navigate('Main');
+        } else {
+          setError('Invalid response from server. Please try again.');
+        }
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred during login. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <SafeAreaView style={[styles.area, {
-      backgroundColor: COLORS.white
-    }]}>
-      <View style={[styles.container, {
-        backgroundColor: COLORS.white
-      }]}>
+    <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
+      <View style={[styles.container, { backgroundColor: COLORS.white }]}>
         <Header />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
@@ -56,19 +94,17 @@ const Login = ({ navigation }) => {
               style={styles.logo}
             />
           </View>
-          <Text style={[styles.title, {
-            color: COLORS.black
-          }]}>Login to Your Account</Text>
+          <Text style={[styles.title, { color: COLORS.black }]}>Login to Your Account</Text>
           <Input
             id="email"
-            onInputChanged={inputChangedHandler}
+            onInputChanged={(id, value) => inputChangedHandler(id, value)}
             placeholder="Email"
             placeholderTextColor={COLORS.black}
             icon={icons.email}
             keyboardType="email-address"
           />
           <Input
-            onInputChanged={inputChangedHandler}
+            onInputChanged={(id, value) => inputChangedHandler(id, value)}
             autoCapitalize="none"
             id="password"
             placeholder="Password"
@@ -89,32 +125,24 @@ const Login = ({ navigation }) => {
                 tintColors={{ true: COLORS.primary, false: "gray" }}
               />
               <View style={{ flex: 1 }}>
-                <Text style={[styles.privacy, {
-                  color: COLORS.black
-                }]}>Remenber me</Text>
+                <Text style={[styles.privacy, { color: COLORS.black }]}>Remember me</Text>
               </View>
             </View>
           </View>
           <Button
             title="Login"
             filled
-            onPress={() => navigation.navigate("Main")}
+            onPress={loginHandler}
             style={styles.button}
+            isLoading={isLoading}
           />
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ForgotPasswordMethods")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordMethods")}>
             <Text style={styles.forgotPasswordBtnText}>Forgot the password?</Text>
           </TouchableOpacity>
-          <View>
-
-          </View>
         </ScrollView>
         <View style={styles.bottomContainer}>
-          <Text style={[styles.bottomLeft, {
-            color: COLORS.black
-          }]}>Don't have an account ?</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Signup")}>
+          <Text style={[styles.bottomLeft, { color: COLORS.black }]}>Don't have an account ?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
             <Text style={styles.bottomRight}>{"  "}Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -200,6 +228,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 12
   }
-})
+});
 
-export default Login
+export default Login;
