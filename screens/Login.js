@@ -44,6 +44,7 @@ const Login = ({ navigation }) => {
     }
   }, [error]);
 
+
   const loginHandler = async () => {
     const { email, password } = formState.inputValues;
 
@@ -52,6 +53,7 @@ const Login = ({ navigation }) => {
       return;
     }
 
+    setError(null);
     setIsLoading(true);
     try {
       console.log('Sending login request to:', `${config.API_URL}/api/users/login`);
@@ -71,16 +73,25 @@ const Login = ({ navigation }) => {
         } else {
           setError('Invalid response from server. Please try again.');
         }
-      } else {
-        setError('Invalid email or password');
       }
     } catch (err) {
       console.error('Login error:', err);
+
+      if (err.response) {
+      if (err.response.status === 400) {
+        setError('Invalid email or password. Please try again.');
+      } else if (err.response.status === 401 || err.response.status === 403) {
+        setError('Invalid email or password');
+      } else {
+        setError('An error occurred during login. Please try again.');
+      }
+    } else {
       setError('An error occurred during login. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
