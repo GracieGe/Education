@@ -98,7 +98,12 @@ const Signup = ({ navigation, route }) => {
       }
     } catch (err) {
       setIsLoading(false);
-      setError(err.message);
+      if (err.response && err.response.status === 400 && err.response.data.msg === 'Email already exists') {
+        Alert.alert('Signup Error', 'Email already exists.');
+      } else {
+        setError(err.message);
+        Alert.alert('An error occurred', err.message);
+      }
     }
   };
 
