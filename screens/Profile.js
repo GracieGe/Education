@@ -302,11 +302,6 @@ const styles = StyleSheet.create({
     color: COLORS.greyscale900,
     marginLeft: 12
   },
-  headerIcon: {
-    height: 24,
-    width: 24,
-    tintColor: COLORS.greyscale900
-  },
   profileContainer: {
     alignItems: "center",
     borderBottomColor: COLORS.grayscale400,
@@ -413,11 +408,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 12,
     paddingHorizontal: 16
-  },
-  cancelButton: {
-    width: (SIZES.width - 32) / 2 - 8,
-    backgroundColor: COLORS.tansparentPrimary,
-    borderRadius: 32
   },
   logoutButton: {
     width: (SIZES.width - 32) / 2 - 8,
