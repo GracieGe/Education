@@ -59,7 +59,7 @@ const Home = ({ navigation }) => {
             style={styles.userIcon}
           />
           <View style={styles.viewNameContainer}>
-            <Text style={[styles.title, { color: COLORS.greyscale900 }]}>Andrew Ainsley</Text>
+            <Text style={[styles.title, { color: COLORS.greyscale900 }]}>Welcome!</Text>
           </View>
         </View>
         <View style={styles.viewRight}>

@@ -16,5 +16,9 @@
     "aboutUs": "About Us",
     "myNotification": "My Notification",
     "languageRegionSettings": "Language & Region Settings",
-    "chooseLanguage": "Choose your language:"
+    "chooseLanguage": "Choose your language:",
+    "home": "Home",
+    "course": "Course",
+    "session": "Session",
+    "chat": "Chat"
   }

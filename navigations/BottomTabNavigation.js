@@ -3,10 +3,12 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS, FONTS, icons } from '../constants';
 import { Home, Inbox, Orders, Profile, Course } from '../screens';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator()
 
 const BottomTabNavigation = () => {
+    const { t } = useTranslation();
 
     return (
         <Tab.Navigator screenOptions={{
@@ -43,7 +45,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Home</Text>
+                                }}>{t('home')}</Text>
                             </View>
                         )
                     },
@@ -69,7 +71,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Course</Text>
+                                }}>{t('course')}</Text>
                             </View>
                         )
                     },
@@ -94,7 +96,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Session</Text>
+                                }}>{t('session')}</Text>
                             </View>
                         )
                     },
@@ -120,7 +122,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary : COLORS.gray3,
-                                }}>Chat</Text>
+                                }}>{t('chat')}</Text>
                             </View>
                         )
                     },
@@ -146,7 +148,7 @@ const BottomTabNavigation = () => {
                                 <Text style={{
                                     ...FONTS.body4,
                                     color: focused ? COLORS.primary :  COLORS.gray3,
-                                }}>Profile</Text>
+                                }}>{t('profile')}</Text>
                             </View>
                         )
                     },

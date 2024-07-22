@@ -16,5 +16,9 @@
     "aboutUs": "关于我们",
     "myNotification": "我的通知",
     "languageRegionSettings": "语言和地区设置",
-    "chooseLanguage": "选择你的语言:"
+    "chooseLanguage": "选择你的语言:",
+    "home": "首页",
+    "course": "课程",
+    "session": "课时",
+    "chat": "消息"
   }
