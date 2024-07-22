@@ -9,6 +9,7 @@ const VerticalCourseCard = ({
     price,
     rating,
     numReviews,
+    image,
     onPress
 }) => {
     const [isFavourite, setIsFavourite] = useState(false);
@@ -19,7 +20,7 @@ const VerticalCourseCard = ({
             style={[styles.container, { backgroundColor: COLORS.white }]}>
             <View style={styles.imageContainer}>
                 <Image
-                    source={{ uri: null }} 
+                    source={{ uri: image }} 
                     style={styles.image}
                 />
             </View>
@@ -58,8 +59,8 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: "100%",
-        height: 140,
-        borderRadius: 16,
+        height: 160,
+        borderRadius: 10,
         backgroundColor: COLORS.lightGray, 
         justifyContent: "center",
         alignItems: "center"
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        borderRadius: 16,
+        borderRadius: 10,
         resizeMode: "cover"
     },
     name: {

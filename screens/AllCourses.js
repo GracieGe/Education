@@ -83,6 +83,7 @@ const AllCourses = ({ navigation }) => {
               price={item.price}
               rating={item.rating}
               numReviews={item.numReviews}
+              image={`${config.API_URL}/${item.image}`}
               onPress={() => navigation.navigate("CourseDetails", { courseId: item.courseId })}
             />
           )}

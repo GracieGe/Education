@@ -25,17 +25,21 @@ const CourseDetails = ({ route, navigation }) => {
   }, [courseId]);
 
   const renderImage = () => {
+    if (!courseData) {
+      return <Text>Loading...</Text>;
+    }
+
     return (
       <View>
         <Image
-          source={images.courses1}
+          source={{ uri: `${config.API_URL}/${courseData.image}` }}
           resizeMode='cover'
-          style={{ width: SIZES.width, height: 350 }} 
+          style={{ width: SIZES.width, height: 380 }} 
         />
         <View style={styles.separateLine} />
       </View>
     );
-  }
+  };
 
   // render header
   const renderHeader = () => {
