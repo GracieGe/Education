@@ -5,15 +5,20 @@ import { SIZES, COLORS, images } from '../constants';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Course = () => {
   const [orders, setOrders] = useState([]);
   const navigation = useNavigation();
-  const userId = 1; 
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${config.API_URL}/api/orders/user/${userId}/orders`);
+      const token = await AsyncStorage.getItem('token'); 
+      const response = await axios.get(`${config.API_URL}/api/orders/user/orders`, {
+        headers: {
+          'x-auth-token': token 
+        }
+      });
       console.log('Fetched orders:', response.data); 
       setOrders(response.data);
     } catch (error) {
@@ -48,7 +53,7 @@ const Course = () => {
 
   const renderEmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No orders found.</Text>
+      <Text style={styles.emptyText}>No courses found.</Text>
     </View>
   );
 
@@ -66,7 +71,7 @@ const Course = () => {
               <View style={styles.detailsContainer}>
                 <View>
                   <Image
-                    source={images.courses1} 
+                    source={{ uri: `${config.API_URL}/${item.image}` }}
                     resizeMode='cover'
                     style={styles.serviceImage}
                   />

@@ -99,7 +99,7 @@ const Signup = ({ navigation, route }) => {
     } catch (err) {
       setIsLoading(false);
       if (err.response && err.response.status === 400 && err.response.data.msg === 'Email already exists') {
-        Alert.alert('Signup Error', 'Email already exists.');
+        Alert.alert('Signup Error', 'Email already exists. Please go to the Sign In page or use another email to create your account.');
       } else {
         setError(err.message);
         Alert.alert('An error occurred', err.message);
