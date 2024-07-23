@@ -16,7 +16,6 @@ import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
 import config from '../config';
 
-
 const initialState = {
   inputValues: {
     fullName: '',
@@ -83,7 +82,8 @@ const FillYourProfile = ({ route, navigation }) => {
         console.log('Image picker error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        setImage({ uri: imageUri });
+        let imageType = response.type || response.assets?.[0]?.type;
+        setImage({ uri: imageUri, type: imageType });
       }
     });
   };
@@ -210,7 +210,31 @@ const FillYourProfile = ({ route, navigation }) => {
     console.log('Profile data being sent:', profileData);
 
     try {
-      const response = await axios.post(`${config.API_URL}/api/profiles/create`, { ...profileData, role });
+      const formData = new FormData();
+      formData.append('userId', userId);
+      formData.append('role', role);
+      formData.append('fullName', formState.inputValues.fullName);
+      formData.append('gender', formState.inputValues.gender);
+      formData.append('age', formState.inputValues.age);
+      formData.append('phoneNum', formState.inputValues.phoneNumber);
+      formData.append('birthday', formatDate(formState.inputValues.birthday));
+      if (role === 'student') {
+        formData.append('grade', formState.inputValues.grade);
+      }
+      if (image) {
+        formData.append('photo', {
+          uri: image.uri,
+          type: image.type, 
+          name: `profile.${image.type.split('/')[1]}`, 
+        });
+      }
+
+      const response = await axios.post(`${config.API_URL}/api/profiles/create`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       if (response.status === 201) {
         Alert.alert('Congratulations!', 'Profile created successfully');
         navigation.navigate('Main'); 
