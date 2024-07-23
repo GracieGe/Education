@@ -73,40 +73,10 @@ const PaymentMethods = ({ route, navigation }) => {
             Select the payment method you want to use.
           </Text>
           <PaymentMethodItem
-            checked={selectedItem === 'Paypal'}
-            onPress={() => handleCheckboxPress('Paypal')}
-            title="Paypal"
+            checked={selectedItem === 'Alipay'}
+            onPress={() => handleCheckboxPress('Alipay')}
+            title="Alipay"
             icon={icons.paypal}
-          />
-          <PaymentMethodItem
-            checked={selectedItem === 'Google Pay'}
-            onPress={() => handleCheckboxPress('Google Pay')}
-            title="Google Pay"
-            icon={icons.google}
-          />
-          <PaymentMethodItem
-            checked={selectedItem === 'Apple Pay'}
-            onPress={() => handleCheckboxPress('Apple Pay')}
-            title="Apple Pay"
-            icon={icons.apple}
-            tintColor={COLORS.black}
-          />
-          <PaymentMethodItem
-            checked={selectedItem === 'Credit Card'}
-            onPress={() => handleCheckboxPress('Credit Card')}
-            title="•••• •••• •••• •••• 4679"
-            icon={icons.creditCard}
-          />
-          <Button
-            title="Add New Card"
-            onPress={() => { navigation.navigate("AddNewCard") }}
-            style={{
-              width: SIZES.width - 32,
-              borderRadius: 32,
-              backgroundColor: COLORS.tansparentPrimary,
-              borderColor: COLORS.tansparentPrimary
-            }}
-            textColor={COLORS.primary}
           />
         </ScrollView>
         <Button
