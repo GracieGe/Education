@@ -61,10 +61,11 @@ const FillYourProfile = ({ route, navigation }) => {
   );
 
   useEffect(() => {
-    if (error) {
-      Alert.alert('An error occurred', error);
+    if (!userId) {
+      console.error("No userId found");
+      setError("No userId found. Please try again.");
     }
-  }, [error]);
+  }, [userId]);
 
   // Image Profile handler
   const pickImage = () => {
@@ -182,6 +183,7 @@ const FillYourProfile = ({ route, navigation }) => {
   }
 
   const handleContinue = async () => {
+    console.log('userId:', userId);
     const formatDate = (date) => {
       return date.replace(/\//g, '-');
     };

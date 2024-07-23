@@ -10,6 +10,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
 import axios from 'axios';
 import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const isTestMode = true;
 
@@ -91,8 +92,10 @@ const Signup = ({ navigation, route }) => {
       const response = await axios.post(`${config.API_URL}/api/users/signup`, userData);
       setIsLoading(false);
       if (response.status === 201) {
-        const { userId, role } = response.data;
-        navigation.navigate("FillYourProfile", { userId, role });
+        const { token, user } = response.data;
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+        navigation.navigate("FillYourProfile", { userId: user.id, role: user.role });
       } else {
         console.error('Error creating user:', response.status);
       }
