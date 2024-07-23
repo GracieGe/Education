@@ -11,6 +11,7 @@ import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -40,6 +41,21 @@ const Profile = () => {
       i18n.off('languageChanged', handleLanguageChanged);
     };
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Clear AsyncStorage
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('user');
+      // Navigate to Login
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   /**
    * Render header
@@ -289,7 +305,7 @@ const Profile = () => {
             style={styles.logoutButton}
             onPress={() => {
               refRBSheet.current.close();
-              navigation.navigate("Login"); 
+              handleLogout();
             }}
           />
         </View>
