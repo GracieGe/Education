@@ -7,8 +7,12 @@ import {
     validateCVV
 } from '../ValidationConstraints';
 
-export const validateInput = (inputId, inputValue) => {
+export const validateInput = (inputId, inputValue, role) => {
     let validationResult;
+
+    if (role === 'teacher' && inputId === 'grade') {
+        return null;
+    }
 
     if (
         inputId === 'fullName' ||

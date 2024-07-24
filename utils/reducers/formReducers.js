@@ -3,7 +3,7 @@ export const reducer = (state, action) => {
       return state;
     }
   
-    const { validationResult, inputId, inputValue } = action;
+    const { validationResult, inputId, inputValue, role } = action;
   
     const updatedValues = {
       ...state.inputValues,
@@ -12,14 +12,16 @@ export const reducer = (state, action) => {
   
     const updatedValidities = {
       ...state.inputValidities,
-      [inputId]: validationResult || null,  
+      [inputId]: validationResult,
     };
   
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
-      if (updatedValidities[key] !== null) {
-        updatedFormIsValid = false;
-        break;
+      if (role === 'student' || key !== 'grade') { 
+        if (!updatedValidities[key]) {
+          updatedFormIsValid = false;
+          break;
+        }
       }
     }
   

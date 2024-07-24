@@ -54,10 +54,14 @@ const FillYourProfile = ({ route, navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue);
-      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
+      if (inputId === 'grade' && role === 'teacher') {
+        return;
+      }
+      const validationResult = validateInput(inputId, inputValue);
+      const isValid = validationResult === null; 
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: isValid, inputValue });
     },
-    [dispatchFormState]
+    [dispatchFormState, role]
   );
 
   useEffect(() => {
@@ -184,6 +188,7 @@ const FillYourProfile = ({ route, navigation }) => {
 
   const handleContinue = async () => {
     console.log('userId:', userId);
+
     const formatDate = (date) => {
       return date.replace(/\//g, '-');
     };
@@ -198,16 +203,18 @@ const FillYourProfile = ({ route, navigation }) => {
       grade: formState.inputValues.grade,
     };
 
-    if (!formState.formIsValid || 
-      !formState.inputValues.fullName ||
-      !formState.inputValues.gender ||
-      !formState.inputValues.age ||
-      !formState.inputValues.phoneNumber ||
-      !formState.inputValues.birthday ||
-      (role === 'student' && !formState.inputValues.grade)) {
-    Alert.alert('Incomplete Form', 'Please fill all the fields before continuing.');
-    return;
-  }
+    const isFormValid = formState.formIsValid && 
+                      formState.inputValues.fullName &&
+                      formState.inputValues.gender &&
+                      formState.inputValues.age &&
+                      formState.inputValues.phoneNumber &&
+                      formState.inputValues.birthday &&
+                      (role !== 'student' || (role === 'student' && formState.inputValues.grade));
+
+    if (!isFormValid) {
+      Alert.alert('Incomplete Form', 'Please fill all the fields before continuing.');
+      return;
+    }
 
     console.log('Profile data being sent:', profileData);
 
