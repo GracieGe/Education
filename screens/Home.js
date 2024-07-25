@@ -12,6 +12,7 @@ import config from '../config';
 
 const Home = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
+  const [teacherProfiles, setTeacherProfiles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -19,6 +20,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     fetchCategories();
     fetchCourses();
+    fetchTeachers();
   }, []);
 
   const fetchCategories = async () => {
@@ -44,9 +46,23 @@ const Home = ({ navigation }) => {
     }
   };
 
+  const fetchTeachers = async (categoryId = 'all') => {
+    try {
+      setLoading(true);
+      const url = `${config.API_URL}/api/teachers/signed${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
+      const response = await axios.get(url);
+      setTeacherProfiles(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching teachers:', error);
+      setLoading(false);
+    }
+  };
+
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId);
     fetchCourses(categoryId);
+    fetchTeachers(categoryId);
   };
 
   const renderHeader = () => {
@@ -174,6 +190,12 @@ const Home = ({ navigation }) => {
   };
 
   const renderTeacherProfiles = () => {
+    if (loading) {
+      return <Text>Loading...</Text>;
+    }
+
+    const displayedCourses = teacherProfiles.slice(0, 6);
+
     return (
       <View>
         <SubHeaderItem
@@ -181,16 +203,24 @@ const Home = ({ navigation }) => {
           navTitle="See all"
           onPress={() => navigation.navigate("AllTeacherProfiles")}
         />
+        <FlatList
+          data={categories}
+          keyExtractor={item => item.categoryId.toString()}
+          numColumns={3}
+          renderItem={renderCategoryItem}
+          scrollEnabled={false}
+          // contentContainerStyle={{ justifyContent: 'space-between' }}
+        />
         <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
           <FlatList
-            data={teacherProfiles}
-            keyExtractor={item => item.id.toString()}
+            data={displayedCourses}
+            keyExtractor={item => item.teacherId.toString()}
             numColumns={1}
             renderItem={({ item }) => (
               <HorizontalTeacherProfile
-                key={item.id}
-                name={item.name}
-                course={item.course}
+                fullName={item.fullName}
+                photo={`${config.API_URL}/${item.photo}`}
+                courseName={item.courseName}
                 grade={item.grade}
                 rating={item.rating}
                 numReviews={item.numReviews}

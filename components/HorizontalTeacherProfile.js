@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
-import { COLORS, SIZES, icons } from '../constants';
+import React from 'react';
+import { COLORS, SIZES } from '../constants';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const HorizontalTeacherProfile = ({
-    name,
-    image,
-    course,
+    fullName,
+    photo,
+    courseName,
     grade,
     rating,
     numReviews,
@@ -20,7 +20,7 @@ const HorizontalTeacherProfile = ({
                 backgroundColor: COLORS.white
             }]}>
             <Image
-                source={image}
+                source={{ uri: photo }}
                 resizeMode='cover'
                 style={styles.image}
             />
@@ -28,7 +28,7 @@ const HorizontalTeacherProfile = ({
                 <View style={styles.topViewContainer}>
                     <Text style={[styles.name, {
                         color: COLORS.greyscale900
-                    }]}>{name}</Text>
+                    }]}>{fullName}</Text>
                 </View>
                 <View style={styles.viewContainer}>
                     <FontAwesome name="star" size={14} color="rgb(250, 159, 28)" />
@@ -38,7 +38,7 @@ const HorizontalTeacherProfile = ({
                 </View>
                 <View style={styles.bottomViewContainer}>
                     <View style={styles.courseContainer}>
-                        <Text style={styles.course}>{course}</Text>
+                        <Text style={styles.course}>{courseName}</Text>
                         <Text style={styles.grade}>{""}| {" "}</Text>
                         <Text style={styles.grade}>{grade}</Text>
                     </View>
