@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { COLORS, SIZES, icons, images } from '../constants';
-import { teacherProfiles } from '../data';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import SubHeaderItem from '../components/SubHeaderItem';
@@ -15,7 +14,8 @@ const Home = ({ navigation }) => {
   const [teacherProfiles, setTeacherProfiles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCourseCategory, setSelectedCourseCategory] = useState('all');
+  const [selectedTeacherCategory, setSelectedTeacherCategory] = useState('all');
 
   useEffect(() => {
     fetchCategories();
@@ -59,9 +59,13 @@ const Home = ({ navigation }) => {
     }
   };
 
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId);
+  const handleCourseCategorySelect = (categoryId) => {
+    setSelectedCourseCategory(categoryId);
     fetchCourses(categoryId);
+  };
+
+  const handleTeacherCategorySelect = (categoryId) => {
+    setSelectedTeacherCategory(categoryId);
     fetchTeachers(categoryId);
   };
 
@@ -124,10 +128,10 @@ const Home = ({ navigation }) => {
     );
   };
 
-  const renderCategoryItem = ({ item }) => (
+  const renderCourseCategoryItem = ({ item }) => (
     <TouchableOpacity
       style={{
-        backgroundColor: selectedCategory === item.categoryId ? COLORS.primary : "transparent",
+        backgroundColor: selectedCourseCategory === item.categoryId ? COLORS.primary : "transparent",
         padding: 10,
         marginVertical: 5,
         borderColor: COLORS.primary,
@@ -137,9 +141,29 @@ const Home = ({ navigation }) => {
         flex: 1,
         alignItems: 'center',
       }}
-      onPress={() => handleCategorySelect(item.categoryId)}>
+      onPress={() => handleCourseCategorySelect(item.categoryId)}>
       <Text style={{
-        color: selectedCategory === item.categoryId ? COLORS.white : COLORS.primary
+        color: selectedCourseCategory === item.categoryId ? COLORS.white : COLORS.primary
+      }}>{item.categoryName}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderTeacherCategoryItem = ({ item }) => (
+    <TouchableOpacity
+      style={{
+        backgroundColor: selectedTeacherCategory === item.categoryId ? COLORS.primary : "transparent",
+        padding: 10,
+        marginVertical: 5,
+        borderColor: COLORS.primary,
+        borderWidth: 1.3,
+        borderRadius: 24,
+        marginRight: 12,
+        flex: 1,
+        alignItems: 'center',
+      }}
+      onPress={() => handleTeacherCategorySelect(item.categoryId)}>
+      <Text style={{
+        color: selectedTeacherCategory === item.categoryId ? COLORS.white : COLORS.primary
       }}>{item.categoryName}</Text>
     </TouchableOpacity>
   );
@@ -162,9 +186,8 @@ const Home = ({ navigation }) => {
           data={categories}
           keyExtractor={item => item.categoryId.toString()}
           numColumns={3}
-          renderItem={renderCategoryItem}
+          renderItem={renderCourseCategoryItem}
           scrollEnabled={false}
-          // contentContainerStyle={{ justifyContent: 'space-between' }}
         />
         <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
           <FlatList
@@ -207,9 +230,8 @@ const Home = ({ navigation }) => {
           data={categories}
           keyExtractor={item => item.categoryId.toString()}
           numColumns={3}
-          renderItem={renderCategoryItem}
+          renderItem={renderTeacherCategoryItem}
           scrollEnabled={false}
-          // contentContainerStyle={{ justifyContent: 'space-between' }}
         />
         <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
           <FlatList
