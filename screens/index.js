@@ -65,7 +65,7 @@ import TrackDriver from "./TrackDriver";
 import TeacherDetails from "./TeacherDetails";
 import VoiceCall from "./VoiceCall";
 import VideoCall from "./VideoCall";
-import WhatsYourMood from "./WhatsYourMood";
+import SelectTeachers from "./SelectTeachers";
 import RateTheDriver from "./RateTheDriver";
 import GiveTipForDriver from "./GiveTipForDriver";
 import RateTheRestaurant from "./RateTheRestaurant";
@@ -142,7 +142,7 @@ export {
     TeacherDetails,
     VoiceCall,
     VideoCall,
-    WhatsYourMood,
+    SelectTeachers,
     RateTheDriver,
     GiveTipForDriver,
     RateTheRestaurant,
