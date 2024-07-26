@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, StatusBar } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { COLORS, SIZES, icons, images } from '../constants';
+import { COLORS, SIZES, icons } from '../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Button from '../components/Button';

@@ -1,10 +1,33 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import React from 'react';
-import { COLORS, SIZES, icons, images } from '../constants';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { COLORS, SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
+import axios from 'axios';
+import config from '../config';
 
-const TeacherDetails = ({ navigation }) => {
+const TeacherDetails = ({ route, navigation }) => {
+  const { teacherId } = route.params; 
+  const [teacherData, setTeacherData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTeacherData = async () => {
+      try {
+        const response = await axios.get(`${config.API_URL}/api/teachers/${teacherId}`);
+        setTeacherData(response.data);
+      } catch (err) {
+        console.error('Error fetching teacher data:', err);
+        setError('Failed to load teacher data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+
+    fetchTeacherData();
+  }, [teacherId]);
   
   /**
    * Render header
@@ -35,93 +58,87 @@ const TeacherDetails = ({ navigation }) => {
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
         {renderHeader()}
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.userInfoContainer}>
-            <Image
-              source={images.user3}
-              resizeMode='contain'
-              style={styles.avatar}
-            />
-            <Text style={[styles.driverName, {
-              color: COLORS.greyscale900
-            }]}>
-              Yang Liu
-            </Text>
-          </View>
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            teacherData && (
+              <View>
+                <View style={styles.userInfoContainer}>
+                  <Image
+                    source={{ uri: `${config.API_URL}/${teacherData.photo}` }}
+                    resizeMode='contain'
+                    style={styles.avatar}
+                  />
+                  <Text style={[styles.teacherName, { color: COLORS.greyscale900 }]}>
+                    {teacherData.fullName}
+                  </Text>
+                </View>
 
-          <View style={[styles.driverStatsContainer, {
-            backgroundColor: COLORS.white
-          }]}>
-            <View style={styles.driverStatsItem}>
-              <View style={styles.driverStatsIconContainer}>
-                <Image
-                  source={icons.star}
-                  resizeMode='contain'
-                  style={styles.driverStatsIcon}
-                />
-              </View>
-              <Text style={[styles.statsNum, {
-                color: COLORS.greyscale900
-              }]}>4.9</Text>
-              <Text style={[styles.statsLabel, {
-                color: COLORS.grayscale700,
-              }]}>Ratings</Text>
-            </View>
-            <View style={styles.driverStatsItem}>
-              <View style={styles.driverStatsIconContainer}>
-                <Image
-                  source={icons.people4}
-                  resizeMode='contain'
-                  style={styles.peopleIcon}
-                />
-              </View>
-              <Text style={[styles.statsNum, {
-                color: COLORS.greyscale900
-              }]}>279</Text>
-              <Text style={[styles.statsLabel, {
-                color: COLORS.grayscale700,
-              }]}>Students</Text>
-            </View>
-            <View style={styles.driverStatsItem}>
-              <View style={styles.driverStatsIconContainer}>
-                <Image
-                  source={icons.clock2}
-                  resizeMode='contain'
-                  style={styles.driverStatsIcon}
-                />
-              </View>
-              <Text style={[styles.statsNum, {
-                color: COLORS.greyscale900
-              }]}>5</Text>
-              <Text style={[styles.statsLabel, {
-                color: COLORS.grayscale700,
-              }]}>Teaching Years</Text>
-            </View>
-          </View>
+                <View style={[styles.teacherStatsContainer, { backgroundColor: COLORS.white }]}>
+                  <View style={styles.teacherStatsItem}>
+                    <View style={styles.teacherStatsIconContainer}>
+                      <Image
+                        source={icons.star}
+                        resizeMode='contain'
+                        style={styles.teacherStatsIcon}
+                      />
+                    </View>
+                    <Text style={[styles.statsNum, { color: COLORS.greyscale900 }]}>
+                      {teacherData.rating}
+                    </Text>
+                    <Text style={[styles.statsLabel, { color: COLORS.grayscale700 }]}>Ratings</Text>
+                  </View>
+                  <View style={styles.teacherStatsItem}>
+                    <View style={styles.teacherStatsIconContainer}>
+                      <Image
+                        source={icons.people4}
+                        resizeMode='contain'
+                        style={styles.peopleIcon}
+                      />
+                    </View>
+                    <Text style={[styles.statsNum, { color: COLORS.greyscale900 }]}>
+                      {teacherData.numStudents}
+                    </Text>
+                    <Text style={[styles.statsLabel, { color: COLORS.grayscale700 }]}>Students</Text>
+                  </View>
+                  <View style={styles.teacherStatsItem}>
+                    <View style={styles.teacherStatsIconContainer}>
+                      <Image
+                        source={icons.clock2}
+                        resizeMode='contain'
+                        style={styles.teacherStatsIcon}
+                      />
+                    </View>
+                    <Text style={[styles.statsNum, { color: COLORS.greyscale900 }]}>
+                      {teacherData.teachingYears}
+                    </Text>
+                    <Text style={[styles.statsLabel, { color: COLORS.grayscale700 }]}>Teaching Years</Text>
+                  </View>
+                </View>
 
-          <View style={[styles.descriptionContainer, {
-            backgroundColor: COLORS.white,
-            borderRadius: 6,
-          }]}>
-            <Text style={[styles.descriptionTitle, { color: COLORS.black }]}>
-            Description of Teacher
-            </Text>
-            <Text style={[styles.descriptionText, { color: COLORS.black }]}>
-              xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-            </Text> 
-          </View>
+                <View style={[styles.descriptionContainer, { backgroundColor: COLORS.white, borderRadius: 6 }]}>
+                  <Text style={[styles.descriptionTitle, { color: COLORS.black }]}>
+                    Description of Teacher
+                  </Text>
+                  <Text style={[styles.descriptionText, { color: COLORS.black }]}>
+                    {teacherData.description}
+                  </Text>
+                </View>
+              </View>
+            )
+          )}
         </ScrollView>
         <View style={styles.bottomContainer}>
-          <TouchableOpacity
-            style={styles.document}>
+          <TouchableOpacity style={styles.document}>
             <Image
               source={icons.document}
               resizeMode='contain'
               style={styles.documentIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ChatWithPerson")}
-            style={styles.chat}>
+          <TouchableOpacity onPress={() => navigation.navigate("ChatWithPerson")} style={styles.chat}>
             <Image
               source={icons.chatBubble2}
               resizeMode='contain'
@@ -131,7 +148,7 @@ const TeacherDetails = ({ navigation }) => {
         </View>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -173,7 +190,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     marginVertical: 16
   },
-  driverName: {
+  teacherName: {
     fontSize: 22,
     fontFamily: "Urbanist Bold",
     color: COLORS.greyscale900,
@@ -184,7 +201,7 @@ const styles = StyleSheet.create({
     tintColor: COLORS.primary,
     marginHorizontal: 6
   },
-  driverStatsContainer: {
+  teacherStatsContainer: {
     width: SIZES.width - 32,
     borderRadius: 16,
     flexDirection: "row",
@@ -193,11 +210,11 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     backgroundColor: COLORS.white
   },
-  driverStatsItem: {
+  teacherStatsItem: {
     alignItems: "center",
     width: '33%'
   },
-  driverStatsIconContainer: {
+  teacherStatsIconContainer: {
     height: 52,
     width: 52,
     borderRadius: 999,
@@ -205,7 +222,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.primary
   },
-  driverStatsIcon: {
+  teacherStatsIcon: {
     height: 20,
     width: 20,
     tintColor: COLORS.white

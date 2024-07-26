@@ -83,7 +83,7 @@ const AllTeacherProfiles = ({ navigation }) => {
               grade={item.grade}
               rating={item.rating}
               numReviews={item.numReviews}
-              onPress={() => navigation.navigate("TeacherDetails")}
+              onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
             />
           )}
         />
