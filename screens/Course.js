@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Course = () => {
   const [orders, setOrders] = useState([]);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
   const navigation = useNavigation();
 
   const fetchOrders = async () => {
@@ -26,13 +27,22 @@ const Course = () => {
     }
   };
 
+  const fetchSelectedTeacher = async () => {
+    const teacherData = await AsyncStorage.getItem('selectedTeacher');
+    if (teacherData) {
+      setSelectedTeacher(JSON.parse(teacherData));
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
+    fetchSelectedTeacher();
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       fetchOrders();
+      fetchSelectedTeacher();
     }, [])
   );
 
@@ -81,7 +91,9 @@ const Course = () => {
                   <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>{item.grade}</Text>
                   <View style={styles.teacherContainer}>
                     <View style={styles.teacherItemContainer}>
-                      <Text style={styles.teacher}>Selected Teacher: N/A</Text>
+                      <Text style={styles.teacher}>
+                        Selected Teacher: {selectedTeacher ? selectedTeacher.fullName : 'N/A'}
+                      </Text>
                     </View>
                   </View>
                 </View>

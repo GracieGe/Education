@@ -11,6 +11,7 @@ import config from '../config';
 
 const SelectTeachers = ({ navigation, route }) => {
   const [teachers, setTeachers] = useState([]);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { courseId } = route.params;
@@ -21,12 +22,12 @@ const SelectTeachers = ({ navigation, route }) => {
 
   const fetchTeachers = async () => {
     try {
-      const token = await AsyncStorage.getItem('token'); 
+      const token = await AsyncStorage.getItem('token');
       const url = `${config.API_URL}/api/teachers/byCourse?courseId=${courseId}`;
       console.log('Fetching teachers with URL:', url);
       const response = await axios.get(url, {
         headers: {
-          'x-auth-token': token, 
+          'x-auth-token': token,
         },
       });
       console.log('Teachers fetched:', response.data);
@@ -36,6 +37,16 @@ const SelectTeachers = ({ navigation, route }) => {
       setError(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSelect = async (teacher) => {
+    setSelectedTeacher(teacher);
+    try {
+      await AsyncStorage.setItem('selectedTeacher', JSON.stringify(teacher));
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error saving selected teacher:', error);
     }
   };
 
@@ -55,6 +66,7 @@ const SelectTeachers = ({ navigation, route }) => {
             rating={item.rating}
             numReviews={item.numReviews}
             onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
+            onSelect={() => handleSelect(item)}
           />
         )}
       />
