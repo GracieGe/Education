@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
@@ -8,107 +9,70 @@ import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
 import axios from 'axios';
 import config from '../config';
 
-const SelectTeachers = ({ navigation }) => {
+const SelectTeachers = ({ navigation, route }) => {
   const [teachers, setTeachers] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [error, setError] = useState(null);
+  const { courseId } = route.params;
 
   useEffect(() => {
-    fetchCategories();
     fetchTeachers();
-  }, []);
+  }, [courseId]);
 
-  const fetchCategories = async () => {
+  const fetchTeachers = async () => {
     try {
-      const response = await axios.get(`${config.API_URL}/api/categories`);
-      setCategories([{ categoryId: 'all', categoryName: 'All' }, ...response.data]);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
-  const fetchTeachers = async (categoryId = 'all') => {
-    try {
-      const url = `${config.API_URL}/api/teachers/signed${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
+      const token = await AsyncStorage.getItem('token'); 
+      const url = `${config.API_URL}/api/teachers/byCourse?courseId=${courseId}`;
       console.log('Fetching teachers with URL:', url);
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          'x-auth-token': token, 
+        },
+      });
       console.log('Teachers fetched:', response.data);
       setTeachers(response.data);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching teachers:', error);
+      setError(error);
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId);
-    fetchTeachers(categoryId);
-  };
-
-  const renderCategoryItem = ({ item }) => (
-    <TouchableOpacity
-      style={{
-        backgroundColor: selectedCategory === item.categoryId ? COLORS.primary : "transparent",
-        padding: 10,
-        marginVertical: 5,
-        borderColor: COLORS.primary,
-        borderWidth: 1.3,
-        borderRadius: 24,
-        marginRight: 12,
-        flex: 1,
-        alignItems: 'center',
-      }}
-      onPress={() => handleCategorySelect(item.categoryId)}>
-      <Text style={{
-        color: selectedCategory === item.categoryId ? COLORS.white : COLORS.primary
-      }}>{item.categoryName}</Text>
-    </TouchableOpacity>
+  const renderTeachers = () => (
+    <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
+      <FlatList
+        data={teachers}
+        keyExtractor={item => item.teacherId.toString()}
+        numColumns={1}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <HorizontalTeacherProfile
+            fullName={item.fullName}
+            photo={`${config.API_URL}/${item.photo}`}
+            courseName={item.courseName}
+            grade={item.grade}
+            rating={item.rating}
+            numReviews={item.numReviews}
+            onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
+          />
+        )}
+      />
+    </View>
   );
-
-  const renderTeachers = () => {
-    return (
-      <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
-        <FlatList
-          data={teachers}
-          keyExtractor={item => item.teacherId.toString()}
-          numColumns={1}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <HorizontalTeacherProfile
-              fullName={item.fullName}
-              photo={`${config.API_URL}/${item.photo}`}
-              courseName={item.courseName}
-              grade={item.grade}
-              rating={item.rating}
-              numReviews={item.numReviews}
-              onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
-            />
-          )}
-        />
-      </View>
-    );
-  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="All Teacher Profiles" />
+        <Header title="Select Teacher" />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-          <FlatList
-            data={categories}
-            keyExtractor={item => item.categoryId.toString()}
-            numColumns={3}
-            renderItem={renderCategoryItem}
-            scrollEnabled={false}
-            contentContainerStyle={{ justifyContent: 'space-between' }}
-          />
-          {loading ? <Text>Loading...</Text> : renderTeachers()}
+          {loading && <Text>Loading...</Text>}
+          {error && <Text>Error fetching teachers: {error.message}</Text>}
+          {!loading && !error && renderTeachers()}
         </ScrollView>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -124,6 +88,6 @@ const styles = StyleSheet.create({
   scrollView: {
     marginVertical: 16
   }
-})
+});
 
-export default SelectTeachers
+export default SelectTeachers;

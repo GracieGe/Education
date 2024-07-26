@@ -94,7 +94,7 @@ const Course = () => {
               <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("SelectTeachers")}
+                  onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
                   style={styles.cancelBtn}>
                   <Text style={styles.cancelBtnText}>Select Teacher</Text>
                 </TouchableOpacity>
