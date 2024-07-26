@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
+import HorizontalTeacherProfileWithSelection from '../components/HorizontalTeacherProfileWithSelection';
 import axios from 'axios';
 import config from '../config';
 
@@ -47,7 +47,7 @@ const SelectTeachers = ({ navigation, route }) => {
         numColumns={1}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <HorizontalTeacherProfile
+          <HorizontalTeacherProfileWithSelection
             fullName={item.fullName}
             photo={`${config.API_URL}/${item.photo}`}
             courseName={item.courseName}
