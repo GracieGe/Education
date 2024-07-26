@@ -12,7 +12,7 @@ const HorizontalTeacherProfileWithSelection = ({
     numReviews,
     onPress,
     onSelect,
-    isSelected // 添加 isSelected prop 来控制选中状态
+    isSelected 
 }) => {
 
     return (
@@ -49,17 +49,17 @@ const HorizontalTeacherProfileWithSelection = ({
             <TouchableOpacity 
                 style={[
                     styles.selectButton, 
-                    isSelected && styles.selectedButton // 动态应用选中样式
+                    isSelected && styles.selectedButton 
                 ]} 
                 onPress={onSelect}
             >
                 <Text 
                     style={[
                         styles.selectButtonText, 
-                        isSelected && styles.selectedButtonText // 动态应用选中文字颜色
+                        isSelected && styles.selectedButtonText 
                     ]}
                 >
-                    {isSelected ? "Selected" : "Select"} {/* 动态显示按钮文本 */}
+                    {isSelected ? "Selected" : "Select"} 
                 </Text>
             </TouchableOpacity>
         </TouchableOpacity>

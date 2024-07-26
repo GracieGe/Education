@@ -17,7 +17,19 @@ const SelectTeachers = ({ navigation, route }) => {
   const { courseId } = route.params;
 
   useEffect(() => {
+    const fetchSelectedTeacher = async () => {
+      try {
+        const storedTeacher = await AsyncStorage.getItem('selectedTeacher');
+        if (storedTeacher) {
+          setSelectedTeacher(JSON.parse(storedTeacher));
+        }
+      } catch (error) {
+        console.error('Error loading selected teacher:', error);
+      }
+    };
+  
     fetchTeachers();
+    fetchSelectedTeacher(); 
   }, [courseId]);
 
   const fetchTeachers = async () => {
@@ -44,7 +56,6 @@ const SelectTeachers = ({ navigation, route }) => {
     setSelectedTeacher(teacher);
     try {
       await AsyncStorage.setItem('selectedTeacher', JSON.stringify(teacher));
-      navigation.goBack();
     } catch (error) {
       console.error('Error saving selected teacher:', error);
     }
@@ -67,6 +78,7 @@ const SelectTeachers = ({ navigation, route }) => {
             numReviews={item.numReviews}
             onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
             onSelect={() => handleSelect(item)}
+            isSelected={selectedTeacher?.teacherId === item.teacherId}
           />
         )}
       />
