@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Course = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedTeachers, setSelectedTeachers] = useState({});
   const navigation = useNavigation();
 
   const fetchOrders = async () => {
@@ -20,29 +20,36 @@ const Course = () => {
           'x-auth-token': token 
         }
       });
-      console.log('Fetched orders:', response.data); 
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
 
-  const fetchSelectedTeacher = async () => {
-    const teacherData = await AsyncStorage.getItem('selectedTeacher');
-    if (teacherData) {
-      setSelectedTeacher(JSON.parse(teacherData));
+  const fetchSelectedTeachers = async () => {
+    try {
+      const teachers = {};
+      for (const order of orders) {
+        const teacherData = await AsyncStorage.getItem(`selectedTeacher_${order.courseId}`);
+        if (teacherData) {
+          teachers[order.courseId] = JSON.parse(teacherData);
+        }
+      }
+      setSelectedTeachers(teachers);
+    } catch (error) {
+      console.error('Error loading selected teachers:', error);
     }
   };
 
   useEffect(() => {
     fetchOrders();
-    fetchSelectedTeacher();
-  }, []);
+    fetchSelectedTeachers();
+  }, [orders]);
 
   useFocusEffect(
     React.useCallback(() => {
       fetchOrders();
-      fetchSelectedTeacher();
+      fetchSelectedTeachers();
     }, [])
   );
 
@@ -67,6 +74,50 @@ const Course = () => {
     </View>
   );
 
+  const renderItem = ({ item }) => {
+    const selectedTeacher = selectedTeachers[item.courseId];
+    return (
+      <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
+        <View style={styles.detailsContainer}>
+          <Image
+            source={{ uri: `${config.API_URL}/${item.image}` }}
+            resizeMode='cover'
+            style={styles.serviceImage}
+          />
+          <View style={styles.detailsRightContainer}>
+            <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.courseName}</Text>
+            <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>{item.grade}</Text>
+            <View style={styles.teacherContainer}>
+              <View style={styles.teacherItemContainer}>
+                <Text style={styles.teacher}>
+                  Selected Teacher: {selectedTeacher ? selectedTeacher.fullName : 'N/A'}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={styles.additionalContainer}>
+          <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Purchased Hours: {item.purchasedHours}</Text>
+          <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Used Hours: {item.usedHours}</Text>
+          <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Remaining Hours: {item.remainingHours}</Text>
+        </View>
+        <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
+            style={styles.cancelBtn}>
+            <Text style={styles.cancelBtnText}>Select Teacher</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("EReceipt")}
+            style={styles.completionBtn}>
+            <Text style={styles.completionBtnText}>Book Slots</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.container}>
@@ -76,48 +127,7 @@ const Course = () => {
           keyExtractor={item => item.orderId.toString()}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmptyComponent}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
-              <View style={styles.detailsContainer}>
-                <View>
-                  <Image
-                    source={{ uri: `${config.API_URL}/${item.image}` }}
-                    resizeMode='cover'
-                    style={styles.serviceImage}
-                  />
-                </View>
-                <View style={styles.detailsRightContainer}>
-                  <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.courseName}</Text>
-                  <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>{item.grade}</Text>
-                  <View style={styles.teacherContainer}>
-                    <View style={styles.teacherItemContainer}>
-                      <Text style={styles.teacher}>
-                        Selected Teacher: {selectedTeacher ? selectedTeacher.fullName : 'N/A'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.additionalContainer}>
-                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Purchased Hours: {item.purchasedHours}</Text>
-                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Used Hours: {item.usedHours}</Text>
-                <Text style={[styles.grade, { color: COLORS.grayscale700 }]}>Remaining Hours: {item.remainingHours}</Text>
-              </View>
-              <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
-                  style={styles.cancelBtn}>
-                  <Text style={styles.cancelBtnText}>Select Teacher</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("EReceipt")}
-                  style={styles.completionBtn}>
-                  <Text style={styles.completionBtnText}>Book Slots</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          )}
+          renderItem={renderItem}
         />
       </View>
     </SafeAreaView>
