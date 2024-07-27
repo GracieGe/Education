@@ -29,12 +29,13 @@ const Course = () => {
   const fetchSelectedTeachers = async () => {
     try {
       const teachers = {};
-      for (const order of orders) {
+      const fetchPromises = orders.map(async (order) => {
         const teacherData = await AsyncStorage.getItem(`selectedTeacher_${order.orderId}`);
         if (teacherData) {
           teachers[order.orderId] = JSON.parse(teacherData);
         }
-      }
+      });
+      await Promise.all(fetchPromises);
       setSelectedTeachers(teachers);
     } catch (error) {
       console.error('Error loading selected teachers:', error);
@@ -44,8 +45,8 @@ const Course = () => {
   useEffect(() => {
     fetchOrders();
     fetchSelectedTeachers();
-  }, [orders]);
-
+  }, []);  
+  
   useFocusEffect(
     React.useCallback(() => {
       fetchOrders();
