@@ -30,9 +30,9 @@ const Course = () => {
     try {
       const teachers = {};
       for (const order of orders) {
-        const teacherData = await AsyncStorage.getItem(`selectedTeacher_${order.courseId}`);
+        const teacherData = await AsyncStorage.getItem(`selectedTeacher_${order.orderId}`);
         if (teacherData) {
-          teachers[order.courseId] = JSON.parse(teacherData);
+          teachers[order.orderId] = JSON.parse(teacherData);
         }
       }
       setSelectedTeachers(teachers);
@@ -75,7 +75,7 @@ const Course = () => {
   );
 
   const renderItem = ({ item }) => {
-    const selectedTeacher = selectedTeachers[item.courseId];
+    const selectedTeacher = selectedTeachers[item.orderId];
     return (
       <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
         <View style={styles.detailsContainer}>
@@ -104,7 +104,7 @@ const Course = () => {
         <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
+            onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId, orderId: item.orderId })}
             style={styles.cancelBtn}>
             <Text style={styles.cancelBtnText}>Select Teacher</Text>
           </TouchableOpacity>

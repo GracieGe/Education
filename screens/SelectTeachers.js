@@ -14,12 +14,12 @@ const SelectTeachers = ({ navigation, route }) => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { courseId } = route.params;
+  const { courseId, orderId } = route.params;
 
   useEffect(() => {
     const fetchSelectedTeacher = async () => {
       try {
-        const storedTeacher = await AsyncStorage.getItem(`selectedTeacher_${courseId}`);
+        const storedTeacher = await AsyncStorage.getItem(`selectedTeacher_${orderId}`);
         if (storedTeacher) {
           setSelectedTeacher(JSON.parse(storedTeacher));
         }
@@ -29,8 +29,8 @@ const SelectTeachers = ({ navigation, route }) => {
     };
   
     fetchTeachers();
-    fetchSelectedTeacher(); 
-  }, [courseId]);
+    fetchSelectedTeacher();
+  }, [courseId, orderId]);
 
   const fetchTeachers = async () => {
     try {
@@ -55,7 +55,7 @@ const SelectTeachers = ({ navigation, route }) => {
   const handleSelect = async (teacher) => {
     setSelectedTeacher(teacher);
     try {
-      await AsyncStorage.setItem(`selectedTeacher_${courseId}`, JSON.stringify(teacher));
+      await AsyncStorage.setItem(`selectedTeacher_${orderId}`, JSON.stringify(teacher));
     } catch (error) {
       console.error('Error saving selected teacher:', error);
     }
