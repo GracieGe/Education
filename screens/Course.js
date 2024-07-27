@@ -44,8 +44,13 @@ const Course = () => {
 
   useEffect(() => {
     fetchOrders();
-    fetchSelectedTeachers();
-  }, []);  
+  }, []);
+  
+  useEffect(() => {
+    if (orders.length > 0) {
+      fetchSelectedTeachers();
+    }
+  }, [orders]);
   
   useFocusEffect(
     React.useCallback(() => {
