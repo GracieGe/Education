@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { COLORS, SIZES, FONTS, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,6 +13,8 @@ const BookSlots = ({ navigation }) => {
   const [image, setImage] = useState(images.user1);
   const [error, setError] = useState();
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const [showSlotsDropdown, setShowSlotsDropdown] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState("");
 
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
@@ -21,6 +23,14 @@ const BookSlots = ({ navigation }) => {
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
+
+  const slots = [
+    "9:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "1:00 PM - 2:00 PM",
+    "2:00 PM - 3:00 PM"
+  ];
 
   useEffect(() => {
     if (error) {
@@ -58,6 +68,35 @@ const BookSlots = ({ navigation }) => {
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
+            <Text style={styles.Label}>Available Slots:</Text>
+            <View style={{ width: SIZES.width - 32 }}>
+              <TouchableOpacity
+                style={[styles.inputBtn, {
+                  backgroundColor: COLORS.greyscale500,
+                  borderColor: COLORS.greyscale500,
+                }]}
+                onPress={() => setShowSlotsDropdown(!showSlotsDropdown)}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{selectedSlot || "Select a slot"}</Text>
+                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
+            </View>
+            {showSlotsDropdown && (
+              <View style={styles.dropdownContainer}>
+              {slots.map((slot, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.dropdownItem}
+                  onPress={() => {
+                    setSelectedSlot(slot);
+                    setShowSlotsDropdown(false);
+                  }}
+                >
+                  <Text style={{ color: COLORS.black }}>{slot}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            )}
             <Text style={styles.Label}>Location:</Text>
             <Input
               id="location"
@@ -158,6 +197,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
+  dropdownContainer: {
+    marginVertical: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.greyscale500,
+    borderRadius: 12,
+    backgroundColor: COLORS.white,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.greyscale300,
+  }
 });
 
 export default BookSlots
