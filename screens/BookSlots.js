@@ -98,12 +98,15 @@ const BookSlots = ({ navigation }) => {
             </View>
             )}
             <Text style={styles.Label}>Location:</Text>
-            <Input
-              id="location"
-              onInputChanged={() => {}}
-              placeholder=""
-              placeholderTextColor={COLORS.black}
-            />
+            <View style={{ width: SIZES.width - 32 }}>
+              <TouchableOpacity
+                style={styles.inputBtn}
+                onPress={() => navigation.navigate('Address')}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>Select the location</Text>
+                <Feather name="chevron-right" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     fontSize: 18,
     justifyContent: "space-between",
-    marginVertical: 8,
+    marginVertical: 15,
     backgroundColor: COLORS.greyscale500,
     flexDirection: "row",
     alignItems: "center",
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
   },
   dropdownContainer: {
-    marginTop: -11, 
+    marginTop: -20, 
     padding: 16,
     borderWidth: 1,
     borderColor: COLORS.greyscale500,
@@ -210,6 +213,9 @@ const styles = StyleSheet.create({
   },
   dropdownItem: {
     paddingVertical: 6
+  },
+  chevronIcon: {
+    marginLeft: 10,
   }
 });
 
