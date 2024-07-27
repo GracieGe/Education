@@ -26,7 +26,7 @@ import SettingsPrivacyPolicy from "./SettingsPrivacyPolicy";
 import InviteFriends from "./InviteFriends";
 import HelpCenter from "./HelpCenter";
 import CustomerService from "./CustomerService";
-import EReceipt from "./EReceipt";
+import BookSlots from "./BookSlots";
 import Chat from "./Chat";
 import Notifications from "./Notifications";
 import Search from "./Search";
@@ -103,7 +103,7 @@ export {
     InviteFriends,
     HelpCenter,
     CustomerService,
-    EReceipt,
+    BookSlots,
     Chat,
     Notifications,
     Search,

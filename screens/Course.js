@@ -88,7 +88,7 @@ const Course = () => {
           <Image
             source={{ uri: `${config.API_URL}/${item.image}` }}
             resizeMode='cover'
-            style={styles.serviceImage}
+            style={styles.courseImage}
           />
           <View style={styles.detailsRightContainer}>
             <Text style={[styles.name, { color: COLORS.greyscale900 }]}>{item.courseName}</Text>
@@ -111,13 +111,13 @@ const Course = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId, orderId: item.orderId })}
-            style={styles.cancelBtn}>
-            <Text style={styles.cancelBtnText}>Select Teacher</Text>
+            style={styles.selectBtn}>
+            <Text style={styles.selectBtnText}>Select Teacher</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("EReceipt")}
-            style={styles.completionBtn}>
-            <Text style={styles.completionBtnText}>Book Slots</Text>
+            onPress={() => navigation.navigate("BookSlots")}
+            style={styles.bookingBtn}>
+            <Text style={styles.bookingBtnText}>Book Slots</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  serviceImage: {
+  courseImage: {
     width: 88,
     height: 88,
     borderRadius: 16,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     color: COLORS.grayscale700,
     marginVertical: 6,
   },
-  cancelBtn: {
+  selectBtn: {
     width: (SIZES.width - 32) / 2 - 20,
     height: 36,
     borderRadius: 24,
@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
     borderWidth: 1.4,
     marginBottom: 12,
   },
-  cancelBtnText: {
+  selectBtnText: {
     fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
   },
-  completionBtn: {
+  bookingBtn: {
     width: (SIZES.width - 32) / 2 - 16,
     height: 36,
     borderRadius: 24,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.4,
     marginBottom: 12,
   },
-  completionBtnText: {
+  bookingBtnText: {
     fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.white,
