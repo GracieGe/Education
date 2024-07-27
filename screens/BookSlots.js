@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
   },
   dropdownContainer: {
-    marginTop: -20, 
+    marginTop: -25, 
     padding: 16,
     borderWidth: 1,
     borderColor: COLORS.greyscale500,
