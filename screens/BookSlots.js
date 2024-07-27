@@ -17,12 +17,9 @@ const BookSlots = ({ navigation }) => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
   const today = new Date();
-  const startDate = getFormatedDate(
-    new Date(today.setDate(today.getDate() + 1)),
-    "YYYY/MM/DD"
-  );
-
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
+  const [startedDate, setStartedDate] = useState("");
+  
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
@@ -76,6 +73,7 @@ const BookSlots = ({ navigation }) => {
             </View>
           </View>
           <View>
+            <Text style={styles.Label}>Date:</Text>
             <View style={{
               width: SIZES.width - 32
             }}>
@@ -86,14 +84,15 @@ const BookSlots = ({ navigation }) => {
                 }]}
                 onPress={handleOnPressStartDate}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{startedDate}</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{startedDate || "Select the date"}</Text>
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
+            <Text style={styles.Label}>Location:</Text>
             <Input
               id="location"
               onInputChanged={() => {}}
-              placeholder="Location"
+              placeholder=""
               placeholderTextColor={COLORS.black}
             />
           </View>
@@ -101,18 +100,27 @@ const BookSlots = ({ navigation }) => {
       </View>
       <DatePickerModal
         open={openStartDatePicker}
-        startDate={startDate}
+        startDate={formattedToday}
         selectedDate={startedDate}
         onClose={() => setOpenStartDatePicker(false)}
-        onChangeStartDate={(date) => setStartedDate(date)}
+        onChangeStartDate={(date) => {
+          setStartedDate(date);
+          setOpenStartDatePicker(false); 
+        }}
       />
-      <View style={styles.bottomContainer}>
+      <View style={styles.bottomContainer}>      
         <Button
           title="Submit"
           filled
-          style={styles.submitButton}
+          style={styles.button}
           onPress={() => navigation.goBack()}
         />
+        <Button
+          title="Cancel"
+          filled
+          style={styles.button}
+          onPress={() => navigation.goBack()} 
+        />       
       </View>
     </SafeAreaView>
   )
@@ -165,21 +173,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingRight: 8
   },
-  bottomContainer: {
-    position: "absolute",
-    bottom: 32,
-    right: 16,
-    left: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: SIZES.width - 32,
-    alignItems: "center"
+  Label: {
+    ...FONTS.h3,
+    marginBottom: 5,
+    color: COLORS.black,
+    marginLeft: 5,
   },
-  submitButton: {
-    width: SIZES.width - 32,
+  bottomContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16, 
+    marginBottom: 25
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 8, 
     borderRadius: 32,
     backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary
+    borderColor: COLORS.primary,
   },
 });
 
