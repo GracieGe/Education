@@ -198,17 +198,18 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
   },
   dropdownContainer: {
-    marginVertical: 8,
+    marginTop: -11, 
     padding: 16,
     borderWidth: 1,
     borderColor: COLORS.greyscale500,
+    borderTopWidth: 0, 
     borderRadius: 12,
-    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    backgroundColor: COLORS.greyscale500,
   },
   dropdownItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.greyscale300,
+    paddingVertical: 6
   }
 });
 
