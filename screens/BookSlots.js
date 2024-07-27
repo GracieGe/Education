@@ -3,16 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { COLORS, SIZES, FONTS, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
-import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
 
 const BookSlots = ({ navigation }) => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(images.user1);
   const [error, setError] = useState();
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
@@ -29,27 +27,6 @@ const BookSlots = ({ navigation }) => {
       Alert.alert('An error occured', error)
     }
   }, [error])
-
-   // Image Profile handler
- const pickImage = () => {
-  const options = {
-    mediaType: 'photo',
-    includeBase64: false,
-    maxHeight: 2000,
-    maxWidth: 2000,
-  };
-
-  launchImageLibrary(options, (response) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('Image picker error: ', response.error);
-    } else {
-      let imageUri = response.uri || response.assets?.[0]?.uri;
-      setImage({ uri: imageUri });
-    }
-  });
-};
                
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -59,17 +36,10 @@ const BookSlots = ({ navigation }) => {
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
               <Image
-                source={image === null ? images.user1 : image}
+                source={image}
                 resizeMode="cover"
                 style={styles.avatar} />
-              <TouchableOpacity
-                onPress={pickImage}
-                style={styles.pickImage}>
-                <MaterialCommunityIcons
-                  name="pencil-outline"
-                  size={24}
-                  color={COLORS.white} />
-              </TouchableOpacity>
+              <Text style={styles.teacherName}>Liu Yang</Text>
             </View>
           </View>
           <View>
@@ -139,25 +109,20 @@ const styles = StyleSheet.create({
   avatarContainer: {
     marginVertical: 12,
     alignItems: "center",
-    width: 130,
-    height: 130,
+    width: 150,
+    height: 150,
     borderRadius: 65,
   },
   avatar: {
-    height: 130,
-    width: 130,
+    height: 110,
+    width: 110,
     borderRadius: 65,
   },
-  pickImage: {
-    height: 42,
-    width: 42,
-    borderRadius: 21,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
+  teacherName: {
+    marginTop: 8,
+    fontSize: 16,
+    color: COLORS.black,
+    ...FONTS.h2,
   },
   inputBtn: {
     borderWidth: 1,
@@ -188,7 +153,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    marginHorizontal: 8, 
+    marginHorizontal: 10, 
     borderRadius: 32,
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
