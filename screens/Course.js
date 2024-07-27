@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   teacher: {
-    fontSize: 17,
+    fontSize: 13,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
     textAlign: "center",
