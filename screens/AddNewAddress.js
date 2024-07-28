@@ -165,17 +165,20 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   contentContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     paddingVertical: 16,
   },
   inputContainer: {
     marginTop: 12,
     width: SIZES.width - 32,
+    alignSelf: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 12,
+    width: SIZES.width - 32, 
+    alignSelf: 'center',
   },
   halfWidthInput: {
     width: (SIZES.width - 32) / 2 - 10,
