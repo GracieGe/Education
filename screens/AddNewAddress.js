@@ -8,23 +8,20 @@ import Button from '../components/Button';
 import Header from '../components/Header';
 
 const AddNewAddress = ({ navigation }) => {
-  const [address1, setAddress1] = useState('');
-  const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [address2, setAddress2] = useState('');
+  const [address, setAddress] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
-  const [address1Error, setAddress1Error] = useState('');
+  const [addressError, setAddressError] = useState('');
 
   const handleLabelSelection = (label) => {
     setSelectedLabel(prevLabel => prevLabel === label ? null : label);
   };
 
   const saveLocationHandler = () => {
-    if (address1.trim() === '') {
-      setAddress1Error('Address 1 is required');
+    if (address.trim() === '') {
+      setAddressError('Address is required');
       return;
     }
-    setAddress1Error('');
+    setAddressError('');
     navigation.navigate('Address');
   };
 
@@ -38,57 +35,17 @@ const AddNewAddress = ({ navigation }) => {
             <View style={{ marginVertical: 0 }}>
               <View style={styles.inputContainer}>
                 <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
-                  Address 1
+                  Address 
                   <Text style={styles.required}> *</Text>
                 </Text>
                 <Input
-                  id="address1"
-                  value={address1}
-                  onInputChanged={(id, text) => setAddress1(text)}
+                  id="address"
+                  value={address}
+                  onInputChanged={(id, text) => setAddress(text)}
                   placeholder=""
                   placeholderTextColor={COLORS.black}
                 />
-                {address1Error ? <Text style={styles.errorText}>{address1Error}</Text> : null}
-              </View>
-
-              <View style={styles.inputContainer}>
-                <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
-                  Address 2
-                </Text>
-                <Input
-                  id="address2"
-                  value={address2}
-                  onInputChanged={(id, text) => setAddress2(text)}
-                  placeholder=""
-                  placeholderTextColor={COLORS.black}
-                />
-              </View>
-
-              <View style={styles.rowContainer}>
-                <View style={styles.halfWidthInput}>
-                  <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
-                    City
-                  </Text>
-                  <Input
-                    id="city"
-                    value={city}
-                    onInputChanged={(id, text) => setCity(text)}
-                    placeholder=""
-                    placeholderTextColor={COLORS.black}
-                  />
-                </View>
-                <View style={styles.halfWidthInput}>
-                  <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
-                    Post Code
-                  </Text>
-                  <Input
-                    id="postalCode"
-                    value={postalCode}
-                    onInputChanged={(id, text) => setPostalCode(text)}
-                    placeholder=""
-                    placeholderTextColor={COLORS.black}
-                  />
-                </View>
+                {addressError ? <Text style={styles.errorText}>{addressError}</Text> : null}
               </View>
             </View>
           </View>
@@ -180,16 +137,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     width: SIZES.width - 32,
     alignSelf: 'center',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-    width: SIZES.width - 32, 
-    alignSelf: 'center',
-  },
-  halfWidthInput: {
-    width: (SIZES.width - 32) / 2 - 10,
   },
   checkboxContainer: {
     paddingHorizontal: 8,
