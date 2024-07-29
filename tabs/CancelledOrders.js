@@ -60,7 +60,6 @@ const CancelledOrders = () => {
             }]} />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("FoodDetails")}
                 style={styles.viewBtn}>
                 <Text style={styles.viewBtnText}>View</Text>
               </TouchableOpacity>

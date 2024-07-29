@@ -73,7 +73,6 @@ const ActiveOrders = () => {
                 <Text style={styles.recordBtnText}>Record</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate("EReceipt")}
                 style={styles.completionBtn}>
                 <Text style={styles.completionBtnText}>Confirm Completion</Text>
               </TouchableOpacity>
