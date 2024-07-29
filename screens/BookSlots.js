@@ -1,42 +1,106 @@
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { COLORS, SIZES, FONTS, images } from '../constants';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
+import { COLORS, SIZES, FONTS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import Feather from "react-native-vector-icons/Feather";
 import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BookSlots = ({ navigation }) => {
-  const [image, setImage] = useState(images.user1);
-  const [error, setError] = useState();
+const BookSlots = ({ navigation, route }) => {
+  const { teacherId, fullName, courseId, orderId } = route.params || {};
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState(null);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const [showSlotsDropdown, setShowSlotsDropdown] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState("");
+  const [slots, setSlots] = useState([]);
+  const [location, setLocation] = useState("");
 
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
-  const [startedDate, setStartedDate] = useState("");
-  
-  const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
-  };
-
-  const slots = [
-    "9:00 AM - 10:00 AM",
-    "10:00 AM - 11:00 AM",
-    "11:00 AM - 12:00 PM",
-    "1:00 PM - 2:00 PM",
-    "2:00 PM - 3:00 PM"
-  ];
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
-    if (error) {
-      Alert.alert('An error occured', error)
+    if (!teacherId) {
+      setError('No teacher selected. Please select a teacher first.');
+      return;
     }
-  }, [error])
-               
+
+    const fetchTeacherDetails = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        const response = await axios.get(`${config.API_URL}/api/teachers/${teacherId}`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+        const teacher = response.data;
+        setImage(`${config.API_URL}/${teacher.photo}`);
+      } catch (error) {
+        setError('Error fetching teacher details');
+      }
+    };
+
+    fetchTeacherDetails();
+  }, [teacherId]);
+
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots(selectedDate);
+    }
+  }, [selectedDate]);
+
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await axios.get(`${config.API_URL}/api/slots/availableSlots`, {
+        headers: {
+          'x-auth-token': token,
+        },
+        params: {
+          teacherId,
+          date: date.replace(/\//g, '-') 
+        }
+      });
+      setSlots(response.data);
+    } catch (error) {
+      setError('Error fetching available slots');
+    }
+  };
+
+  const handleOnPressStartDate = () => {
+    setOpenStartDatePicker(true);
+  };
+
+  const renderSlotsDropdown = () => (
+    <View style={styles.dropdownContainer}>
+      {slots.map((slot, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.dropdownItem}
+          onPress={() => {
+            setSelectedSlot(`${slot.startTime} - ${slot.endTime}`);
+            setLocation(slot.location);
+            setShowSlotsDropdown(false);
+          }}
+        >
+          <Text style={{ color: COLORS.black }}>{`${slot.startTime} - ${slot.endTime}`}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
@@ -44,18 +108,19 @@ const BookSlots = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
-              <Image
-                source={image}
-                resizeMode="cover"
-                style={styles.avatar} />
-              <Text style={styles.teacherName}>Liu Yang</Text>
+              {image && (
+                <Image
+                  source={{ uri: image }}
+                  resizeMode="cover"
+                  style={styles.avatar}
+                />
+              )}
+              <Text style={styles.teacherName}>{fullName}</Text>
             </View>
           </View>
           <View>
             <Text style={styles.Label}>Date:</Text>
-            <View style={{
-              width: SIZES.width - 32
-            }}>
+            <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={[styles.inputBtn, {
                   backgroundColor: COLORS.greyscale500,
@@ -63,7 +128,7 @@ const BookSlots = ({ navigation }) => {
                 }]}
                 onPress={handleOnPressStartDate}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{startedDate || "Select the date"}</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{selectedDate ? selectedDate : "Select a date"}</Text>
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
@@ -80,29 +145,14 @@ const BookSlots = ({ navigation }) => {
                 <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
-            {showSlotsDropdown && (
-              <View style={styles.dropdownContainer}>
-              {slots.map((slot, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setSelectedSlot(slot);
-                    setShowSlotsDropdown(false);
-                  }}
-                >
-                  <Text style={{ color: COLORS.black }}>{slot}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            )}
+            {showSlotsDropdown && renderSlotsDropdown()}
             <Text style={styles.Label}>Location:</Text>
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={styles.inputBtn}
                 onPress={() => navigation.navigate('Address')}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>Select the location</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{location || "Select the location"}</Text>
                 <Feather name="chevron-right" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
@@ -112,10 +162,10 @@ const BookSlots = ({ navigation }) => {
       <DatePickerModal
         open={openStartDatePicker}
         startDate={formattedToday}
-        selectedDate={startedDate}
+        selectedDate={selectedDate}
         onClose={() => setOpenStartDatePicker(false)}
         onChangeStartDate={(date) => {
-          setStartedDate(date);
+          setSelectedDate(date);
           setOpenStartDatePicker(false); 
         }}
       />
@@ -124,7 +174,9 @@ const BookSlots = ({ navigation }) => {
           title="Submit"
           filled
           style={styles.button}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack();
+          }}
         />
         <Button
           title="Cancel"
@@ -134,7 +186,7 @@ const BookSlots = ({ navigation }) => {
         />       
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -218,4 +270,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default BookSlots
+export default BookSlots;

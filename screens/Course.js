@@ -115,10 +115,23 @@ const Course = () => {
             <Text style={styles.selectBtnText}>Select Teacher</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("BookSlots")}
-            style={styles.bookingBtn}>
-            <Text style={styles.bookingBtnText}>Book Slots</Text>
-          </TouchableOpacity>
+          onPress={() => {
+            // 确保 selectedTeacher 存在，并传递 teacherId 等必要的参数
+            if (selectedTeacher) {
+              navigation.navigate("BookSlots", { 
+                teacherId: selectedTeacher.teacherId, 
+                fullName: selectedTeacher.fullName, // 如果需要传递教师的名字
+                courseId: item.courseId, // 如果需要传递课程ID
+                orderId: item.orderId // 如果需要传递订单ID
+              });
+            } else {
+              console.error('No teacher selected');
+              Alert.alert('Error', 'Please select a teacher first.');
+            }
+          }}
+          style={styles.bookingBtn}>
+          <Text style={styles.bookingBtnText}>Book Slots</Text>
+        </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
