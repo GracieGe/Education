@@ -104,7 +104,7 @@ const ActiveOrders = () => {
         }}>
         <Text style={[styles.bottomSubtitle, {
           color: COLORS.red
-        }]}>Cancel Order</Text>
+        }]}>Cancel Session</Text>
         <View style={[styles.separateLine, {
           backgroundColor:  COLORS.grayscale200,
         }]} />
@@ -112,10 +112,10 @@ const ActiveOrders = () => {
         <View style={styles.selectedCancelContainer}>
           <Text style={[styles.cancelTitle, {
             color: COLORS.greyscale900
-          }]}>Are you sure you want to cancel your order?</Text>
+          }]}>Are you sure you want to cancel your session?</Text>
           <Text style={[styles.cancelSubtitle, {
             color: COLORS.grayscale700
-          }]}>Only 80% of the money you can refund from your payment according to our policy.</Text>
+          }]}>The cancelled hours will be returned to your remaining hours according to our policy.</Text>
         </View>
 
         <View style={styles.bottomContainer}>
