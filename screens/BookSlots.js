@@ -4,7 +4,6 @@ import { COLORS, SIZES, FONTS, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import Feather from "react-native-vector-icons/Feather";
-import Input from '../components/Input';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';

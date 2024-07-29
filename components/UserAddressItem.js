@@ -5,7 +5,8 @@ import { COLORS, SIZES, icons } from '../constants';
 const UserAddressItem = ({
     name,
     address,
-    onPress
+    onPress,
+    navigation
 }) => {
 
     return (
@@ -33,11 +34,15 @@ const UserAddressItem = ({
                     }]}>{address}</Text>
                 </View>
             </View>
-            <Image
-                source={icons.editPencil}
-                resizeMode='contain'
-                style={styles.editIcon}
-            />
+            <TouchableOpacity
+                onPress={() => navigation.navigate('EditAddress')}
+            >
+                <Image
+                    source={icons.editPencil}
+                    resizeMode='contain'
+                    style={styles.editIcon}
+                />
+            </TouchableOpacity>
         </TouchableOpacity>
     )
 };

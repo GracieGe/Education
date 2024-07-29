@@ -12,7 +12,7 @@ import OTPVerification from "./OTPVerification";
 import CreateNewPassword from "./CreateNewPassword";
 import FillYourProfile from "./FillYourProfile";
 import CreateNewPIN from "./CreateNewPIN";
-import Fingerprint from "./Fingerprint";
+import EditAddress from "./EditAddress";
 import EditProfile from "./EditProfile";
 import SettingsNotifications from "./SettingsNotifications";
 import PurchaseHistory from "./PurchaseHistory";
@@ -89,7 +89,7 @@ export {
     CreateNewPassword,
     FillYourProfile,
     CreateNewPIN,
-    Fingerprint,
+    EditAddress,
     EditProfile,
     SettingsNotifications,
     PurchaseHistory,

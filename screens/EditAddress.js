@@ -7,7 +7,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Header from '../components/Header';
 
-const AddNewAddress = ({ navigation }) => {
+const EditAddress = ({ navigation }) => {
   const [address1, setAddress1] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -19,7 +19,7 @@ const AddNewAddress = ({ navigation }) => {
     setSelectedLabel(prevLabel => prevLabel === label ? null : label);
   };
 
-  const saveLocationHandler = () => {
+  const updateLocationHandler = () => {
     if (address1.trim() === '') {
       setAddress1Error('Address 1 is required');
       return;
@@ -32,7 +32,7 @@ const AddNewAddress = ({ navigation }) => {
     <SafeAreaView style={styles.area}>
       <StatusBar hidden={false} />
       <View style={styles.container}>
-        <Header title="Add New Address" />
+        <Header title="Edit Address" />
         <View style={styles.contentContainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={{ marginVertical: 0 }}>
@@ -63,7 +63,6 @@ const AddNewAddress = ({ navigation }) => {
                   placeholderTextColor={COLORS.black}
                 />
               </View>
-
               <View style={styles.rowContainer}>
                 <View style={styles.halfWidthInput}>
                   <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
@@ -151,8 +150,8 @@ const AddNewAddress = ({ navigation }) => {
             </View>
             <Button
               filled
-              title="SAVE LOCATION"
-              onPress={saveLocationHandler}
+              title="UPDATE LOCATION"
+              onPress={updateLocationHandler}
               style={{ borderRadius: 30 }}
             />
           </View>
@@ -221,4 +220,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AddNewAddress;
+export default EditAddress;
