@@ -83,22 +83,32 @@ const BookSlots = ({ navigation, route }) => {
     setOpenStartDatePicker(true);
   };
 
+  const formatTime = (time) => {
+    return time.substring(0, 5); 
+  };
+
   const renderSlotsDropdown = () => (
     <View style={styles.dropdownContainer}>
-      {slots.map((slot, index) => (
+    {slots.length === 0 ? (
+      <Text style={{ color: COLORS.black, padding: 10 }}>No available slots.</Text>
+    ) : (
+      slots.map((slot, index) => (
         <TouchableOpacity
           key={index}
           style={styles.dropdownItem}
           onPress={() => {
-            setSelectedSlot(`${slot.startTime} - ${slot.endTime}`);
+            setSelectedSlot(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`);
             setLocation(slot.location);
             setShowSlotsDropdown(false);
           }}
         >
-          <Text style={{ color: COLORS.black }}>{`${slot.startTime} - ${slot.endTime}`}</Text>
+          <Text style={{ color: COLORS.black }}>
+            {`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`}
+          </Text>
         </TouchableOpacity>
-      ))}
-    </View>
+      ))
+    )}
+  </View>
   );
 
   return (
