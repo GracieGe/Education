@@ -56,15 +56,10 @@ const Login = ({ navigation }) => {
     setError(null);
     setIsLoading(true);
     try {
-      console.log('Sending login request to:', `${config.API_URL}/api/users/login`);
       const response = await axios.post(`${config.API_URL}/api/users/login`, { email, password });
-
-      console.log('Response from server:', response);
 
       if (response.status === 200) {
         const { token, user } = response.data;
-        console.log('Token:', token);
-        console.log('User:', user);
 
         if (token && user) {
           await AsyncStorage.setItem('token', token);
@@ -75,7 +70,6 @@ const Login = ({ navigation }) => {
         }
       }
     } catch (err) {
-      console.error('Login error:', err);
 
       if (err.response) {
       if (err.response.status === 400) {
