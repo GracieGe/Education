@@ -12,7 +12,7 @@ import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BookSlots = ({ navigation, route }) => {
-  const { teacherId, fullName, courseId, orderId } = route.params || {};
+  const { teacherId, fullName } = route.params || {};
   const [image, setImage] = useState(null);
   const [error, setError] = useState(null);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);

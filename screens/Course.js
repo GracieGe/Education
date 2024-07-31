@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import axios from 'axios';
 import { SIZES, COLORS, images } from '../constants';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -9,53 +9,65 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Course = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedTeachers, setSelectedTeachers] = useState({});
   const navigation = useNavigation();
 
   const fetchOrders = async () => {
     try {
-      const token = await AsyncStorage.getItem('token'); 
+      const token = await AsyncStorage.getItem('token');
       const response = await axios.get(`${config.API_URL}/api/orders/user/orders`, {
         headers: {
-          'x-auth-token': token 
+          'x-auth-token': token
         }
       });
-      setOrders(response.data);
+
+      const ordersWithTeachers = await Promise.all(response.data.map(async (order) => {
+        const storedTeacher = await AsyncStorage.getItem(`selectedTeacher_${order.courseId}`);
+        if (storedTeacher) {
+          order.selectedTeacher = JSON.parse(storedTeacher);
+        }
+        return order;
+      }));
+
+      const mergedOrders = mergeOrdersByCourseId(ordersWithTeachers);
+      setOrders(mergedOrders);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
 
-  const fetchSelectedTeachers = async () => {
-    try {
-      const teachers = {};
-      const fetchPromises = orders.map(async (order) => {
-        const teacherData = await AsyncStorage.getItem(`selectedTeacher_${order.orderId}`);
-        if (teacherData) {
-          teachers[order.orderId] = JSON.parse(teacherData);
-        }
-      });
-      await Promise.all(fetchPromises);
-      setSelectedTeachers(teachers);
-    } catch (error) {
-      console.error('Error loading selected teachers:', error);
-    }
+  const mergeOrdersByCourseId = (orders) => {
+    const mergedOrders = {};
+
+    orders.forEach(order => {
+      if (!mergedOrders[order.courseId]) {
+        mergedOrders[order.courseId] = {
+          ...order,
+          purchasedHours: 0,
+          usedHours: 0,
+          remainingHours: 0,
+          selectedTeacher: null,
+        };
+      }
+
+      mergedOrders[order.courseId].purchasedHours += Number(order.purchasedHours);
+      mergedOrders[order.courseId].usedHours += Number(order.usedHours);
+      mergedOrders[order.courseId].remainingHours += Number(order.remainingHours);
+
+      if (!mergedOrders[order.courseId].selectedTeacher && order.selectedTeacher) {
+        mergedOrders[order.courseId].selectedTeacher = order.selectedTeacher;
+      }
+    });
+
+    return Object.values(mergedOrders);
   };
 
   useEffect(() => {
     fetchOrders();
   }, []);
-  
-  useEffect(() => {
-    if (orders.length > 0) {
-      fetchSelectedTeachers();
-    }
-  }, [orders]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
       fetchOrders();
-      fetchSelectedTeachers();
     }, [])
   );
 
@@ -81,7 +93,7 @@ const Course = () => {
   );
 
   const renderItem = ({ item }) => {
-    const selectedTeacher = selectedTeachers[item.orderId];
+    const selectedTeacher = item.selectedTeacher;
     return (
       <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
         <View style={styles.detailsContainer}>
@@ -110,28 +122,26 @@ const Course = () => {
         <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId, orderId: item.orderId })}
+            onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
             style={styles.selectBtn}>
             <Text style={styles.selectBtnText}>Select Teacher</Text>
           </TouchableOpacity>
           <TouchableOpacity
-          onPress={() => {
-            // 确保 selectedTeacher 存在，并传递 teacherId 等必要的参数
-            if (selectedTeacher) {
-              navigation.navigate("BookSlots", { 
-                teacherId: selectedTeacher.teacherId, 
-                fullName: selectedTeacher.fullName, // 如果需要传递教师的名字
-                courseId: item.courseId, // 如果需要传递课程ID
-                orderId: item.orderId // 如果需要传递订单ID
-              });
-            } else {
-              console.error('No teacher selected');
-              Alert.alert('Error', 'Please select a teacher first.');
-            }
-          }}
-          style={styles.bookingBtn}>
-          <Text style={styles.bookingBtnText}>Book Slots</Text>
-        </TouchableOpacity>
+            onPress={() => {
+              if (selectedTeacher) {
+                navigation.navigate("BookSlots", { 
+                  teacherId: selectedTeacher.teacherId, 
+                  fullName: selectedTeacher.fullName, 
+                  courseId: item.courseId, 
+                });
+              } else {
+                console.error('No teacher selected');
+                Alert.alert('Error', 'Please select a teacher first.');
+              }
+            }}
+            style={styles.bookingBtn}>
+            <Text style={styles.bookingBtnText}>Book Slots</Text>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -143,7 +153,7 @@ const Course = () => {
         {renderHeader()}
         <FlatList
           data={orders}
-          keyExtractor={item => item.orderId.toString()}
+          keyExtractor={item => item.courseId.toString()}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmptyComponent}
           renderItem={renderItem}
@@ -279,7 +289,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   additionalContainer: {
-    marginLeft: 12, 
+    marginLeft: 12,
   },
 });
 
