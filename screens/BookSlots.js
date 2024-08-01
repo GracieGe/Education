@@ -54,6 +54,8 @@ const BookSlots = ({ navigation, route }) => {
 
   useEffect(() => {
     if (selectedDate) {
+      setSelectedSlot("");
+      setLocation("");
       fetchAvailableSlots(selectedDate);
     }
   }, [selectedDate]);
