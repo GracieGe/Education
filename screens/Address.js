@@ -30,7 +30,8 @@ const Address = ({ navigation }) => {
                     }
                 });
 
-                setUserAddresses(response.data);
+                const sortedAddresses = response.data.sort((a, b) => a.addressId - b.addressId);
+                setUserAddresses(sortedAddresses);
             } catch (error) {
                 console.error('Error fetching user addresses:', error);
                 Alert.alert('Error', 'Failed to load user addresses');
