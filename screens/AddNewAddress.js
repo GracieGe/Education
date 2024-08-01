@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES, COLORS } from '../constants';
@@ -6,6 +6,9 @@ import { commonStyles } from '../styles/CommonStyles';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Header from '../components/Header';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddNewAddress = ({ navigation }) => {
   const [address, setAddress] = useState('');
@@ -16,13 +19,42 @@ const AddNewAddress = ({ navigation }) => {
     setSelectedLabel(prevLabel => prevLabel === label ? null : label);
   };
 
-  const saveLocationHandler = () => {
+  const saveLocationHandler = async () => {
     if (address.trim() === '') {
       setAddressError('Address is required');
       return;
     }
+
+    if (!selectedLabel) {
+      Alert.alert('Incomplete Form', 'Please select a label for the address');
+      return;
+    }
+
     setAddressError('');
-    navigation.navigate('Address');
+
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found, please login again');
+      }
+
+      const response = await axios.post(`${config.API_URL}/api/addresses`, {
+        address,
+        label: selectedLabel
+      }, {
+        headers: {
+          'x-auth-token': token
+        }
+      });
+
+      if (response.status === 201) {
+        Alert.alert('Congratulations', 'Address added successfully');
+        navigation.navigate('Address');
+      }
+    } catch (error) {
+      console.error('Error adding address:', error);
+      Alert.alert('Error', 'Failed to add address');
+    }
   };
 
   return (
@@ -52,20 +84,21 @@ const AddNewAddress = ({ navigation }) => {
           <View>
             <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
               Label
+              <Text style={styles.required}> *</Text>
             </Text>
 
             <View style={{ flexDirection: 'row', marginVertical: 13 }}>
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'home' && styles.selectedCheckbox,
+                  selectedLabel === 'Home' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('home')}>
+                onPress={() => handleLabelSelection('Home')}>
                 <Text
                   style={[
-                    selectedLabel === 'home' && styles.checkboxText,
-                    { color: selectedLabel === 'home' ? COLORS.white : COLORS.primary }
+                    selectedLabel === 'Home' && styles.checkboxText,
+                    { color: selectedLabel === 'Home' ? COLORS.white : COLORS.primary }
                   ]}>
                   Home
                 </Text>
@@ -74,14 +107,14 @@ const AddNewAddress = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'work' && styles.selectedCheckbox,
+                  selectedLabel === 'Work' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('work')}>
+                onPress={() => handleLabelSelection('Work')}>
                 <Text
                   style={[
-                    selectedLabel === 'work' && styles.checkboxText,
-                    { color: selectedLabel === 'work' ? COLORS.white : COLORS.primary }
+                    selectedLabel === 'Work' && styles.checkboxText,
+                    { color: selectedLabel === 'Work' ? COLORS.white : COLORS.primary }
                   ]}
                 >
                   Work
@@ -91,15 +124,15 @@ const AddNewAddress = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'other' && styles.selectedCheckbox,
+                  selectedLabel === 'Other' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('other')}
+                onPress={() => handleLabelSelection('Other')}
               >
                 <Text
                   style={[
-                    selectedLabel === 'other' && styles.checkboxText,
-                    { color: selectedLabel === 'other' ? COLORS.white : COLORS.greyscale900 }
+                    selectedLabel === 'Other' && styles.checkboxText,
+                    { color: selectedLabel === 'Other' ? COLORS.white : COLORS.greyscale900 }
                   ]}
                 >
                   Other

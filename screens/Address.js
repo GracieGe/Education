@@ -9,10 +9,12 @@ import Button from '../components/Button';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 // user address location
 const Address = ({ navigation }) => {
     const [userAddresses, setUserAddresses] = useState([]);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchUserAddresses = async () => {
@@ -35,8 +37,10 @@ const Address = ({ navigation }) => {
             }
         };
 
-        fetchUserAddresses();
-    }, []);
+        if (isFocused) {
+            fetchUserAddresses(); 
+        }
+    }, [isFocused]); 
 
     return (
         <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
