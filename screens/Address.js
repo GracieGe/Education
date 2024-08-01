@@ -56,6 +56,7 @@ const Address = ({ navigation }) => {
                             <UserAddressItem
                                 name={item.label}
                                 address={item.address}
+                                addressId={item.addressId}
                                 navigation={navigation}
                                 onPress={() => console.log("Clicked")}
                             />

@@ -1,28 +1,99 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES, COLORS } from '../constants';
 import { commonStyles } from '../styles/CommonStyles';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Header from '../components/Header';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditAddress = ({ navigation }) => {
+const EditAddress = ({ route, navigation }) => {
+  const { addressId } = route.params;
   const [address, setAddress] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [addressError, setAddressError] = useState('');
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAddressData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found, please login again');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/addresses/${addressId}`, {
+          headers: {
+            'x-auth-token': token
+          }
+        });
+
+        const { address, label } = response.data;
+        setAddress(address);
+        setSelectedLabel(label);
+      } catch (error) {
+        console.error('Error fetching address data:', error);
+        setError('Failed to load address data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAddressData();
+  }, [addressId]);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>{error}</Text>;
+  }
 
   const handleLabelSelection = (label) => {
     setSelectedLabel(prevLabel => prevLabel === label ? null : label);
   };
 
-  const updateLocationHandler = () => {
+  const updateLocationHandler = async () => {
     if (address.trim() === '') {
       setAddressError('Address is required');
       return;
     }
+
+    if (!selectedLabel) {
+      Alert.alert('Incomplete Form', 'Please select a label for the address');
+      return;
+    }
+
     setAddressError('');
-    navigation.navigate('Address');
+
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found, please login again');
+      }
+
+      const response = await axios.put(`${config.API_URL}/api/addresses/${addressId}`, {
+        address,
+        label: selectedLabel
+      }, {
+        headers: {
+          'x-auth-token': token
+        }
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Congratulations', 'Address updated successfully');
+        navigation.navigate('Address');
+      }
+    } catch (error) {
+      console.error('Error updating address:', error);
+      Alert.alert('Error', 'Failed to update address');
+    }
   };
 
   return (
@@ -52,20 +123,21 @@ const EditAddress = ({ navigation }) => {
           <View>
             <Text style={[commonStyles.inputHeader, { color: COLORS.greyscale900 }]}>
               Label
+              <Text style={styles.required}> *</Text>
             </Text>
 
             <View style={{ flexDirection: 'row', marginVertical: 13 }}>
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'home' && styles.selectedCheckbox,
+                  selectedLabel === 'Home' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('home')}>
+                onPress={() => handleLabelSelection('Home')}>
                 <Text
                   style={[
-                    selectedLabel === 'home' && styles.checkboxText,
-                    { color: selectedLabel === 'home' ? COLORS.white : COLORS.primary }
+                    selectedLabel === 'Home' && styles.checkboxText,
+                    { color: selectedLabel === 'Home' ? COLORS.white : COLORS.primary }
                   ]}>
                   Home
                 </Text>
@@ -74,14 +146,14 @@ const EditAddress = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'work' && styles.selectedCheckbox,
+                  selectedLabel === 'Work' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('work')}>
+                onPress={() => handleLabelSelection('Work')}>
                 <Text
                   style={[
-                    selectedLabel === 'work' && styles.checkboxText,
-                    { color: selectedLabel === 'work' ? COLORS.white : COLORS.primary }
+                    selectedLabel === 'Work' && styles.checkboxText,
+                    { color: selectedLabel === 'Work' ? COLORS.white : COLORS.primary }
                   ]}
                 >
                   Work
@@ -91,15 +163,15 @@ const EditAddress = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.checkboxContainer,
-                  selectedLabel === 'other' && styles.selectedCheckbox,
+                  selectedLabel === 'Other' && styles.selectedCheckbox,
                   { borderColor: COLORS.greyscale900 }
                 ]}
-                onPress={() => handleLabelSelection('other')}
+                onPress={() => handleLabelSelection('Other')}
               >
                 <Text
                   style={[
-                    selectedLabel === 'other' && styles.checkboxText,
-                    { color: selectedLabel === 'other' ? COLORS.white : COLORS.greyscale900 }
+                    selectedLabel === 'Other' && styles.checkboxText,
+                    { color: selectedLabel === 'Other' ? COLORS.white : COLORS.greyscale900 }
                   ]}
                 >
                   Other
