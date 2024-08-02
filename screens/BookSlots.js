@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BookSlots = ({ navigation, route }) => {
   const { teacherId, fullName } = route.params || {};
+  const selectedAddress = route.params?.selectedAddress;
   const [image, setImage] = useState(null);
   const [error, setError] = useState(null);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
@@ -24,7 +25,7 @@ const BookSlots = ({ navigation, route }) => {
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
   const [selectedDate, setSelectedDate] = useState("");
-
+  
   useEffect(() => {
     if (!teacherId) {
       setError('No teacher selected. Please select a teacher first.');
@@ -53,6 +54,12 @@ const BookSlots = ({ navigation, route }) => {
   }, [teacherId]);
 
   useEffect(() => {
+    if (selectedAddress) {
+      setLocation(selectedAddress);
+    }
+  }, [selectedAddress]);
+
+  useEffect(() => {
     if (selectedDate) {
       setSelectedSlot("");
       setLocation("");
@@ -66,6 +73,8 @@ const BookSlots = ({ navigation, route }) => {
       if (!token) {
         throw new Error('No token found');
       }
+      console.log('Fetching available slots for date:', date, 'and teacherId:', teacherId);
+
       const response = await axios.get(`${config.API_URL}/api/slots/availableSlots`, {
         headers: {
           'x-auth-token': token,
@@ -75,8 +84,10 @@ const BookSlots = ({ navigation, route }) => {
           date: date.replace(/\//g, '-') 
         }
       });
+      console.log('Available Slots:', response.data);
       setSlots(response.data);
     } catch (error) {
+      console.error('Error fetching available slots:', error);
       setError('Error fetching available slots');
     }
   };

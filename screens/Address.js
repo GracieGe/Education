@@ -59,7 +59,9 @@ const Address = ({ navigation }) => {
                                 address={item.address}
                                 addressId={item.addressId}
                                 navigation={navigation}
-                                onPress={() => console.log("Clicked")}
+                                onPress={() => {
+                                    navigation.navigate('BookSlots', { selectedAddress: `(${item.label}) ${item.address}` });
+                                }}
                             />
                         )}
                     />
