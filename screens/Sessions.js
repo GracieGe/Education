@@ -3,15 +3,15 @@ import React from 'react';
 import { COLORS, SIZES, icons, images } from '../constants'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { ActiveOrders, CancelledOrders, CompletedOrders } from '../tabs';
+import { ActiveSessions, CancelledSessions, CompletedSessions } from '../tabs';
 
 const renderScene = SceneMap({
-  first: ActiveOrders,
-  second: CompletedOrders,
-  third: CancelledOrders
+  first: ActiveSessions,
+  second: CompletedSessions,
+  third: CancelledSessions
 });
 
-const Orders = ({ navigation }) => {
+const Sessions = ({ navigation }) => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Orders
+export default Sessions

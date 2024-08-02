@@ -2,7 +2,7 @@ import { View, Platform, Image, Text } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS, FONTS, icons } from '../constants';
-import { Home, Inbox, Orders, Profile, Course } from '../screens';
+import { Home, Inbox, Sessions, Profile, Course } from '../screens';
 import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator()
@@ -78,8 +78,8 @@ const BottomTabNavigation = () => {
                 }}
             />
             <Tab.Screen
-                name="Orders"
-                component={Orders}
+                name="Sessions"
+                component={Sessions}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (

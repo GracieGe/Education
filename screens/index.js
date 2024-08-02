@@ -70,7 +70,7 @@ import RateTheDriver from "./RateTheDriver";
 import GiveTipForDriver from "./GiveTipForDriver";
 import RateTheRestaurant from "./RateTheRestaurant";
 import MyCart from "./MyCart";
-import Orders from "./Orders";
+import Sessions from "./Sessions";
 import ChatWithPerson from "./ChatWithPerson";
 import AboutUs from "./AboutUs";
 
@@ -147,7 +147,7 @@ export {
     GiveTipForDriver,
     RateTheRestaurant,
     MyCart,
-    Orders,
+    Sessions,
     ChatWithPerson,
     AboutUs
 }

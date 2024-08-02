@@ -1,23 +1,23 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { completedOrders } from '../data';
 import { SIZES, COLORS } from '../constants';
 import { useNavigation } from '@react-navigation/native';
-import { cancelledOrders } from '../data';
 
-const CancelledOrders = () => {
-  const [orders, setOrders] = useState(cancelledOrders);
+const CompletedSessions = () => {
+  const [orders, setOrders] = useState(completedOrders);
   const navigation = useNavigation();
 
   useEffect(() => {
-    setOrders(cancelledOrders);
-  }, [cancelledOrders]);
+    setOrders(completedOrders);
+  }, [completedOrders]);
 
   return (
     <View style={[styles.container, {
       backgroundColor: COLORS.tertiaryWhite
     }]}>
       <FlatList
-        data={orders} 
+        data={orders}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -60,8 +60,9 @@ const CancelledOrders = () => {
             }]} />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={styles.viewBtn}>
-                <Text style={styles.viewBtnText}>View</Text>
+                onPress={() => navigation.navigate("RateTheDriver")}
+                style={styles.evaluationBtn}>
+                <Text style={styles.evaluationBtnText}>Give Evaluation</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     color: COLORS.grayscale700,
     marginVertical: 6
   },
-  viewBtn: {
+  evaluationBtn: {
     width: (SIZES.width - 32) - 12,
     height: 36,
     borderRadius: 24,
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.4,
     marginBottom: 12
   },
-  viewBtnText: {
+  evaluationBtnText: {
     fontSize: 16,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.white,
@@ -158,4 +159,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default CancelledOrders
+export default CompletedSessions

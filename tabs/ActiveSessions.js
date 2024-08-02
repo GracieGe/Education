@@ -6,7 +6,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 
-const ActiveOrders = () => {
+const ActiveSessions = () => {
   const [orders, setOrders] = useState(activeOrders);
   const refRBSheet = useRef();
   const navigation = useNavigation();
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     marginVertical: 6
   },
   teacher: {
-    fontSize: 17,
+    fontSize: 13,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
     textAlign: "center",
@@ -304,4 +304,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ActiveOrders
+export default ActiveSessions

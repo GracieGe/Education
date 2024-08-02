@@ -1,11 +1,11 @@
 import Chats from "./Chats";
-import ActiveOrders from "./ActiveOrders";
-import CancelledOrders from "./CancelledOrders";
-import CompletedOrders from "./CompletedOrders";
+import ActiveSessions from "./ActiveSessions";
+import CancelledSessions from "./CancelledSessions";
+import CompletedSessions from "./CompletedSessions";
 
 export {
     Chats,
-    ActiveOrders,
-    CancelledOrders,
-    CompletedOrders,
+    ActiveSessions,
+    CancelledSessions,
+    CompletedSessions,
 }
