@@ -73,7 +73,6 @@ const BookSlots = ({ navigation, route }) => {
       if (!token) {
         throw new Error('No token found');
       }
-      console.log('Fetching available slots for date:', date, 'and teacherId:', teacherId);
 
       const response = await axios.get(`${config.API_URL}/api/slots/availableSlots`, {
         headers: {
@@ -84,10 +83,8 @@ const BookSlots = ({ navigation, route }) => {
           date: date.replace(/\//g, '-') 
         }
       });
-      console.log('Available Slots:', response.data);
       setSlots(response.data);
     } catch (error) {
-      console.error('Error fetching available slots:', error);
       setError('Error fetching available slots');
     }
   };
@@ -173,7 +170,7 @@ const BookSlots = ({ navigation, route }) => {
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={styles.inputBtn}
-                onPress={() => navigation.navigate('Address')}
+                onPress={() => navigation.navigate('Address', { teacherId })}
               >
                 <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{location || "Select the location"}</Text>
                 <Feather name="chevron-right" size={24} color={COLORS.grayscale400} />

@@ -9,10 +9,12 @@ import Button from '../components/Button';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 
 // user address location
 const Address = ({ navigation }) => {
+    const route = useRoute();
+    const { teacherId } = route.params || {};
     const [userAddresses, setUserAddresses] = useState([]);
     const isFocused = useIsFocused();
 
@@ -33,7 +35,6 @@ const Address = ({ navigation }) => {
                 const sortedAddresses = response.data.sort((a, b) => a.addressId - b.addressId);
                 setUserAddresses(sortedAddresses);
             } catch (error) {
-                console.error('Error fetching user addresses:', error);
                 Alert.alert('Error', 'Failed to load user addresses');
             }
         };
@@ -42,6 +43,13 @@ const Address = ({ navigation }) => {
             fetchUserAddresses(); 
         }
     }, [isFocused]); 
+
+    const handleSelectAddress = (address) => {
+        navigation.navigate('BookSlots', {
+            teacherId,
+            selectedAddress: address,
+        });
+    };
 
     return (
         <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -59,9 +67,7 @@ const Address = ({ navigation }) => {
                                 address={item.address}
                                 addressId={item.addressId}
                                 navigation={navigation}
-                                onPress={() => {
-                                    navigation.navigate('BookSlots', { selectedAddress: `(${item.label}) ${item.address}` });
-                                }}
+                                onPress={() => handleSelectAddress(`(${item.label}) ${item.address}`)}
                             />
                         )}
                     />
