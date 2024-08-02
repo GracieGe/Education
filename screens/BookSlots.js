@@ -19,6 +19,7 @@ const BookSlots = ({ navigation, route }) => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const [showSlotsDropdown, setShowSlotsDropdown] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState("");
+  const [selectedSlotId, setSelectedSlotId] = useState(null);
   const [slots, setSlots] = useState([]);
   const [location, setLocation] = useState("");
 
@@ -108,6 +109,7 @@ const BookSlots = ({ navigation, route }) => {
           style={styles.dropdownItem}
           onPress={() => {
             setSelectedSlot(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`);
+            setSelectedSlotId(slot.slotId);
             setLocation(slot.location);
             setShowSlotsDropdown(false);
           }}
@@ -120,6 +122,32 @@ const BookSlots = ({ navigation, route }) => {
     )}
   </View>
   );
+
+  const handleSubmit = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const response = await axios.post(`${config.API_URL}/api/slots/updateSlot`, {
+        slotId: selectedSlotId,
+        newLocation: location,
+      }, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Slot updated successfully');
+        navigation.goBack(); 
+      }
+    } catch (error) {
+      console.error('Error updating slot:', error);
+      Alert.alert('Error', 'Failed to update slot');
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -194,9 +222,7 @@ const BookSlots = ({ navigation, route }) => {
           title="Submit"
           filled
           style={styles.button}
-          onPress={() => {
-            navigation.goBack();
-          }}
+          onPress={handleSubmit}
         />
         <Button
           title="Cancel"
