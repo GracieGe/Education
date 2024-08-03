@@ -75,7 +75,7 @@ const PaymentMethods = ({ route, navigation }) => {
           <PaymentMethodItem
             checked={selectedItem === 'Alipay'}
             onPress={() => handleCheckboxPress('Alipay')}
-            title="Alipay"
+            title="WeChat"
             icon={icons.paypal}
           />
         </ScrollView>
