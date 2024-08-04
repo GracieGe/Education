@@ -108,7 +108,7 @@ const Course = () => {
             <View style={styles.teacherContainer}>
               <View style={styles.teacherItemContainer}>
                 <Text style={styles.teacher}>
-                  Selected Teacher: {selectedTeacher ? selectedTeacher.fullName : 'N/A'}
+                  Teacher: {selectedTeacher ? selectedTeacher.fullName : 'N/A'}
                 </Text>
               </View>
             </View>

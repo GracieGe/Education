@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,30 +11,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
   const refRBSheet = useRef();
-  const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchActiveSessions = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
-        }
-
-        const response = await axios.get(`${config.API_URL}/api/sessions/activeSessions`, {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
-
-        setSessions(response.data);
-      } catch (error) {
-        console.error('Error fetching active sessions:', error);
+  const fetchActiveSessions = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
       }
-    };
 
-    fetchActiveSessions();
-  }, []);
+      const response = await axios.get(`${config.API_URL}/api/sessions/activeSessions`, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      setSessions(response.data);
+    } catch (error) {
+      console.error('Error fetching active sessions:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchActiveSessions();
+    }, [])
+  );
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -47,6 +48,77 @@ const ActiveSessions = () => {
   const formatTime = (time) => {
     return time.substring(0, 5);
   };
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No sessions booked.</Text>
+    </View>
+  );
+
+  const [sheetContent, setSheetContent] = useState(null);
+
+  const renderCancelContent = () => (
+    <>
+      <Text style={[styles.bottomSubtitle, { color: COLORS.red }]}>Cancel Session</Text>
+      <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
+      <View style={styles.selectedCancelContainer}>
+        <Text style={[styles.cancelTitle, { color: COLORS.greyscale900 }]}>Are you sure you want to cancel your session?</Text>
+        <Text style={[styles.cancelSubtitle, { color: COLORS.grayscale700 }]}>The cancelled hours will be returned to your remaining hours according to our policy.</Text>
+      </View>
+      <View style={styles.bottomContainer}>
+        <Button
+          title="Cancel"
+          style={{
+            width: (SIZES.width - 32) / 2 - 8,
+            backgroundColor: COLORS.tansparentPrimary,
+            borderRadius: 32,
+            borderColor: COLORS.tansparentPrimary
+          }}
+          textColor={COLORS.primary}
+          onPress={() => refRBSheet.current.close()}
+        />
+        <Button
+          title="Yes, Cancel"
+          filled
+          style={styles.removeButton}
+          onPress={() => {
+            refRBSheet.current.close();
+          }}
+        />
+      </View>
+    </>
+  );
+  
+  const renderCompletionContent = () => (
+    <>
+      <Text style={[styles.bottomSubtitle, { color: COLORS.primary }]}>Confirm Completion</Text>
+      <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
+      <View style={styles.selectedCancelContainer}>
+        <Text style={[styles.cancelTitle, { color: COLORS.greyscale900 }]}>Are you sure you want to confirm completion of your session?</Text>
+      </View>
+      <View style={styles.bottomContainer}>
+        <Button
+          title="Cancel"
+          style={{
+            width: (SIZES.width - 32) / 2 - 8,
+            backgroundColor: COLORS.tansparentPrimary,
+            borderRadius: 32,
+            borderColor: COLORS.tansparentPrimary
+          }}
+          textColor={COLORS.primary}
+          onPress={() => refRBSheet.current.close()}
+        />
+        <Button
+          title="Yes, Confirm"
+          filled
+          style={styles.removeButton}
+          onPress={() => {
+            refRBSheet.current.close();
+          }}
+        />
+      </View>
+    </>
+  );
 
   return (
     <View style={[styles.container, {
@@ -96,7 +168,10 @@ const ActiveSessions = () => {
             }]} />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  setSheetContent(renderCancelContent());
+                  refRBSheet.current.open();
+                }}
                 style={styles.cancelBtn}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>
               </TouchableOpacity>
@@ -106,12 +181,17 @@ const ActiveSessions = () => {
                 <Text style={styles.recordBtnText}>Record</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => {
+                  setSheetContent(renderCompletionContent());
+                  refRBSheet.current.open();
+                }}
                 style={styles.completionBtn}>
                 <Text style={styles.completionBtnText}>Confirm Completion</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
         )}
+        ListEmptyComponent={renderEmptyComponent}
       />
       <RBSheet
         ref={refRBSheet}
@@ -134,44 +214,7 @@ const ActiveSessions = () => {
             width: "100%"
           }
         }}>
-        <Text style={[styles.bottomSubtitle, {
-          color: COLORS.red
-        }]}>Cancel Session</Text>
-        <View style={[styles.separateLine, {
-          backgroundColor:  COLORS.grayscale200,
-        }]} />
-
-        <View style={styles.selectedCancelContainer}>
-          <Text style={[styles.cancelTitle, {
-            color: COLORS.greyscale900
-          }]}>Are you sure you want to cancel your session?</Text>
-          <Text style={[styles.cancelSubtitle, {
-            color: COLORS.grayscale700
-          }]}>The cancelled hours will be returned to your remaining hours according to our policy.</Text>
-        </View>
-
-        <View style={styles.bottomContainer}>
-          <Button
-            title="Cancel"
-            style={{
-              width: (SIZES.width - 32) / 2 - 8,
-              backgroundColor: COLORS.tansparentPrimary,
-              borderRadius: 32,
-              borderColor: COLORS.tansparentPrimary
-            }}
-            textColor={COLORS.primary}
-            onPress={() => refRBSheet.current.close()}
-          />
-          <Button
-            title="Yes, Cancel"
-            filled
-            style={styles.removeButton}
-            onPress={() => {
-              refRBSheet.current.close();
-              navigation.navigate("CancelOrder");
-            }}
-          />
-        </View>
+        {sheetContent}
       </RBSheet>
     </View>
   )
@@ -334,6 +377,16 @@ const styles = StyleSheet.create({
   },
   additionalContainer: {
     marginLeft: 12, 
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: COLORS.grayscale700,
   },
 });
 
