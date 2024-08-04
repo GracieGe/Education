@@ -26,7 +26,7 @@ const BookSlots = ({ navigation, route }) => {
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
   const [selectedDate, setSelectedDate] = useState("");
-  
+
   useEffect(() => {
     if (!teacherId) {
       setError('No teacher selected. Please select a teacher first.');
@@ -100,27 +100,27 @@ const BookSlots = ({ navigation, route }) => {
 
   const renderSlotsDropdown = () => (
     <View style={styles.dropdownContainer}>
-    {slots.length === 0 ? (
-      <Text style={{ color: COLORS.black, padding: 10 }}>No available slots.</Text>
-    ) : (
-      slots.map((slot, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.dropdownItem}
-          onPress={() => {
-            setSelectedSlot(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`);
-            setSelectedSlotId(slot.slotId);
-            setLocation(slot.location);
-            setShowSlotsDropdown(false);
-          }}
-        >
-          <Text style={{ color: COLORS.black }}>
-            {`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`}
-          </Text>
-        </TouchableOpacity>
-      ))
-    )}
-  </View>
+      {slots.length === 0 ? (
+        <Text style={{ color: COLORS.black, padding: 10 }}>No available slots.</Text>
+      ) : (
+        slots.map((slot, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.dropdownItem}
+            onPress={() => {
+              setSelectedSlot(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`);
+              setSelectedSlotId(slot.slotId);
+              setLocation(slot.location);
+              setShowSlotsDropdown(false);
+            }}
+          >
+            <Text style={{ color: COLORS.black }}>
+              {`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`}
+            </Text>
+          </TouchableOpacity>
+        ))
+      )}
+    </View>
   );
 
   const handleSubmit = async () => {
@@ -130,7 +130,8 @@ const BookSlots = ({ navigation, route }) => {
         throw new Error('No token found');
       }
 
-      const response = await axios.post(`${config.API_URL}/api/slots/updateSlot`, {
+      // Update slots with new location
+      const updateSlotResponse = await axios.post(`${config.API_URL}/api/slots/updateSlot`, {
         slotId: selectedSlotId,
         newLocation: location,
       }, {
@@ -139,13 +140,47 @@ const BookSlots = ({ navigation, route }) => {
         },
       });
 
-      if (response.status === 200) {
-        Alert.alert('Success', 'Slot updated successfully');
-        navigation.goBack(); 
+      if (updateSlotResponse.status === 200) {
+        // Obtain studentId
+        const userResponse = await axios.get(`${config.API_URL}/api/students/studentId`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+
+        if (userResponse.status === 200) {
+          const { studentId } = userResponse.data;
+
+          // Insert into sessions
+          const addSessionResponse = await axios.post(`${config.API_URL}/api/sessions/addSession`, {
+            slotId: selectedSlotId,
+            teacherId,
+            studentId,
+            location,
+            date: selectedDate,
+            startTime: selectedSlot.split(' - ')[0],
+            endTime: selectedSlot.split(' - ')[1],
+          }, {
+            headers: {
+              'x-auth-token': token,
+            },
+          });
+
+          if (addSessionResponse.status === 201) {
+            Alert.alert('Congratulations', 'You booked the slot successfully!');
+            navigation.goBack();
+          } else {
+            throw new Error('Failed to add session');
+          }
+        } else {
+          throw new Error('Failed to get student ID');
+        }
+      } else {
+        throw new Error('Failed to update slot');
       }
     } catch (error) {
-      console.error('Error updating slot:', error);
-      Alert.alert('Error', 'Failed to update slot');
+      console.error('Error booking slot:', error);
+      Alert.alert('Error', 'Failed to book slot and add session');
     }
   };
 
