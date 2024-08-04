@@ -1,27 +1,60 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
-import { activeOrders } from '../data';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ActiveSessions = () => {
-  const [orders, setOrders] = useState(activeOrders);
+  const [sessions, setSessions] = useState([]);
   const refRBSheet = useRef();
   const navigation = useNavigation();
 
   useEffect(() => {
-    setOrders(activeOrders);
-  }, [activeOrders]);
+    const fetchActiveSessions = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/sessions/activeSessions`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+
+        setSessions(response.data);
+      } catch (error) {
+        console.error('Error fetching active sessions:', error);
+      }
+    };
+
+    fetchActiveSessions();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  };
+  
+  const formatTime = (time) => {
+    return time.substring(0, 5);
+  };
 
   return (
     <View style={[styles.container, {
       backgroundColor: COLORS.tertiaryWhite
     }]}>
       <FlatList
-        data={orders}
-        keyExtractor={item => item.id}
+        data={sessions}
+        keyExtractor={item => item.slotId.toString()} 
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity style={[styles.cardContainer, {
@@ -30,7 +63,7 @@ const ActiveSessions = () => {
             <View style={styles.detailsContainer}>
               <View>
                 <Image
-                  source={item.image}
+                  source={{ uri: `${config.API_URL}/${item.image}` }}
                   resizeMode='cover'
                   style={styles.serviceImage}
                 />             
@@ -38,13 +71,13 @@ const ActiveSessions = () => {
               <View style={styles.detailsRightContainer}>
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
-                }]}>{item.name}</Text>
+                }]}>{item.courseName}</Text>
                 <Text style={[styles.grade, {
                   color: COLORS.grayscale700,
                 }]}>{item.grade}</Text>
                 <View style={styles.teacherContainer}>
                   <View style={styles.teacherItemContainer}>
-                    <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
+                    <Text style={styles.teacher}>Teacher: {item.fullName}</Text>
                   </View>
                 </View>
               </View>
@@ -52,7 +85,7 @@ const ActiveSessions = () => {
             <View style={styles.additionalContainer}>
               <Text style={[styles.grade, {
                 color: COLORS.grayscale700,
-              }]}>Time: {item.time}</Text>
+              }]}>Time: {formatDate(item.date)}  {formatTime(item.startTime)} - {formatTime(item.endTime)}</Text>
               <Text style={[styles.grade, {
                 color: COLORS.grayscale700,
               }]}>Location: {item.location}</Text>
@@ -302,6 +335,6 @@ const styles = StyleSheet.create({
   additionalContainer: {
     marginLeft: 12, 
   },
-})
+});
 
-export default ActiveSessions
+export default ActiveSessions;
