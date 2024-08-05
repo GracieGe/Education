@@ -1,16 +1,56 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { completedOrders } from '../data';
+import React, { useState } from 'react';
 import { SIZES, COLORS } from '../constants';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CompletedSessions = () => {
-  const [sessions, setSessions] = useState(completedOrders);
-  const navigation = useNavigation();
+const CompletedSessions = ({ navigation }) => {
+  const [sessions, setSessions] = useState([]);
 
-  useEffect(() => {
-    setSessions(completedOrders);
-  }, [completedOrders]);
+  const fetchCompletedSessions = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const response = await axios.get(`${config.API_URL}/api/sessions/completedSessions`, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      setSessions(response.data);
+    } catch (error) {
+      console.error('Error fetching completed sessions:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCompletedSessions();
+    }, [])
+  );
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  };
+  
+  const formatTime = (time) => {
+    return time.substring(0, 5);
+  };
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No completed sessions currently.</Text>
+    </View>
+  );
 
   return (
     <View style={[styles.container, {
@@ -18,7 +58,7 @@ const CompletedSessions = () => {
     }]}>
       <FlatList
         data={sessions}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.sessionId.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity style={[styles.cardContainer, {
@@ -27,7 +67,7 @@ const CompletedSessions = () => {
             <View style={styles.detailsContainer}>
               <View>
                 <Image
-                  source={item.image}
+                  source={{ uri: `${config.API_URL}/${item.image}` }}
                   resizeMode='cover'
                   style={styles.serviceImage}
                 />
@@ -35,13 +75,13 @@ const CompletedSessions = () => {
               <View style={styles.detailsRightContainer}>
                 <Text style={[styles.name, {
                   color: COLORS.greyscale900
-                }]}>{item.name}</Text>
+                }]}>{item.courseName}</Text>
                 <Text style={[styles.grade, {
                   color: COLORS.grayscale700,
                 }]}>{item.grade}</Text>
                 <View style={styles.teacherContainer}>
                   <View style={styles.teacherItemContainer}>
-                    <Text style={styles.teacher}>Teacher: {item.teacher}</Text>
+                    <Text style={styles.teacher}>Teacher: {item.fullName}</Text>
                   </View>
                 </View>
               </View>
@@ -49,7 +89,7 @@ const CompletedSessions = () => {
             <View style={styles.additionalContainer}>
               <Text style={[styles.grade, {
                 color: COLORS.grayscale700,
-              }]}>Time: {item.time}</Text>
+              }]}>Time: {formatDate(item.date)}  {formatTime(item.startTime)} - {formatTime(item.endTime)}</Text>
               <Text style={[styles.grade, {
                 color: COLORS.grayscale700,
               }]}>Location: {item.location}</Text>
@@ -67,6 +107,7 @@ const CompletedSessions = () => {
             </View>
           </TouchableOpacity>
         )}
+        ListEmptyComponent={renderEmptyComponent}
       />
     </View>
   )
@@ -157,6 +198,16 @@ const styles = StyleSheet.create({
   additionalContainer: {
     marginLeft: 12, 
   },
-})
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: COLORS.grayscale700,
+  },
+});
 
-export default CompletedSessions
+export default CompletedSessions;
