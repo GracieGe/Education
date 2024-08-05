@@ -5,11 +5,11 @@ import { SIZES, COLORS } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 
 const CompletedSessions = () => {
-  const [orders, setOrders] = useState(completedOrders);
+  const [sessions, setSessions] = useState(completedOrders);
   const navigation = useNavigation();
 
   useEffect(() => {
-    setOrders(completedOrders);
+    setSessions(completedOrders);
   }, [completedOrders]);
 
   return (
@@ -17,7 +17,7 @@ const CompletedSessions = () => {
       backgroundColor: COLORS.tertiaryWhite
     }]}>
       <FlatList
-        data={orders}
+        data={sessions}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     marginVertical: 6
   },
   teacher: {
-    fontSize: 17,
+    fontSize: 13,
     fontFamily: "Urbanist SemiBold",
     color: COLORS.primary,
     textAlign: "center",

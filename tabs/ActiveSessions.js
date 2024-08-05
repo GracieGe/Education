@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import React, { useRef, useState } from 'react';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
@@ -51,7 +51,7 @@ const ActiveSessions = () => {
 
   const renderEmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No sessions booked.</Text>
+      <Text style={styles.emptyText}>No active sessions currently.</Text>
     </View>
   );
 
@@ -88,8 +88,33 @@ const ActiveSessions = () => {
       </View>
     </>
   );
+
+  const handleConfirmCompletion = async (sessionId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
   
-  const renderCompletionContent = () => (
+      const response = await axios.post(`${config.API_URL}/api/sessions/updateStatus`, {
+        sessionId,
+      }, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+  
+      if (response.status === 200) {
+        // Alert.alert('Success', 'Session status updated successfully');
+        fetchActiveSessions(); 
+      }
+    } catch (error) {
+      console.error('Error updating session status:', error);
+      Alert.alert('Error', 'Failed to update session status');
+    }
+  };
+  
+  const renderCompletionContent = (sessionId) => (
     <>
       <Text style={[styles.bottomSubtitle, { color: COLORS.primary }]}>Confirm Completion</Text>
       <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
@@ -113,6 +138,7 @@ const ActiveSessions = () => {
           filled
           style={styles.removeButton}
           onPress={() => {
+            handleConfirmCompletion(sessionId);
             refRBSheet.current.close();
           }}
         />
@@ -126,7 +152,7 @@ const ActiveSessions = () => {
     }]}>
       <FlatList
         data={sessions}
-        keyExtractor={item => item.slotId.toString()} 
+        keyExtractor={item => item.sessionId.toString()} 
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity style={[styles.cardContainer, {
@@ -182,7 +208,7 @@ const ActiveSessions = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setSheetContent(renderCompletionContent());
+                  setSheetContent(renderCompletionContent(item.sessionId));
                   refRBSheet.current.open();
                 }}
                 style={styles.completionBtn}>
