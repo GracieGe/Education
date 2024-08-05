@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
-import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert, PermissionsAndroid, Linking } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
@@ -7,10 +7,43 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AudioRecorder, AudioUtils } from 'react-native-audio';
+
+const requestPermissions = async () => {
+  try {
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    ]);
+
+    console.log('Permissions granted:', granted);
+
+    return granted['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED &&
+           granted['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED &&
+           granted['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED;
+  } catch (err) {
+    console.warn('Permissions error:', err);
+    return false;
+  }
+};
 
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
+  const [recording, setRecording] = useState(false);
+  const [recordingPath, setRecordingPath] = useState('');
   const refRBSheet = useRef();
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const hasPermission = await requestPermissions();
+      if (!hasPermission) {
+        // Alert.alert('Permissions not granted', 'Please enable audio and storage permissions in your device settings.');
+      }
+    };
+
+    checkPermissions();
+  }, []);
 
   const fetchActiveSessions = async () => {
     try {
@@ -57,7 +90,32 @@ const ActiveSessions = () => {
 
   const [sheetContent, setSheetContent] = useState(null);
 
-  const renderCancelContent = () => (
+  const handleConfirmCancel = async (sessionId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
+      const response = await axios.post(`${config.API_URL}/api/sessions/updateCancelledStatus`, {
+        sessionId,
+      }, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+  
+      if (response.status === 200) {
+        // Alert.alert('Success', 'Session status updated successfully');
+        fetchActiveSessions(); 
+      }
+    } catch (error) {
+      console.error('Error updating session status:', error);
+      Alert.alert('Error', 'Failed to update session status');
+    }
+  };
+
+  const renderCancelContent = (sessionId) => (
     <>
       <Text style={[styles.bottomSubtitle, { color: COLORS.red }]}>Cancel Session</Text>
       <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
@@ -82,6 +140,7 @@ const ActiveSessions = () => {
           filled
           style={styles.removeButton}
           onPress={() => {
+            handleConfirmCancel(sessionId);
             refRBSheet.current.close();
           }}
         />
@@ -96,7 +155,7 @@ const ActiveSessions = () => {
         throw new Error('No token found');
       }
   
-      const response = await axios.post(`${config.API_URL}/api/sessions/updateStatus`, {
+      const response = await axios.post(`${config.API_URL}/api/sessions/updateCompletedStatus`, {
         sessionId,
       }, {
         headers: {
@@ -145,6 +204,84 @@ const ActiveSessions = () => {
       </View>
     </>
   );
+
+  const prepareRecordingPath = (audioPath) => {
+    AudioRecorder.prepareRecordingAtPath(audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: "Low",
+      AudioEncoding: "aac",
+      OutputFormat: "mpeg_4",
+      MeteringEnabled: false,
+      AudioEncodingBitRate: 32000
+    });
+  };
+
+  const startRecording = async () => {
+    console.log('Requesting permissions for recording...');
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) {
+      Alert.alert('Permissions not granted', 'Please enable audio and storage permissions in your device settings.');
+      return;
+    }
+
+    if (recording) return;
+    const audioPath = `${AudioUtils.DocumentDirectoryPath}/recording.aac`;
+    prepareRecordingPath(audioPath);
+    setRecordingPath(audioPath);
+
+    try {
+      await AudioRecorder.startRecording();
+      setRecording(true);
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  };
+
+  const stopRecording = async () => {
+    if (!recording) return;
+
+    try {
+      const filePath = await AudioRecorder.stopRecording();
+      setRecording(false);
+      // Handle the recorded file upload
+      uploadRecording(filePath);
+    } catch (err) {
+      console.error('Failed to stop recording', err);
+    }
+  };
+
+  const uploadRecording = async (path) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', {
+        uri: `file://${path}`,
+        type: 'audio/aac',
+        name: 'recording.aac',
+      });
+
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const response = await axios.post(`${config.API_URL}/api/sessions/uploadRecording`, formData, {
+        headers: {
+          'x-auth-token': token,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Recording uploaded successfully');
+        // Update the session with the recording URL
+        // You may need to update the session data here
+      }
+    } catch (error) {
+      console.error('Failed to upload recording', error);
+      Alert.alert('Error', 'Failed to upload recording');
+    }
+  };
 
   return (
     <View style={[styles.container, {
@@ -195,16 +332,22 @@ const ActiveSessions = () => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  setSheetContent(renderCancelContent());
+                  setSheetContent(renderCancelContent(item.sessionId));
                   refRBSheet.current.open();
                 }}
                 style={styles.cancelBtn}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                  if (recording) {
+                    stopRecording();
+                  } else {
+                    startRecording();
+                  }
+                }}
                 style={styles.recordBtn}>
-                <Text style={styles.recordBtnText}>Record</Text>
+                <Text style={styles.recordBtnText}>{recording ? 'Stop Recording' : 'Record'}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
