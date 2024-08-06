@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, DeviceEventEmitter } from 'react-native';
 import React, { useState } from 'react';
 import { SIZES, COLORS } from '../constants';
 import { useFocusEffect } from '@react-navigation/native';
@@ -31,6 +31,12 @@ const CancelledSessions = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchCancelledSessions();
+  
+      const updateListener = DeviceEventEmitter.addListener('updateCancelledSessions', fetchCancelledSessions);
+  
+      return () => {
+        updateListener.remove();
+      };
     }, [])
   );
 

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert, PermissionsAndroid, Linking } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, DeviceEventEmitter, Alert, PermissionsAndroid } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../constants';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -108,6 +108,7 @@ const ActiveSessions = () => {
       if (response.status === 200) {
         // Alert.alert('Success', 'Session status updated successfully');
         fetchActiveSessions(); 
+        DeviceEventEmitter.emit('updateCancelledSessions');
       }
     } catch (error) {
       console.error('Error updating session status:', error);
@@ -166,6 +167,7 @@ const ActiveSessions = () => {
       if (response.status === 200) {
         // Alert.alert('Success', 'Session status updated successfully');
         fetchActiveSessions(); 
+        DeviceEventEmitter.emit('updateCompletedSessions');
       }
     } catch (error) {
       console.error('Error updating session status:', error);
