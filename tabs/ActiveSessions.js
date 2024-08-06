@@ -90,15 +90,16 @@ const ActiveSessions = () => {
 
   const [sheetContent, setSheetContent] = useState(null);
 
-  const handleConfirmCancel = async (sessionId) => {
+  const handleConfirmCancel = async (sessionId, slotId) => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }
   
-      const response = await axios.post(`${config.API_URL}/api/sessions/updateCancelledStatus`, {
+      const response = await axios.post(`${config.API_URL}/api/slots/cancelSession`, {
         sessionId,
+        slotId,
       }, {
         headers: {
           'x-auth-token': token,
@@ -116,7 +117,7 @@ const ActiveSessions = () => {
     }
   };
 
-  const renderCancelContent = (sessionId) => (
+  const renderCancelContent = (sessionId, slotId) => (
     <>
       <Text style={[styles.bottomSubtitle, { color: COLORS.red }]}>Cancel Session</Text>
       <View style={[styles.separateLine, { backgroundColor: COLORS.grayscale200 }]} />
@@ -141,7 +142,7 @@ const ActiveSessions = () => {
           filled
           style={styles.removeButton}
           onPress={() => {
-            handleConfirmCancel(sessionId);
+            handleConfirmCancel(sessionId, slotId);
             refRBSheet.current.close();
           }}
         />
@@ -334,7 +335,7 @@ const ActiveSessions = () => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  setSheetContent(renderCancelContent(item.sessionId));
+                  setSheetContent(renderCancelContent(item.sessionId, item.slotId));
                   refRBSheet.current.open();
                 }}
                 style={styles.cancelBtn}>
