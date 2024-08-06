@@ -36,9 +36,8 @@ const prepareRecordingPath = (audioPath) => {
 
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
-  const [recording, setRecording] = useState(false);
-  const [recordingPath, setRecordingPath] = useState('');
   const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [recordingPaths, setRecordingPaths] = useState({});
   const refRBSheet = useRef();
 
   useEffect(() => {
@@ -65,7 +64,12 @@ const ActiveSessions = () => {
         },
       });
 
-      setSessions(response.data);
+      const updatedSessions = response.data.map(session => ({
+        ...session,
+        recording: false,
+      }));
+
+      setSessions(updatedSessions);
     } catch (error) {
       console.error('Error fetching active sessions:', error);
     }
@@ -222,62 +226,64 @@ const ActiveSessions = () => {
       return;
     }
 
-    if (recording) {
-      console.log('Already recording');
-      return;
-    }
+    const updatedSessions = sessions.map(session => {
+      if (session.sessionId === sessionId) {
+        return { ...session, recording: true };
+      }
+      return session;
+    });
+    setSessions(updatedSessions);
+    setCurrentSessionId(sessionId);
 
-    setCurrentSessionId(sessionId); 
-    const audioPath = `${AudioUtils.DocumentDirectoryPath}/recording.aac`;
+    const audioPath = `${AudioUtils.DocumentDirectoryPath}/recording-${sessionId}.aac`;
     prepareRecordingPath(audioPath);
-    setRecordingPath(audioPath);
+    setRecordingPaths(prevPaths => ({ ...prevPaths, [sessionId]: audioPath }));
 
     try {
       await AudioRecorder.startRecording();
-      setRecording(true);
     } catch (err) {
       console.error('Failed to start recording:', err);
     }
   };
 
-  const stopRecording = async () => {
-    if (!recording) {
-      console.log('Not currently recording');
-      return;
-    }
-
+  const stopRecording = async (sessionId) => {
     try {
       const filePath = await AudioRecorder.stopRecording();
-      setRecording(false);
-      // Handle the recorded file upload
-      uploadRecording(filePath);
+      const updatedSessions = sessions.map(session => {
+        if (session.sessionId === sessionId) {
+          return { ...session, recording: false };
+        }
+        return session;
+      });
+      setSessions(updatedSessions);
+      uploadRecording(filePath, sessionId);
     } catch (err) {
       console.error('Failed to stop recording:', err);
     }
   };
 
-  const uploadRecording = async (path) => {
+  const uploadRecording = async (path, sessionId) => {
     try {
       const formData = new FormData();
       formData.append('audio', {
         uri: `file://${path}`,
         type: 'audio/aac',
-        name: 'recording.aac',
+        name: `recording-${sessionId}.aac`,
       });
-      formData.append('sessionId', currentSessionId); 
-  
+      formData.append('sessionId', sessionId); 
+
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }
-  
+
       const response = await axios.post(`${config.API_URL}/api/sessions/uploadRecording`, formData, {
         headers: {
           'x-auth-token': token,
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (response.status === 200) {
         Alert.alert('Success', 'Recording uploaded successfully');
       } else {
@@ -345,14 +351,14 @@ const ActiveSessions = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (recording) {
-                    stopRecording();
+                  if (item.recording) {
+                    stopRecording(item.sessionId);
                   } else {
                     startRecording(item.sessionId);
                   }
                 }}
                 style={styles.recordBtn}>
-                <Text style={styles.recordBtnText}>{recording ? 'Stop Recording' : 'Record'}</Text>
+                <Text style={styles.recordBtnText}>{item.recording ? 'Stop' : 'Record'}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
