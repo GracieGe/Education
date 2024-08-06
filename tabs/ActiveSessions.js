@@ -11,34 +11,41 @@ import { AudioRecorder, AudioUtils } from 'react-native-audio';
 
 const requestPermissions = async () => {
   try {
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    ]);
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+    );
 
-    console.log('Permissions granted:', granted);
-
-    return granted['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED &&
-           granted['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED &&
-           granted['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED;
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
     console.warn('Permissions error:', err);
     return false;
   }
 };
 
+const prepareRecordingPath = (audioPath) => {
+  AudioRecorder.prepareRecordingAtPath(audioPath, {
+    SampleRate: 22050,
+    Channels: 1,
+    AudioQuality: 'Low',
+    AudioEncoding: 'aac',
+    OutputFormat: 'mpeg_4',
+    MeteringEnabled: false,
+    AudioEncodingBitRate: 32000
+  });
+};
+
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [recording, setRecording] = useState(false);
   const [recordingPath, setRecordingPath] = useState('');
+  const [currentSessionId, setCurrentSessionId] = useState(null);
   const refRBSheet = useRef();
 
   useEffect(() => {
     const checkPermissions = async () => {
       const hasPermission = await requestPermissions();
       if (!hasPermission) {
-        // Alert.alert('Permissions not granted', 'Please enable audio and storage permissions in your device settings.');
+        Alert.alert('Permissions not granted', 'Please enable audio permissions in your device settings.');
       }
     };
 
@@ -208,27 +215,19 @@ const ActiveSessions = () => {
     </>
   );
 
-  const prepareRecordingPath = (audioPath) => {
-    AudioRecorder.prepareRecordingAtPath(audioPath, {
-      SampleRate: 22050,
-      Channels: 1,
-      AudioQuality: "Low",
-      AudioEncoding: "aac",
-      OutputFormat: "mpeg_4",
-      MeteringEnabled: false,
-      AudioEncodingBitRate: 32000
-    });
-  };
-
-  const startRecording = async () => {
-    console.log('Requesting permissions for recording...');
+  const startRecording = async (sessionId) => {
     const hasPermission = await requestPermissions();
     if (!hasPermission) {
-      Alert.alert('Permissions not granted', 'Please enable audio and storage permissions in your device settings.');
+      Alert.alert('Permissions not granted', 'Please enable audio permissions in your device settings.');
       return;
     }
 
-    if (recording) return;
+    if (recording) {
+      console.log('Already recording');
+      return;
+    }
+
+    setCurrentSessionId(sessionId); 
     const audioPath = `${AudioUtils.DocumentDirectoryPath}/recording.aac`;
     prepareRecordingPath(audioPath);
     setRecordingPath(audioPath);
@@ -237,12 +236,15 @@ const ActiveSessions = () => {
       await AudioRecorder.startRecording();
       setRecording(true);
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error('Failed to start recording:', err);
     }
   };
 
   const stopRecording = async () => {
-    if (!recording) return;
+    if (!recording) {
+      console.log('Not currently recording');
+      return;
+    }
 
     try {
       const filePath = await AudioRecorder.stopRecording();
@@ -250,7 +252,7 @@ const ActiveSessions = () => {
       // Handle the recorded file upload
       uploadRecording(filePath);
     } catch (err) {
-      console.error('Failed to stop recording', err);
+      console.error('Failed to stop recording:', err);
     }
   };
 
@@ -262,26 +264,26 @@ const ActiveSessions = () => {
         type: 'audio/aac',
         name: 'recording.aac',
       });
-
+      formData.append('sessionId', currentSessionId); 
+  
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }
-
+  
       const response = await axios.post(`${config.API_URL}/api/sessions/uploadRecording`, formData, {
         headers: {
           'x-auth-token': token,
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       if (response.status === 200) {
         Alert.alert('Success', 'Recording uploaded successfully');
-        // Update the session with the recording URL
-        // You may need to update the session data here
+      } else {
+        console.log('Upload failed:', response);
       }
     } catch (error) {
-      console.error('Failed to upload recording', error);
       Alert.alert('Error', 'Failed to upload recording');
     }
   };
@@ -346,7 +348,7 @@ const ActiveSessions = () => {
                   if (recording) {
                     stopRecording();
                   } else {
-                    startRecording();
+                    startRecording(item.sessionId);
                   }
                 }}
                 style={styles.recordBtn}>
