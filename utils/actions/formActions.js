@@ -1,6 +1,5 @@
 import {
     validateString,
-    validateEmail,
     validatePassword,
     validateCreditCardNumber,
     validateExpiryDate,
@@ -19,6 +18,7 @@ export const validateInput = (inputId, inputValue, role) => {
         inputId === 'location' ||
         inputId === 'userName' ||
         inputId === 'phoneNumber' ||
+        inputId === 'email' ||
         inputId === 'creditCardHolderName' ||
         inputId === 'bio' ||
         inputId === 'address' ||
@@ -36,8 +36,6 @@ export const validateInput = (inputId, inputValue, role) => {
         inputId === 'birthday'      
     ) {
         validationResult = validateString(inputId, inputValue);
-    } else if (inputId === 'email' || inputId === 'newEmail') {
-        validationResult = validateEmail(inputId, inputValue);
     } else if (inputId === 'password' || inputId === 'confirmPassword' || inputId === 'newPassword' || inputId === 'confirmNewPassword') {
         validationResult = validatePassword(inputId, inputValue);
     } else if (inputId === 'resetToken') {

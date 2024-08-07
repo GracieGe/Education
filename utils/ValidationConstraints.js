@@ -19,21 +19,6 @@ export const validateString = (id,value)=>{
     return validationResult && validationResult[id]
 }
 
-export const validateEmail = (id,value)=>{
-    const constraints ={
-        presence : {
-            allowEmpty: false
-        }
-    };
-
-    if(value !== ""){
-        constraints.email = true
-    };
-
-    const validationResult = validate({[id]: value},{[id]: constraints});
-    return validationResult && validationResult[id]
-}
-
 export const validatePassword = (id, value) => {
   const constraints = {
     presence: {

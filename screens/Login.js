@@ -14,7 +14,7 @@ const isTestMode = true;
 
 const initialState = {
   inputValues: {
-    email: isTestMode ? 'example@gmail.com' : '',
+    phoneNumber: isTestMode ? '1234567890' : '',
     password: isTestMode ? '**********' : '',
   },
 }
@@ -46,17 +46,17 @@ const Login = ({ navigation }) => {
 
 
   const loginHandler = async () => {
-    const { email, password } = formState.inputValues;
+    const { phoneNumber, password } = formState.inputValues;
 
-    if (!email || !password) {
-      setError('Please enter both email and password');
+    if (!phoneNumber || !password) {
+      setError('Please enter both phone number and password');
       return;
     }
 
     setError(null);
     setIsLoading(true);
     try {
-      const response = await axios.post(`${config.API_URL}/api/users/login`, { email, password });
+      const response = await axios.post(`${config.API_URL}/api/users/login`, { phoneNumber, password });
 
       if (response.status === 200) {
         const { token, user } = response.data;
@@ -73,9 +73,9 @@ const Login = ({ navigation }) => {
 
       if (err.response) {
       if (err.response.status === 400) {
-        setError('Invalid email or password. Please try again.');
+        setError('Invalid phone number or password. Please try again.');
       } else if (err.response.status === 401 || err.response.status === 403) {
-        setError('Invalid email or password');
+        setError('Invalid phone number or password');
       } else {
         setError('An error occurred during login. Please try again.');
       }
@@ -101,12 +101,11 @@ const Login = ({ navigation }) => {
           </View>
           <Text style={[styles.title, { color: COLORS.black }]}>Login to Your Account</Text>
           <Input
-            id="email"
+            id="phoneNumber"
             onInputChanged={(id, value) => inputChangedHandler(id, value)}
-            placeholder="Email"
+            placeholder="Phone Number"
             placeholderTextColor={COLORS.black}
-            icon={icons.email}
-            keyboardType="email-address"
+            icon={icons.telephone}
           />
           <Input
             onInputChanged={(id, value) => inputChangedHandler(id, value)}

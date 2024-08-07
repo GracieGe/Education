@@ -7,7 +7,6 @@ import { reducer } from '../utils/reducers/formReducers';
 import { validateInput } from '../utils/actions/formActions';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
 import DatePickerModal from '../components/DatePickerModal';
@@ -22,7 +21,7 @@ const initialState = {
     gender: '',
     age: '',
     grade: '',
-    phoneNumber: '',
+    email: '',
     birthday: '',
   },
   inputValidities: {
@@ -30,7 +29,7 @@ const initialState = {
     gender: false,
     age: false,
     grade: false,
-    phoneNumber: false,
+    email: false,
     birthday: false,
   },
   formIsValid: false,
@@ -41,9 +40,6 @@ const FillYourProfile = ({ route, navigation }) => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
-  const [areas, setAreas] = useState([]);
-  const [selectedArea, setSelectedArea] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
   const [birthday, setBirthday] = useState('');
@@ -93,99 +89,6 @@ const FillYourProfile = ({ route, navigation }) => {
     });
   };
 
-  // fetch codes from rescountries api
-  useEffect(() => {
-    fetch("https://restcountries.com/v2/all")
-      .then(response => response.json())
-      .then(data => {
-        let areaData = data.map((item) => {
-          return {
-            code: item.alpha2Code,
-            item: item.name,
-            callingCode: `+${item.callingCodes[0]}`,
-            flag: `https://flagsapi.com/${item.alpha2Code}/flat/64.png`
-          }
-        });
-
-        setAreas(areaData);
-        if (areaData.length > 0) {
-          let defaultData = areaData.filter((a) => a.code == "US");
-
-          if (defaultData.length > 0) {
-            setSelectedArea(defaultData[0])
-          }
-        }
-      })
-  }, []);
-
-  // render countries codes modal
-  function RenderAreasCodesModal() {
-    const renderItem = ({ item }) => {
-      return (
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            flexDirection: "row"
-          }}
-          onPress={() => {
-            setSelectedArea(item),
-              setModalVisible(false)
-          }}
-        >
-          <Image
-            source={{ uri: item.flag }}
-            style={{
-              height: 30,
-              width: 30,
-              marginRight: 10
-            }}
-          />
-          <Text style={{ fontSize: 16, color: "#fff" }}>{item.item}</Text>
-        </TouchableOpacity>
-      )
-    }
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-      >
-        <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)}
-        >
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <View
-              style={{
-                height: SIZES.height,
-                width: SIZES.width,
-                backgroundColor: COLORS.primary,
-                borderRadius: 12
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                style={styles.closeBtn}>
-                <Ionicons name="close-outline" size={24} color={COLORS.primary} />
-              </TouchableOpacity>
-              <FlatList
-                data={areas}
-                renderItem={renderItem}
-                horizontal={false}
-                keyExtractor={(item) => item.code}
-                style={{
-                  padding: 20,
-                  marginBottom: 20
-                }}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    )
-  }
-
   const handleContinue = async () => {
     console.log('userId:', userId);
 
@@ -198,7 +101,7 @@ const FillYourProfile = ({ route, navigation }) => {
       fullName: formState.inputValues.fullName,
       gender: formState.inputValues.gender,
       age: formState.inputValues.age,
-      phoneNum: formState.inputValues.phoneNumber,
+      email: formState.inputValues.email,
       birthday: formatDate(formState.inputValues.birthday),
       grade: formState.inputValues.grade,
     };
@@ -207,7 +110,7 @@ const FillYourProfile = ({ route, navigation }) => {
                       formState.inputValues.fullName &&
                       formState.inputValues.gender &&
                       formState.inputValues.age &&
-                      formState.inputValues.phoneNumber &&
+                      formState.inputValues.email &&
                       formState.inputValues.birthday &&
                       (role !== 'student' || (role === 'student' && formState.inputValues.grade));
 
@@ -225,7 +128,7 @@ const FillYourProfile = ({ route, navigation }) => {
       formData.append('fullName', formState.inputValues.fullName);
       formData.append('gender', formState.inputValues.gender);
       formData.append('age', formState.inputValues.age);
-      formData.append('phoneNum', formState.inputValues.phoneNumber);
+      formData.append('email', formState.inputValues.email);
       formData.append('birthday', formatDate(formState.inputValues.birthday));
       if (role === 'student') {
         formData.append('grade', formState.inputValues.grade);
@@ -323,39 +226,15 @@ const FillYourProfile = ({ route, navigation }) => {
               placeholderTextColor={styles.placeholderStyle.color}
               style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
             />
-            <View style={[styles.inputContainer, {
-              backgroundColor: COLORS.greyscale500,
-              borderColor: COLORS.greyscale500,
-            }]}>
-              <TouchableOpacity
-                style={styles.selectFlagContainer}
-                onPress={() => setModalVisible(true)}>
-                <View style={{ justifyContent: "center" }}>
-                  <Image
-                    source={icons.down}
-                    resizeMode='contain'
-                    style={styles.downIcon}
-                  />
-                </View>
-                <View style={{ justifyContent: "center", marginLeft: 5 }}>
-                  <Image
-                    source={{ uri: selectedArea?.flag }}
-                    style={styles.flagIcon}
-                  />
-                </View>
-                <View style={{ justifyContent: "center", marginLeft: 5 }}>
-                  <Text style={{ color: "#111", fontSize: 12 }}>{selectedArea?.callingCode}</Text>
-                </View>
-              </TouchableOpacity>
-              <TextInput
-                style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
-                placeholder="Enter your phone number"
-                placeholderTextColor={styles.placeholderStyle.color}
-                selectionColor="#111"
-                keyboardType="numeric"
-                onChangeText={(text) => inputChangedHandler('phoneNumber', text)}
-              />
-            </View>
+            <Input
+              id="email"
+              onInputChanged={inputChangedHandler}
+              errorText={formState.inputValidities['email']}
+              placeholder="Email"
+              placeholderTextColor={styles.placeholderStyle.color}
+              keyboardType="email-address"
+              style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
+            />
             {role === 'student' && (
               <RNPickerSelect
                 onValueChange={(value) => inputChangedHandler('grade', value)}
@@ -390,7 +269,6 @@ const FillYourProfile = ({ route, navigation }) => {
           setOpenStartDatePicker(false);
         }}
       />
-      {RenderAreasCodesModal()}
       <View style={styles.bottomContainer}>
         <Button
           title="Continue"

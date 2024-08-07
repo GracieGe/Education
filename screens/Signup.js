@@ -16,11 +16,11 @@ const isTestMode = true;
 
 const initialState = {
   inputValues: {
-    email: isTestMode ? 'example@gmail.com' : '',
+    phoneNumber: isTestMode ? '1234567890' : '',
     password: isTestMode ? '**********' : '',
   },
   inputValidities: {
-    email: false,
+    phoneNumber: false,
     password: false
   },
   formIsValid: false,
@@ -69,9 +69,9 @@ const Signup = ({ navigation, route }) => {
   };
 
   const signupHandler = async () => {
-    const emailValid = formState.inputValidities.email === null; 
+    const phoneNumberValid = formState.inputValidities.phoneNumber === null; 
     const passwordValid = formState.inputValidities.password === null; 
-    const isFormValid = emailValid && passwordValid && userType && isChecked;
+    const isFormValid = phoneNumberValid && passwordValid && userType && isChecked;
 
     if (!isFormValid) {
       Alert.alert('Invalid input', 'Please fill out all fields correctly.');
@@ -79,7 +79,7 @@ const Signup = ({ navigation, route }) => {
     }
 
     const userData = {
-      email: formState.inputValues.email,
+      phoneNumber: formState.inputValues.phoneNumber,
       password: formState.inputValues.password,
       role: userType,
       timeOfCreation: formatDate(new Date()),
@@ -101,8 +101,8 @@ const Signup = ({ navigation, route }) => {
       }
     } catch (err) {
       setIsLoading(false);
-      if (err.response && err.response.status === 400 && err.response.data.msg === 'Email already exists') {
-        Alert.alert('Signup Error', 'Email already exists. Please go to the Sign In page or use another email to create your account.');
+      if (err.response && err.response.status === 400 && err.response.data.msg === 'Phone number already exists') {
+        Alert.alert('Signup Error', 'Phone number already exists. Please go to the Sign In page or use another phone number to create your account.');
       } else {
         setError(err.message);
         Alert.alert('An error occurred', err.message);
@@ -124,13 +124,12 @@ const Signup = ({ navigation, route }) => {
           </View>
           <Text style={[styles.title, { color: COLORS.black }]}>Create Your Account</Text>
           <Input
-            id="email"
+            id="phoneNumber"
             onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities['email']}
-            placeholder="Email"
+            errorText={formState.inputValidities['phoneNumber']}
+            placeholder="Phone Number"
             placeholderTextColor={COLORS.black}
-            icon={icons.email}
-            keyboardType="email-address"
+            icon={icons.telephone}
           />
           <Input
             onInputChanged={inputChangedHandler}
