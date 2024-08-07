@@ -83,13 +83,6 @@ const Home = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.viewRight}>
-          <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
-            <Image
-              source={icons.notificationBell2}
-              resizeMode='contain'
-              style={[styles.bellIcon, { tintColor: COLORS.greyscale900 }]}
-            />
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Favourite")}>
             <Image
               source={icons.heartOutline}

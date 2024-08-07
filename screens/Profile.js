@@ -134,24 +134,14 @@ const Profile = () => {
     return (
       <View style={styles.settingsContainer}>
         <SettingsItem
-          icon={icons.bell3}
-          name={t('myNotification')}
-          onPress={() => navigation.navigate("Notifications")}
-        />
-        <SettingsItem
-          icon={icons.location2Outline}
-          name={t('address')}
-          onPress={() => navigation.navigate("Address")}
-        />
-        <SettingsItem
           icon={icons.userOutline}
           name={t('editProfile')}
           onPress={() => navigation.navigate("EditProfile")}
         />
-        <SettingsItem
-          icon={icons.bell2}
-          name={t('notification')}
-          onPress={() => navigation.navigate("SettingsNotifications")}
+         <SettingsItem
+          icon={icons.location2Outline}
+          name={t('address')}
+          onPress={() => navigation.navigate("Address")}
         />
         <SettingsItem
           icon={icons.wallet2Outline}
@@ -188,31 +178,6 @@ const Profile = () => {
               style={[styles.settingsArrowRight, {
                 tintColor: COLORS.greyscale900
               }]}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.settingsItemContainer}>
-          <View style={styles.leftContainer}>
-            <Image
-              source={icons.show}
-              resizeMode='contain'
-              style={[styles.settingsIcon, {
-                tintColor: COLORS.greyscale900
-              }]}
-            />
-            <Text style={[styles.settingsName, {
-              color: COLORS.greyscale900
-            }]}>{t('darkMode')}</Text>
-          </View>
-          <View style={styles.rightContainer}>
-            <Switch
-              value={isDarkMode}
-              onValueChange={toggleDarkMode}
-              thumbColor={isDarkMode ? '#fff' : COLORS.white}
-              trackColor={{ false: '#EEEEEE', true: COLORS.primary }}
-              ios_backgroundColor={COLORS.white}
-              style={styles.switch}
             />
           </View>
         </TouchableOpacity>
@@ -418,10 +383,6 @@ const styles = StyleSheet.create({
     fontFamily: "Urbanist SemiBold",
     color: COLORS.greyscale900,
     marginRight: 8
-  },
-  switch: {
-    marginLeft: 8,
-    transform: [{ scaleX: .8 }, { scaleY: .8 }], // Adjust the size of the switch
   },
   logoutContainer: {
     width: SIZES.width - 32,
