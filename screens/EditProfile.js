@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { COLORS, SIZES, FONTS, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,7 +11,6 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
-import RNPickerSelect from 'react-native-picker-select';
 
 const initialState = {
   inputValues: {
@@ -31,7 +30,7 @@ const initialState = {
     birthday: false,
   },
   formIsValid: false,
-}
+};
 
 const EditProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -39,15 +38,32 @@ const EditProfile = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const [selectedGender, setSelectedGender] = useState('');
+  const [showGenderModal, setShowGenderModal] = useState(false);
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [showGradeModal, setShowGradeModal] = useState(false);
 
   const genderOptions = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'Female' },
-    { label: 'Other', value: 'Other' },
+    'Male',
+    'Female',
+    'Other'
+  ];
+
+  const gradeOptions = [
+    'Senior One',
+    'Senior Two',
+    'Senior Three'
   ];
 
   const handleGenderChange = (value) => {
     setSelectedGender(value);
+    inputChangedHandler('gender', value);
+    setShowGenderModal(false);
+  };
+
+  const handleGradeChange = (value) => {
+    setSelectedGrade(value);
+    inputChangedHandler('grade', value);
+    setShowGradeModal(false);
   };
 
   const [birthday, setBirthday] = useState('');
@@ -57,38 +73,37 @@ const EditProfile = ({ navigation }) => {
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue)
-      dispatchFormState({ inputId, validationResult: result, inputValue })
+      const result = validateInput(inputId, inputValue);
+      dispatchFormState({ inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-  )
+  );
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occured', error)
+      Alert.alert('An error occurred', error);
     }
-  }, [error])
+  }, [error]);
 
-   // Image Profile handler
- const pickImage = () => {
-  const options = {
-    mediaType: 'photo',
-    includeBase64: false,
-    maxHeight: 2000,
-    maxWidth: 2000,
+  const pickImage = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('Image picker error: ', response.error);
+      } else {
+        let imageUri = response.uri || response.assets?.[0]?.uri;
+        setImage({ uri: imageUri });
+      }
+    });
   };
-
-  launchImageLibrary(options, (response) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('Image picker error: ', response.error);
-    } else {
-      let imageUri = response.uri || response.assets?.[0]?.uri;
-      setImage({ uri: imageUri });
-    }
-  });
-};
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -100,14 +115,17 @@ const EditProfile = ({ navigation }) => {
               <Image
                 source={image === null ? images.user1 : image}
                 resizeMode="cover"
-                style={styles.avatar} />
+                style={styles.avatar}
+              />
               <TouchableOpacity
                 onPress={pickImage}
-                style={styles.pickImage}>
+                style={styles.pickImage}
+              >
                 <MaterialCommunityIcons
                   name="pencil-outline"
                   size={24}
-                  color={COLORS.white} />
+                  color={COLORS.white}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -126,9 +144,7 @@ const EditProfile = ({ navigation }) => {
               placeholder="Age"
               placeholderTextColor={COLORS.black}
             />
-            <View style={{
-              width: SIZES.width - 32
-            }}>
+            <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={[styles.inputBtn, {
                   backgroundColor: COLORS.greyscale500,
@@ -149,48 +165,29 @@ const EditProfile = ({ navigation }) => {
               keyboardType="email-address"
             />
             <View>
-              <RNPickerSelect
-                placeholder={{ label: 'Gender', value: '' }}
-                items={genderOptions}
-                onValueChange={(value) => handleGenderChange(value)}
-                value={selectedGender}
-                style={{
-                  inputIOS: {
-                    fontSize: 16,
-                    paddingHorizontal: 10,
-                    borderRadius: 4,
-                    color: COLORS.greyscale600,
-                    paddingRight: 30,
-                    height: 52,
-                    width: SIZES.width - 32,
-                    alignItems: 'center',
-                    backgroundColor: COLORS.greyscale500,
-                    borderRadius: 16,
-                    marginVertical: 8,
-                  },
-                  inputAndroid: {
-                    fontSize: 16,
-                    paddingHorizontal: 10,
-                    borderRadius: 8,
-                    color: COLORS.greyscale600,
-                    paddingRight: 30,
-                    height: 52,
-                    width: SIZES.width - 32,
-                    alignItems: 'center',
-                    backgroundColor: COLORS.greyscale500,
-                    borderRadius: 16,
-                    marginVertical: 8,
-                  },
-                }}
-              />
+              <TouchableOpacity
+                style={[styles.inputBtn, {
+                  backgroundColor: COLORS.greyscale500,
+                  borderColor: COLORS.greyscale500,
+                }]}
+                onPress={() => setShowGenderModal(true)}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGender || 'Gender'}</Text>
+                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
             </View>
-            <Input
-              id="grade"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['grade']}
-              placeholder="Grade"
-              placeholderTextColor={COLORS.black}
-            />
+            <View>
+              <TouchableOpacity
+                style={[styles.inputBtn, {
+                  backgroundColor: COLORS.greyscale500,
+                  borderColor: COLORS.greyscale500,
+                }]}
+                onPress={() => setShowGradeModal(true)}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGrade || 'Grade'}</Text>
+                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -201,7 +198,7 @@ const EditProfile = ({ navigation }) => {
         onClose={() => setOpenStartDatePicker(false)}
         onChangeStartDate={(date) => {
           setBirthday(date);
-          onInputChanged={inputChangedHandler}
+          inputChangedHandler('birthday', date);
           setOpenStartDatePicker(false);
         }}
       />
@@ -213,19 +210,63 @@ const EditProfile = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
       </View>
+      <Modal
+        visible={showGenderModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowGenderModal(false)}  
+      >
+        <TouchableWithoutFeedback onPress={() => setShowGenderModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {genderOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={styles.modalOption}
+                  onPress={() => handleGenderChange(option)}
+                >
+                  <Text style={styles.modalOptionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={showGradeModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowGradeModal(false)}  
+      >
+        <TouchableWithoutFeedback onPress={() => setShowGradeModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {gradeOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={styles.modalOption}
+                  onPress={() => handleGradeChange(option)}
+                >
+                  <Text style={styles.modalOptionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.white
+    backgroundColor: COLORS.white,
   },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: COLORS.white
+    backgroundColor: COLORS.white,
   },
   avatarContainer: {
     marginVertical: 12,
@@ -262,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.greyscale500,
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 8
+    paddingRight: 8,
   },
   bottomContainer: {
     position: "absolute",
@@ -272,25 +313,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: SIZES.width - 32,
-    alignItems: "center"
+    alignItems: "center",
   },
   updateButton: {
     width: SIZES.width - 32,
     borderRadius: 32,
     backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary
+    borderColor: COLORS.primary,
   },
-  genderContainer: {
-    flexDirection: "row",
-    borderColor: COLORS.greyscale500,
-    borderWidth: .4,
-    borderRadius: 6,
-    height: 58,
-    width: SIZES.width - 32,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 8,
-    backgroundColor: COLORS.greyscale500,
-  }
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: COLORS.white,
+    width: 300,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalOption: {
+    paddingVertical: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalOptionText: {
+    ...FONTS.body3,
+    color: COLORS.black,
+  },
 });
 
-export default EditProfile
+export default EditProfile;
