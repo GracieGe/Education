@@ -265,7 +265,7 @@ const FillYourProfile = ({ route, navigation }) => {
         onClose={() => setOpenStartDatePicker(false)}
         onChangeStartDate={(date) => {
           setBirthday(date);
-          inputChangedHandler('birthday', date.split('/').join('-'));
+          // inputChangedHandler('birthday', date.split('/').join('-'));
           setOpenStartDatePicker(false);
         }}
       />
