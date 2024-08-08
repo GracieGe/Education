@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import { COLORS, SIZES, FONTS, images } from '../constants';
+import { COLORS, SIZES, FONTS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { reducer } from '../utils/reducers/formReducers';
@@ -113,7 +113,7 @@ const EditProfile = ({ navigation }) => {
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
               <Image
-                source={image === null ? images.user1 : image}
+                source={image === null ? icons.userDefault2 : image}
                 resizeMode="cover"
                 style={styles.avatar}
               />
