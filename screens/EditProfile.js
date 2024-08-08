@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import { COLORS, SIZES, FONTS, icons } from '../constants';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { reducer } from '../utils/reducers/formReducers';
@@ -11,6 +10,10 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../config';
+import { COLORS, SIZES, FONTS, icons } from '../constants';
 
 const initialState = {
   inputValues: {
@@ -32,7 +35,7 @@ const initialState = {
   formIsValid: false,
 };
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ route, navigation }) => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -41,18 +44,11 @@ const EditProfile = ({ navigation }) => {
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState('');
   const [showGradeModal, setShowGradeModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState('');
 
-  const genderOptions = [
-    'Male',
-    'Female',
-    'Other'
-  ];
-
-  const gradeOptions = [
-    'Senior One',
-    'Senior Two',
-    'Senior Three'
-  ];
+  const genderOptions = ['Male', 'Female', 'Other'];
+  const gradeOptions = ['Senior One', 'Senior Two', 'Senior Three'];
 
   const handleGenderChange = (value) => {
     setSelectedGender(value);
@@ -80,10 +76,65 @@ const EditProfile = ({ navigation }) => {
   );
 
   useEffect(() => {
-    if (error) {
-      Alert.alert('An error occurred', error);
-    }
-  }, [error]);
+    const fetchProfileData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+
+        if (!token) {
+          throw new Error('No token found, please login again');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/profiles`, {
+          headers: {
+            'x-auth-token': token
+          }
+        });
+
+        const { fullName, gender, age, grade, email, birthday, photo, role } = response.data;
+        setImage(photo ? { uri: photo } : null);
+        setSelectedGender(gender);
+        setSelectedGrade(grade);
+        setBirthday(birthday);
+        setRole(role);
+
+        dispatchFormState({
+          inputValues: {
+            fullName,
+            gender,
+            age,
+            grade,
+            email,
+            birthday,
+          },
+          inputValidities: {
+            fullName: true,
+            gender: true,
+            age: true,
+            grade: role === 'student',
+            email: true,
+            birthday: true,
+          },
+          formIsValid: true,
+        });
+
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        setError('Failed to load profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>{error}</Text>;
+  }
 
   const pickImage = () => {
     const options = {
@@ -100,9 +151,54 @@ const EditProfile = ({ navigation }) => {
         console.log('Image picker error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        setImage({ uri: imageUri });
+        let imageType = response.type || response.assets?.[0]?.type;
+        setImage({ uri: imageUri, type: imageType });
       }
     });
+  };
+
+  const updateProfileHandler = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('No token found, please login again');
+      }
+
+      const formData = new FormData();
+      formData.append('userId', route.params.userId);
+      formData.append('role', role);
+      formData.append('fullName', formState.inputValues.fullName);
+      formData.append('gender', selectedGender);
+      formData.append('age', formState.inputValues.age);
+      formData.append('email', formState.inputValues.email);
+      formData.append('birthday', birthday);
+      if (role === 'student') {
+        formData.append('grade', selectedGrade);
+      }
+      if (image) {
+        formData.append('photo', {
+          uri: image.uri,
+          type: image.type,
+          name: `profile.${image.type.split('/')[1]}`,
+        });
+      }
+
+      const response = await axios.put(`${config.API_URL}/api/profiles`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-auth-token': token
+        }
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Congratulations', 'Profile updated successfully');
+        navigation.navigate('Profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      Alert.alert('Error', 'Failed to update profile');
+    }
   };
 
   return (
@@ -130,20 +226,23 @@ const EditProfile = ({ navigation }) => {
             </View>
           </View>
           <View>
+            <Text style={styles.label}>Full Name</Text>
             <Input
               id="fullName"
               onInputChanged={inputChangedHandler}
+              value={formState.inputValues.fullName}
               errorText={formState.inputValidities['fullName']}
-              placeholder="Full Name"
               placeholderTextColor={COLORS.black}
             />
+            <Text style={styles.label}>Age</Text>
             <Input
               id="age"
               onInputChanged={inputChangedHandler}
+              value={formState.inputValues.age}
               errorText={formState.inputValidities['age']}
-              placeholder="Age"
               placeholderTextColor={COLORS.black}
             />
+            <Text style={styles.label}>Birthday</Text>
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={[styles.inputBtn, {
@@ -152,18 +251,20 @@ const EditProfile = ({ navigation }) => {
                 }]}
                 onPress={handleOnPressBirthday}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{birthday || 'Birthday'}</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{birthday || ''}</Text>
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
+            <Text style={styles.label}>Email</Text>
             <Input
               id="email"
               onInputChanged={inputChangedHandler}
+              value={formState.inputValues.email}
               errorText={formState.inputValidities['email']}
-              placeholder="Email"
               placeholderTextColor={COLORS.black}
               keyboardType="email-address"
             />
+            <Text style={styles.label}>Gender</Text>
             <View>
               <TouchableOpacity
                 style={[styles.inputBtn, {
@@ -172,22 +273,34 @@ const EditProfile = ({ navigation }) => {
                 }]}
                 onPress={() => setShowGenderModal(true)}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGender || 'Gender'}</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGender || ''}</Text>
                 <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
-            <View>
-              <TouchableOpacity
-                style={[styles.inputBtn, {
-                  backgroundColor: COLORS.greyscale500,
-                  borderColor: COLORS.greyscale500,
-                }]}
-                onPress={() => setShowGradeModal(true)}
-              >
-                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGrade || 'Grade'}</Text>
-                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
-              </TouchableOpacity>
-            </View>
+            {role === 'student' && (
+              <>
+                <Text style={styles.label}>Grade</Text>
+                <View>
+                  <TouchableOpacity
+                    style={[styles.inputBtn, {
+                      backgroundColor: COLORS.greyscale500,
+                      borderColor: COLORS.greyscale500,
+                    }]}
+                    onPress={() => setShowGradeModal(true)}
+                  >
+                    <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGrade || ''}</Text>
+                    <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+            <View style={styles.bottomSpacing} />
+            <Button
+              title="Update"
+              filled
+              style={styles.updateButton}
+              onPress={updateProfileHandler}
+            />
           </View>
         </ScrollView>
       </View>
@@ -202,19 +315,11 @@ const EditProfile = ({ navigation }) => {
           setOpenStartDatePicker(false);
         }}
       />
-      <View style={styles.bottomContainer}>
-        <Button
-          title="Update"
-          filled
-          style={styles.updateButton}
-          onPress={() => navigation.goBack()}
-        />
-      </View>
       <Modal
         visible={showGenderModal}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowGenderModal(false)}  
+        onRequestClose={() => setShowGenderModal(false)}
       >
         <TouchableWithoutFeedback onPress={() => setShowGenderModal(false)}>
           <View style={styles.modalOverlay}>
@@ -236,7 +341,7 @@ const EditProfile = ({ navigation }) => {
         visible={showGradeModal}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowGradeModal(false)}  
+        onRequestClose={() => setShowGradeModal(false)}
       >
         <TouchableWithoutFeedback onPress={() => setShowGradeModal(false)}>
           <View style={styles.modalOverlay}>
@@ -321,6 +426,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
+  bottomSpacing: {
+    height: 50,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -342,6 +450,13 @@ const styles = StyleSheet.create({
   modalOptionText: {
     ...FONTS.body3,
     color: COLORS.black,
+  },
+  label: {
+    ...FONTS.body4,
+    color: COLORS.black,
+    marginBottom: 4,
+    marginTop: 8,
+    paddingLeft: 4,
   },
 });
 
