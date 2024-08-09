@@ -6,7 +6,8 @@ import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { COLORS, icons, images } from '../constants';
 
-const ChatWithPerson = ({ navigation }) => {
+const ChatWithPerson = ({ navigation, route }) => {
+  const fullName = route.params?.fullName || 'Teacher';
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
 
@@ -91,7 +92,7 @@ const ChatWithPerson = ({ navigation }) => {
                 style={[styles.headerIcon, { tintColor: COLORS.greyscale900 }]}
               />
             </TouchableOpacity>
-            <Text style={[styles.headerTitle, { color: COLORS.greyscale900 }]}>Yang Liu</Text>
+            <Text style={[styles.headerTitle, { color: COLORS.greyscale900 }]}>{fullName}</Text>
           </View>
         </View>
         <View style={styles.chatContainer}>

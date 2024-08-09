@@ -138,7 +138,7 @@ const TeacherDetails = ({ route, navigation }) => {
               style={styles.documentIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("ChatWithPerson")} style={styles.chat}>
+          <TouchableOpacity onPress={() => navigation.navigate("ChatWithPerson", { fullName: teacherData.fullName })} style={styles.chat}>
             <Image
               source={icons.chatBubble2}
               resizeMode='contain'
