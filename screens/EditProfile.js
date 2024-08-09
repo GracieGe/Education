@@ -1,79 +1,32 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
-import { reducer } from '../utils/reducers/formReducers';
-import { validateInput } from '../utils/actions/formActions';
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Feather from "react-native-vector-icons/Feather";
-import { launchImageLibrary } from 'react-native-image-picker';
-import Input from '../components/Input';
+import Input from '../components/Input'; 
+import Button from '../components/Button'; 
 import DatePickerModal from '../components/DatePickerModal';
-import Button from '../components/Button';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config';
 import { COLORS, SIZES, FONTS, icons } from '../constants';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
+import { launchImageLibrary } from 'react-native-image-picker';
 
-const initialState = {
-  inputValues: {
-    fullName: '',
-    gender: '',
-    age: '',
-    grade: '',
-    email: '',
-    birthday: '',
-  },
-  inputValidities: {
-    fullName: false,
-    gender: false,
-    age: false,
-    grade: false,
-    email: false,
-    birthday: false,
-  },
-  formIsValid: false,
-};
-
-const EditProfile = ({ route, navigation }) => {
+const EditProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState();
-  const [formState, dispatchFormState] = useReducer(reducer, initialState);
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const [selectedGender, setSelectedGender] = useState('');
-  const [showGenderModal, setShowGenderModal] = useState(false);
-  const [selectedGrade, setSelectedGrade] = useState('');
-  const [showGradeModal, setShowGradeModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState('');
-
-  const genderOptions = ['Male', 'Female', 'Other'];
-  const gradeOptions = ['Senior One', 'Senior Two', 'Senior Three'];
-
-  const handleGenderChange = (value) => {
-    setSelectedGender(value);
-    inputChangedHandler('gender', value);
-    setShowGenderModal(false);
-  };
-
-  const handleGradeChange = (value) => {
-    setSelectedGrade(value);
-    inputChangedHandler('grade', value);
-    setShowGradeModal(false);
-  };
-
+  const [fullName, setFullName] = useState('');
+  const [gender, setGender] = useState('');
+  const [age, setAge] = useState('');
+  const [grade, setGrade] = useState('');
+  const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
-  const handleOnPressBirthday = () => {
-    setOpenStartDatePicker(true);
-  };
-
-  const inputChangedHandler = useCallback(
-    (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue);
-      dispatchFormState({ inputId, validationResult: result, inputValue });
-    },
-    [dispatchFormState]
-  );
+  const [role, setRole] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const [showGenderModal, setShowGenderModal] = useState(false);
+  const [showGradeModal, setShowGradeModal] = useState(false);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -91,34 +44,19 @@ const EditProfile = ({ route, navigation }) => {
         });
 
         const { fullName, gender, age, grade, email, birthday, photo, role } = response.data;
-        setImage(photo ? { uri: photo } : null);
-        setSelectedGender(gender);
-        setSelectedGrade(grade);
-        setBirthday(birthday);
+        const imageUri = photo ? { uri: `${config.API_URL}/${photo}` } : icons.userDefault2;
+        setImage(imageUri);
+        setFullName(fullName);
+        setGender(gender);
+        setAge(age.toString());
+        setGrade(grade);
+        setEmail(email);
+        const formattedBirthday = birthday.split('T')[0]; 
+        setBirthday(formattedBirthday.replace(/-/g, '/')); 
         setRole(role);
 
-        dispatchFormState({
-          inputValues: {
-            fullName,
-            gender,
-            age,
-            grade,
-            email,
-            birthday,
-          },
-          inputValidities: {
-            fullName: true,
-            gender: true,
-            age: true,
-            grade: role === 'student',
-            email: true,
-            birthday: true,
-          },
-          formIsValid: true,
-        });
-
       } catch (error) {
-        console.error('Error fetching profile data:', error);
+        console.error('Error fetching profile data:', error.message);
         setError('Failed to load profile data');
       } finally {
         setLoading(false);
@@ -127,14 +65,6 @@ const EditProfile = ({ route, navigation }) => {
 
     fetchProfileData();
   }, []);
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
 
   const pickImage = () => {
     const options = {
@@ -165,22 +95,24 @@ const EditProfile = ({ route, navigation }) => {
         throw new Error('No token found, please login again');
       }
 
+      const formattedBirthday = birthday.replace(/\//g, '-');
+
       const formData = new FormData();
-      formData.append('userId', route.params.userId);
       formData.append('role', role);
-      formData.append('fullName', formState.inputValues.fullName);
-      formData.append('gender', selectedGender);
-      formData.append('age', formState.inputValues.age);
-      formData.append('email', formState.inputValues.email);
-      formData.append('birthday', birthday);
+      formData.append('fullName', fullName);
+      formData.append('gender', gender);
+      formData.append('age', age);
+      formData.append('email', email);
+      formData.append('birthday', formattedBirthday);
       if (role === 'student') {
-        formData.append('grade', selectedGrade);
+        formData.append('grade', grade);
       }
-      if (image) {
+      if (image && image.uri && image.type) {
+        console.log('Image type:', image.type); 
         formData.append('photo', {
           uri: image.uri,
           type: image.type,
-          name: `profile.${image.type.split('/')[1]}`,
+          name: `profile.${image.type.split('/')[1]}`, 
         });
       }
 
@@ -201,6 +133,36 @@ const EditProfile = ({ route, navigation }) => {
     }
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>{error}</Text>;
+  }
+
+  const handleOnPressBirthday = () => {
+    setOpenStartDatePicker(true);
+  };
+
+  const handleDateChange = (date) => {
+    setBirthday(date);
+    setOpenStartDatePicker(false); 
+  };
+
+  const genderOptions = ['Male', 'Female', 'Other'];
+  const gradeOptions = ['Senior One', 'Senior Two', 'Senior Three'];
+
+  const handleGenderChange = (value) => {
+    setGender(value);
+    setShowGenderModal(false);
+  };
+
+  const handleGradeChange = (value) => {
+    setGrade(value);
+    setShowGradeModal(false);
+  };
+
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
@@ -209,7 +171,7 @@ const EditProfile = ({ route, navigation }) => {
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
               <Image
-                source={image === null ? icons.userDefault2 : image}
+                source={image}
                 resizeMode="cover"
                 style={styles.avatar}
               />
@@ -228,18 +190,20 @@ const EditProfile = ({ route, navigation }) => {
           <View>
             <Text style={styles.label}>Full Name</Text>
             <Input
-              id="fullName"
-              onInputChanged={inputChangedHandler}
-              value={formState.inputValues.fullName}
-              errorText={formState.inputValidities['fullName']}
+              value={fullName}
+              onInputChanged={(id, value) => setFullName(value)}
               placeholderTextColor={COLORS.black}
             />
             <Text style={styles.label}>Age</Text>
             <Input
-              id="age"
-              onInputChanged={inputChangedHandler}
-              value={formState.inputValues.age}
-              errorText={formState.inputValidities['age']}
+              value={age}
+              onInputChanged={(id, value) => setAge(value)}
+              placeholderTextColor={COLORS.black}
+            />
+            <Text style={styles.label}>Email</Text>
+            <Input
+              value={email}
+              onInputChanged={(id, value) => setEmail(value)}
               placeholderTextColor={COLORS.black}
             />
             <Text style={styles.label}>Birthday</Text>
@@ -255,15 +219,6 @@ const EditProfile = ({ route, navigation }) => {
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
-            <Text style={styles.label}>Email</Text>
-            <Input
-              id="email"
-              onInputChanged={inputChangedHandler}
-              value={formState.inputValues.email}
-              errorText={formState.inputValidities['email']}
-              placeholderTextColor={COLORS.black}
-              keyboardType="email-address"
-            />
             <Text style={styles.label}>Gender</Text>
             <View>
               <TouchableOpacity
@@ -273,7 +228,7 @@ const EditProfile = ({ route, navigation }) => {
                 }]}
                 onPress={() => setShowGenderModal(true)}
               >
-                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGender || ''}</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{gender || ''}</Text>
                 <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
@@ -288,32 +243,27 @@ const EditProfile = ({ route, navigation }) => {
                     }]}
                     onPress={() => setShowGradeModal(true)}
                   >
-                    <Text style={{ ...FONTS.body4, color: COLORS.black }}>{selectedGrade || ''}</Text>
+                    <Text style={{ ...FONTS.body4, color: COLORS.black }}>{grade || ''}</Text>
                     <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
                   </TouchableOpacity>
                 </View>
               </>
             )}
-            <View style={styles.bottomSpacing} />
-            <Button
-              title="Update"
-              filled
-              style={styles.updateButton}
-              onPress={updateProfileHandler}
-            />
           </View>
         </ScrollView>
+        <View style={styles.bottomSpacing} />
+        <Button
+          title="Update"
+          filled
+          style={styles.updateButton}
+          onPress={updateProfileHandler}
+        />
       </View>
       <DatePickerModal
-        open={openStartDatePicker}
-        startDate={null}
+        open={openStartDatePicker} 
         selectedDate={birthday}
-        onClose={() => setOpenStartDatePicker(false)}
-        onChangeStartDate={(date) => {
-          setBirthday(date);
-          inputChangedHandler('birthday', date);
-          setOpenStartDatePicker(false);
-        }}
+        onClose={() => setOpenStartDatePicker(false)} 
+        onChangeStartDate={handleDateChange} 
       />
       <Modal
         visible={showGenderModal}
@@ -396,6 +346,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  label: {
+    ...FONTS.body4,
+    color: COLORS.black,
+    marginBottom: 4,
+    marginTop: 8,
+    paddingLeft: 4,
+  },
   inputBtn: {
     borderWidth: 1,
     borderRadius: 12,
@@ -409,16 +366,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingRight: 8,
-  },
-  bottomContainer: {
-    position: "absolute",
-    bottom: 32,
-    right: 16,
-    left: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: SIZES.width - 32,
-    alignItems: "center",
   },
   updateButton: {
     width: SIZES.width - 32,
@@ -450,13 +397,6 @@ const styles = StyleSheet.create({
   modalOptionText: {
     ...FONTS.body3,
     color: COLORS.black,
-  },
-  label: {
-    ...FONTS.body4,
-    color: COLORS.black,
-    marginBottom: 4,
-    marginTop: 8,
-    paddingLeft: 4,
   },
 });
 
