@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { COLORS, SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
 import axios from 'axios';
 import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TeacherDetails = ({ route, navigation }) => {
   const { teacherId } = route.params; 
@@ -15,7 +16,17 @@ const TeacherDetails = ({ route, navigation }) => {
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
-        const response = await axios.get(`${config.API_URL}/api/teachers/${teacherId}`);
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/teachers/${teacherId}`, {
+          headers: {
+            'x-auth-token': token,  // 将 token 添加到请求头中
+          },
+        });
+
         setTeacherData(response.data);
       } catch (err) {
         console.error('Error fetching teacher data:', err);
@@ -25,13 +36,34 @@ const TeacherDetails = ({ route, navigation }) => {
       }
     };
 
-
     fetchTeacherData();
   }, [teacherId]);
-  
-  /**
-   * Render header
-   */
+
+  const handleChatPress = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      // 尝试获取现有的会话，如果没有会话，前端会处理为空
+      const response = await axios.post(`${config.API_URL}/api/conversations`, { teacherId }, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      const conversationId = response.data.conversationId || null;
+      navigation.navigate("ChatWithPerson", { conversationId, teacherId, fullName: teacherData.fullName });
+
+    } catch (err) {
+      console.error('Error checking or creating conversation:', err);
+      setError('Failed to initiate chat.');
+      // 即使发生错误也导航到聊天页面，让其展示空白的聊天记录
+      navigation.navigate("ChatWithPerson", { conversationId: null, teacherId, fullName: teacherData.fullName });
+    }
+  };
+
   const renderHeader = () => {
     return (
       <View style={styles.headerContainer}>
@@ -45,13 +77,11 @@ const TeacherDetails = ({ route, navigation }) => {
               }]}
             />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {
-            color: COLORS.greyscale900
-          }]}>Teacher Details</Text>
+          <Text style={[styles.headerTitle, { color: COLORS.greyscale900 }]}>Teacher Details</Text>
         </View>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -138,7 +168,7 @@ const TeacherDetails = ({ route, navigation }) => {
               style={styles.documentIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("ChatWithPerson", { fullName: teacherData.fullName })} style={styles.chat}>
+          <TouchableOpacity onPress={handleChatPress} style={styles.chat}>
             <Image
               source={icons.chatBubble2}
               resizeMode='contain'
@@ -297,6 +327,6 @@ const styles = StyleSheet.create({
     width: 25,
     tintColor: COLORS.white
   }
-})
+});
 
-export default TeacherDetails
+export default TeacherDetails;
