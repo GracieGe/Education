@@ -14,8 +14,27 @@ const ChatWithPerson = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [currentConversationId, setCurrentConversationId] = useState(conversationId);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const fetchUserId = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
+      // 发送请求到后端获取用户信息
+      const response = await axios.get(`${config.API_URL}/api/users/me`, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      console.log('Fetched User ID from API:', response.data.id);  
+      setUserId(response.data.id);  // 假设后端返回的是 id 和 role
+    };
+  
+    fetchUserId();
     if (currentConversationId) {
       fetchMessages(currentConversationId);
     }
@@ -50,6 +69,11 @@ const ChatWithPerson = ({ navigation, route }) => {
   };
 
   const submitHandler = async () => {
+    if (!userId) {
+      console.error('User ID not set, cannot send message');
+      return;
+    }
+
     if (inputMessage.trim().length > 0) {
       try {
         const token = await AsyncStorage.getItem('token');
@@ -89,7 +113,7 @@ const ChatWithPerson = ({ navigation, route }) => {
           _id: response.data.messageId,
           text: inputMessage,
           createdAt: new Date(),
-          user: { _id: response.data.senderId }, // 使用后端返回的senderId
+          user: { _id: userId }, 
         };
 
         setMessages((previousMessages) => GiftedChat.append(previousMessages, [message]));
@@ -103,9 +127,12 @@ const ChatWithPerson = ({ navigation, route }) => {
   const renderMessage = (props) => {
     const { currentMessage } = props;
 
+    console.log('Current Message User ID:', currentMessage.user._id);
+    console.log('Current Logged-in User ID:', userId);
+
     return (
-      <View style={{ flex: 1, flexDirection: currentMessage.user._id === currentMessage.user._id ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
-        {currentMessage.user._id !== currentMessage.user._id && (
+      <View style={{ flex: 1, flexDirection: currentMessage.user._id === userId ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
+        {currentMessage.user._id !== userId && (
           <Image
             source={images.avatar}
             style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 8 }}
@@ -114,20 +141,20 @@ const ChatWithPerson = ({ navigation, route }) => {
         <Bubble
           {...props}
           wrapperStyle={{
-            left: {
-              backgroundColor: COLORS.secondary,
-              marginLeft: 12,
-            },
             right: {
               backgroundColor: COLORS.primary,
               marginRight: 12,
             },
+            left: {
+              backgroundColor: COLORS.secondary,
+              marginLeft: 12,
+            },
           }}
           textStyle={{
-            left: {
+            right: {
               color: COLORS.white,
             },
-            right: {
+            left: {
               color: COLORS.white,
             },
           }}
@@ -156,7 +183,7 @@ const ChatWithPerson = ({ navigation, route }) => {
           <GiftedChat
             messages={messages}
             renderInputToolbar={() => { }}
-            user={{ _id: currentConversationId }} 
+            user={{ _id: userId }}
             minInputToolbarHeight={0}
             renderMessage={renderMessage}
           />
