@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { COLORS, SIZES } from '../constants';
+import { COLORS, SIZES, icons } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -57,7 +57,7 @@ const Chats = () => {
                 ]}>
                 <View style={styles.userImageContainer}>
                     <Image
-                        source={{ uri: `${config.API_URL}${item.photo}` }}  
+                        source={item.photo ? { uri: `${config.API_URL}${item.photo}` } : icons.userDefault2}
                         resizeMode="contain"
                         style={styles.userImage}
                     />
