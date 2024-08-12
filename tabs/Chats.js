@@ -32,7 +32,6 @@ const Chats = () => {
                 },
             });
 
-            console.log('Fetched Conversations:', response.data);
             setConversations(response.data);  
         } catch (error) {
             console.error('Error fetching conversations:', error);
@@ -91,7 +90,12 @@ const Chats = () => {
                             color: COLORS.black
                         }]}>
                             {formatDateTime(item.messageTime)}
-                        </Text>  
+                        </Text>
+                        {item.unreadCount > 0 && (
+                          <View style={styles.unreadCountContainer}>
+                            <Text style={styles.unreadCountText}>{item.unreadCount}</Text>
+                          </View>
+                        )}  
                     </View>
                 </View>
             </TouchableOpacity>
@@ -143,6 +147,20 @@ const styles = StyleSheet.create({
     lastMessageTime: {
         fontSize: 12,
         fontFamily: "Urbanist Regular"
+    },
+    unreadCountContainer: {
+        backgroundColor: COLORS.primary,  
+        borderRadius: 12,  
+        width: 20,  
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,  
+    },
+    unreadCountText: {
+        color: COLORS.white,  
+        fontSize: 12,
+        fontFamily: "Urbanist Bold",
     },
 });
 

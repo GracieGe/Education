@@ -119,7 +119,7 @@ const ChatWithPerson = ({ navigation, route }) => {
     const { currentMessage } = props;
 
     return (
-      <View style={{ flex: 1, flexDirection: currentMessage.user._id === userId ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
+      <View style={{ flex: 1, flexDirection: currentMessage.user._id === userId ? 'row-reverse' : 'row', alignItems: 'flex-start', marginBottom: 10, }}>
         <Bubble
           {...props}
           wrapperStyle={{
