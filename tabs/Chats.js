@@ -1,84 +1,97 @@
 import { View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
-import React from 'react';
-import { messsagesData } from '../data';
+import React, { useEffect, useState } from 'react';
 import { COLORS, SIZES } from '../constants';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../config';
 
 const Chats = () => {
     const navigation = useNavigation();
+    const [conversations, setConversations] = useState([]);
 
-    const renderItem = ({ item, index }) => (
-        <TouchableOpacity
-            key={index}
-            onPress={() =>
-                navigation.navigate('Chat', {
-                    userName: item.fullName,
-                })
+    useEffect(() => {
+        const fetchConversations = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                const response = await axios.get(`${config.API_URL}/api/conversations/all`, {
+                    headers: {
+                        'x-auth-token': token,
+                    },
+                });
+
+                console.log('Fetched Conversations:', response.data);
+                setConversations(response.data);  
+            } catch (error) {
+                console.error('Error fetching conversations:', error);
             }
-            style={[
-                styles.userContainer, {
-                    borderBottomWidth: 1,
-                },
-                index % 2 !== 0 ? {
-                    backgroundColor: COLORS.tertiaryWhite,
-                    borderBottomWidth: 1,
-                    borderTopWidth: 0
-                } : null,
-            ]}>
-            <View style={styles.userImageContainer}>
-                {item.isOnline && item.isOnline === true && (
-                    <View style={styles.onlineIndicator} />
-                )}
-                <Image
-                    source={item.userImg}
-                    resizeMode="contain"
-                    style={styles.userImage}
-                />
-            </View>
-            <View style={{ flexDirection: "row", width: SIZES.width - 104 }}>
-                <View style={[styles.userInfoContainer]}>
-                    <Text style={[styles.userName, {
-                        color: COLORS.black
-                    }]}>{item.fullName}</Text>
-                    <Text style={styles.lastSeen}>{item.lastMessage}</Text>
+        };
+
+        fetchConversations();
+    }, []);
+
+    const renderItem = ({ item, index }) => {
+        console.log("Rendering item:", item);  // 日志显示每个 item 的内容
+    
+        return (
+            <TouchableOpacity
+                key={index}
+                onPress={() =>
+                    navigation.navigate('Chat', {
+                        userName: item.name,  // 使用 fullName 字段
+                    })
+                }
+                style={[
+                    styles.userContainer, {
+                        borderBottomWidth: 1,
+                    },
+                    index % 2 !== 0 ? {
+                        backgroundColor: COLORS.tertiaryWhite,
+                        borderBottomWidth: 1,
+                        borderTopWidth: 0
+                    } : null,
+                ]}>
+                <View style={styles.userImageContainer}>
+                    <Image
+                        source={{ uri: `${config.API_URL}${item.photo}` }}  
+                        resizeMode="contain"
+                        style={styles.userImage}
+                    />
                 </View>
-                <View style={{
-                    position: "absolute",
-                    right: 4,
-                    alignItems: "center"
-                }}>
-                    <Text style={[styles.lastMessageTime, {
-                        color: COLORS.black
-                    }]}>{item.lastMessageTime}</Text>
-                    <View>
-                        {
-                            item.messageInQueue > 0 && (
-                                <TouchableOpacity style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 999,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    backgroundColor: item.messageInQueue ? COLORS.primary : "transparent",
-                                    marginTop: 12
-                                }}>
-                                    <Text style={[styles.messageInQueue]}>{`${item.messageInQueue}`}</Text>
-                                </TouchableOpacity>
-                            )
-                        }
+                <View style={{ flexDirection: "row", width: SIZES.width - 104 }}>
+                    <View style={styles.userInfoContainer}>
+                        <Text style={[styles.userName, {
+                            color: COLORS.black
+                        }]}>{item.name || "No Name"}</Text>  
+                        <Text style={styles.lastSeen}>{item.latestMessage || "No Message"}</Text>  
+                    </View>
+                    <View style={{
+                        position: "absolute",
+                        right: 4,
+                        alignItems: "center"
+                    }}>
+                        <Text style={[styles.lastMessageTime, {
+                            color: COLORS.black
+                        }]}>
+                            {item.messageTime}
+                        </Text>  
                     </View>
                 </View>
-            </View>
-        </TouchableOpacity>
-    );
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <View>
             <FlatList
-                data={messsagesData}
+                data={conversations}
                 showsVerticalScrollIndicator={false}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.conversationId.toString()} 
             />
         </View>
     )
