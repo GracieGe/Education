@@ -31,9 +31,7 @@ const AllCourses = ({ navigation }) => {
   const fetchCourses = async (categoryId = 'all') => {
     try {
       const url = `${config.API_URL}/api/courses${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
-      console.log('Fetching courses with URL:', url);
       const response = await axios.get(url);
-      console.log('Courses fetched:', response.data);
       setCourses(response.data);
       setLoading(false);
     } catch (error) {

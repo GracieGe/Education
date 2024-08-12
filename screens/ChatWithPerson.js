@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, StatusBar, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat';
 import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { COLORS, icons, images } from '../constants';
+import { COLORS, icons } from '../constants';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,16 +22,14 @@ const ChatWithPerson = ({ navigation, route }) => {
       if (!token) {
         throw new Error('No token found');
       }
-  
-      // 发送请求到后端获取用户信息
+
       const response = await axios.get(`${config.API_URL}/api/users/me`, {
         headers: {
           'x-auth-token': token,
         },
       });
 
-      console.log('Fetched User ID from API:', response.data.id);  
-      setUserId(response.data.id);  // 假设后端返回的是 id 和 role
+      setUserId(response.data.id);  
     };
   
     fetchUserId();
@@ -47,14 +45,12 @@ const ChatWithPerson = ({ navigation, route }) => {
         throw new Error('No token found');
       }
 
-      console.log('Fetching messages for conversation ID:', convId);
       const response = await axios.get(`${config.API_URL}/api/conversations/${convId}/messages`, {
         headers: {
           'x-auth-token': token,
         },
       });
 
-      console.log('Messages fetched:', response.data);
       setMessages(response.data.map(msg => ({
         _id: msg.messageId,
         text: msg.text,
@@ -81,18 +77,14 @@ const ChatWithPerson = ({ navigation, route }) => {
           throw new Error('No token found');
         }
 
-        console.log('Sending message:', inputMessage);
-
-        // 如果没有会话ID，先创建一个会话
+        // If there is no conversation, create a conversation first
         if (!currentConversationId) {
-          console.log('No conversation ID, creating new conversation...');
           const createConversationResponse = await axios.post(`${config.API_URL}/api/conversations`, { teacherId }, {
             headers: {
               'x-auth-token': token,
             },
           });
           const newConversationId = createConversationResponse.data.conversationId;
-          console.log('New conversation created with ID:', newConversationId);
           setCurrentConversationId(newConversationId);
           await fetchMessages(newConversationId);
         }
@@ -108,7 +100,6 @@ const ChatWithPerson = ({ navigation, route }) => {
           },
         });
 
-        console.log('Message sent:', response.data);
         const message = {
           _id: response.data.messageId,
           text: inputMessage,
@@ -127,17 +118,8 @@ const ChatWithPerson = ({ navigation, route }) => {
   const renderMessage = (props) => {
     const { currentMessage } = props;
 
-    console.log('Current Message User ID:', currentMessage.user._id);
-    console.log('Current Logged-in User ID:', userId);
-
     return (
       <View style={{ flex: 1, flexDirection: currentMessage.user._id === userId ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
-        {currentMessage.user._id !== userId && (
-          <Image
-            source={images.avatar}
-            style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 8 }}
-          />
-        )}
         <Bubble
           {...props}
           wrapperStyle={{
@@ -146,7 +128,7 @@ const ChatWithPerson = ({ navigation, route }) => {
               marginRight: 12,
             },
             left: {
-              backgroundColor: COLORS.secondary,
+              backgroundColor: COLORS.blue,
               marginLeft: 12,
             },
           }}
@@ -158,10 +140,32 @@ const ChatWithPerson = ({ navigation, route }) => {
               color: COLORS.white,
             },
           }}
+          timeTextStyle={{
+            right: {
+              color: COLORS.white,
+            },
+            left: {
+              color: COLORS.white,
+            },
+          }}
+          renderTime={renderTime}
         />
       </View>
     );
   };
+
+  const renderTime = (timeProps) => {
+    return (
+        <Time
+            {...timeProps}
+            timeTextStyle={{
+                right: { color: COLORS.white },
+                left: { color: COLORS.white },
+            }}
+            timeFormat="YYYY-MM-DD HH:mm" 
+        />
+    );
+};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -267,7 +271,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   input: {
-    color: COLORS.blue2,
+    color: COLORS.blue,
     flex: 1,
     paddingHorizontal: 10,
   },

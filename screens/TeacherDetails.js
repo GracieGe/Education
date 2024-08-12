@@ -23,7 +23,7 @@ const TeacherDetails = ({ route, navigation }) => {
 
         const response = await axios.get(`${config.API_URL}/api/teachers/${teacherId}`, {
           headers: {
-            'x-auth-token': token,  // 将 token 添加到请求头中
+            'x-auth-token': token,  
           },
         });
 
@@ -46,7 +46,6 @@ const TeacherDetails = ({ route, navigation }) => {
         throw new Error('No token found');
       }
 
-      // 尝试获取现有的会话，如果没有会话，前端会处理为空
       const response = await axios.post(`${config.API_URL}/api/conversations`, { teacherId }, {
         headers: {
           'x-auth-token': token,
@@ -59,7 +58,6 @@ const TeacherDetails = ({ route, navigation }) => {
     } catch (err) {
       console.error('Error checking or creating conversation:', err);
       setError('Failed to initiate chat.');
-      // 即使发生错误也导航到聊天页面，让其展示空白的聊天记录
       navigation.navigate("ChatWithPerson", { conversationId: null, teacherId, fullName: teacherData.fullName });
     }
   };

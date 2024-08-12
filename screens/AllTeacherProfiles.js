@@ -31,9 +31,7 @@ const AllTeacherProfiles = ({ navigation }) => {
   const fetchTeachers = async (categoryId = 'all') => {
     try {
       const url = `${config.API_URL}/api/teachers/signed${categoryId !== 'all' ? `?categoryId=${categoryId}` : ''}`;
-      console.log('Fetching teachers with URL:', url);
       const response = await axios.get(url);
-      console.log('Teachers fetched:', response.data);
       setTeachers(response.data);
       setLoading(false);
     } catch (error) {

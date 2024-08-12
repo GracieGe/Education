@@ -131,12 +131,6 @@ const styles = StyleSheet.create({
     height: 24,
     tintColor: COLORS.black
   },
-  moreCircleIcon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black,
-    marginLeft: 12
-  },
   addPostBtn: {
     width: 58,
     height: 58,

@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { COLORS, SIZES, icons } from '../constants';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config';
@@ -9,40 +9,53 @@ import config from '../config';
 const Chats = () => {
     const navigation = useNavigation();
     const [conversations, setConversations] = useState([]);
+    const formatDateTime = (isoString) => {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+      };
 
-    useEffect(() => {
-        const fetchConversations = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
-
-                const response = await axios.get(`${config.API_URL}/api/conversations/all`, {
-                    headers: {
-                        'x-auth-token': token,
-                    },
-                });
-
-                console.log('Fetched Conversations:', response.data);
-                setConversations(response.data);  
-            } catch (error) {
-                console.error('Error fetching conversations:', error);
+    const fetchConversations = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
             }
-        };
 
-        fetchConversations();
-    }, []);
+            const response = await axios.get(`${config.API_URL}/api/conversations/all`, {
+                headers: {
+                    'x-auth-token': token,
+                },
+            });
+
+            console.log('Fetched Conversations:', response.data);
+            setConversations(response.data);  
+        } catch (error) {
+            console.error('Error fetching conversations:', error);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchConversations();
+        }, [])
+    );
+
 
     const renderItem = ({ item, index }) => {
-        console.log("Rendering item:", item);  // 日志显示每个 item 的内容
     
         return (
             <TouchableOpacity
                 key={index}
                 onPress={() =>
-                    navigation.navigate('Chat', {
-                        userName: item.name,  // 使用 fullName 字段
+                    navigation.navigate('ChatWithPerson', {
+                        conversationId: item.conversationId,  
+                        teacherId: item.teacherId,  
+                        fullName: item.name,  
                     })
                 }
                 style={[
@@ -77,7 +90,7 @@ const Chats = () => {
                         <Text style={[styles.lastMessageTime, {
                             color: COLORS.black
                         }]}>
-                            {item.messageTime}
+                            {formatDateTime(item.messageTime)}
                         </Text>  
                     </View>
                 </View>
@@ -98,53 +111,6 @@ const Chats = () => {
 }
 
 const styles = StyleSheet.create({
-    iconBtnContainer: {
-        height: 40,
-        width: 40,
-        borderRadius: 999,
-        backgroundColor: COLORS.white,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    notiContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        height: 16,
-        width: 16,
-        borderRadius: 999,
-        backgroundColor: COLORS.red,
-        position: "absolute",
-        top: 1,
-        right: 1,
-        zIndex: 999,
-    },
-    notiText: {
-        fontSize: 10,
-        color: COLORS.white,
-        fontFamily: "Urbanist Medium"
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontFamily: "Urbanist Bold",
-        color: COLORS.black
-    },
-    searchBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: COLORS.white,
-        height: 50,
-        marginVertical: 22,
-        paddingHorizontal: 12,
-        borderRadius: 20,
-    },
-    searchInput: {
-        width: '100%',
-        height: '100%',
-        marginHorizontal: 12,
-    },
-    flatListContainer: {
-        paddingBottom: 100,
-    },
     userContainer: {
         width: '100%',
         flexDirection: 'row',
@@ -152,24 +118,9 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.secondaryWhite,
         borderBottomWidth: 1,
     },
-    oddBackground: {
-        backgroundColor: COLORS.tertiaryWhite,
-    },
     userImageContainer: {
         paddingVertical: 15,
         marginRight: 22,
-    },
-    onlineIndicator: {
-        height: 14,
-        width: 14,
-        borderRadius: 7,
-        backgroundColor: COLORS.primary,
-        borderColor: COLORS.white,
-        borderWidth: 2,
-        position: 'absolute',
-        top: 14,
-        right: 2,
-        zIndex: 1000,
     },
     userImage: {
         height: 50,
@@ -193,11 +144,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontFamily: "Urbanist Regular"
     },
-    messageInQueue: {
-        fontSize: 12,
-        fontFamily: "Urbanist Regular",
-        color: COLORS.white
-    }
 });
 
 export default Chats
