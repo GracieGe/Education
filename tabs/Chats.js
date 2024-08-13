@@ -44,7 +44,6 @@ const Chats = () => {
         }, [])
     );
 
-
     const renderItem = ({ item, index }) => {
     
         return (

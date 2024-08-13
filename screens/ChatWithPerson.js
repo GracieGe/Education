@@ -29,6 +29,7 @@ const ChatWithPerson = ({ navigation, route }) => {
         },
       });
 
+      console.log('Fetched user ID:', response.data.id);
       setUserId(response.data.id);  
     };
   
@@ -45,24 +46,43 @@ const ChatWithPerson = ({ navigation, route }) => {
         throw new Error('No token found');
       }
 
+      console.log('Fetching messages for conversation ID:', convId);
+
       const response = await axios.get(`${config.API_URL}/api/conversations/${convId}/messages`, {
         headers: {
           'x-auth-token': token,
         },
       });
 
-      setMessages(response.data.map(msg => ({
+      console.log('Fetched messages:', response.data);
+
+      const fetchedMessages = response.data.map(msg => ({
         _id: msg.messageId,
         text: msg.text,
         createdAt: new Date(msg.created_at),
         user: {
-          _id: msg.senderId,
+            _id: msg.senderId,
         },
-      })));
-    } catch (err) {
-      console.error('Error fetching messages:', err);
-    }
-  };
+    }));
+
+    console.log('Processed messages:', fetchedMessages);
+    setMessages(fetchedMessages);
+
+    console.log('Processed messages:', fetchedMessages);
+
+    // 标记对方的消息为已读
+    await axios.post(`${config.API_URL}/api/conversations/${convId}/markAsRead`, { userId }, {
+        headers: {
+            'x-auth-token': token,
+        },
+    });
+
+    console.log('Messages marked as read for conversation ID:', convId);
+
+  } catch (err) {
+    console.error('Error fetching messages:', err);
+  }
+};
 
   const submitHandler = async () => {
     if (!userId) {
@@ -76,6 +96,8 @@ const ChatWithPerson = ({ navigation, route }) => {
         if (!token) {
           throw new Error('No token found');
         }
+
+        console.log('Submitting message:', inputMessage);
 
         // If there is no conversation, create a conversation first
         if (!currentConversationId) {
@@ -100,12 +122,26 @@ const ChatWithPerson = ({ navigation, route }) => {
           },
         });
 
+        console.log('Message sent:', response.data);
+
         const message = {
           _id: response.data.messageId,
           text: inputMessage,
           createdAt: new Date(),
           user: { _id: userId }, 
         };
+
+        console.log('Marking messages as read after sending message...');
+
+        await axios.post(`${config.API_URL}/api/conversations/${currentConversationId || createConversationResponse.data.conversationId}/markAsRead`, {
+          userId
+        }, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+  
+        console.log('Messages marked as read after sending message.');
 
         setMessages((previousMessages) => GiftedChat.append(previousMessages, [message]));
         setInputMessage("");
@@ -271,7 +307,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   input: {
-    color: COLORS.blue,
+    color: COLORS.black,
     flex: 1,
     paddingHorizontal: 10,
   },

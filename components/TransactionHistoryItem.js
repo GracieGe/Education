@@ -6,53 +6,48 @@ const TransactionHistoryItem = ({
     image,
     name,
     date,
-    type,
+    grade,
     amount,
     onPress
 }) => {
+
+    const formatDateTime = (isoString) => {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+      };
 
     return (
         <TouchableOpacity
             onPress={onPress}
             style={styles.container}>
-            <View style={styles.viewLeftContainer}>
-                {
-                    type === "Top Up" ? (
-                        <View style={styles.topUpView1}>
-                            <View style={styles.topUpView2}>
-                                <Image
-                                    source={icons.wallet2}
-                                    resizeMode='contain'
-                                    style={styles.walletIcon}
-                                />
-                            </View>
-                        </View>
-                    ) : (
-                        <Image
-                            source={image}
-                            resizeMode='contain'
-                            style={styles.avatar}
-                        />
-                    )
-                }
-
+            <View style={styles.viewLeftContainer}>               
+                <Image
+                    source={{ uri: image }}
+                    resizeMode='contain'
+                    style={styles.avatar}
+                />
                 <View>
                     <Text style={[styles.name, {
                         color: COLORS.greyscale900
                     }]}>{name}</Text>
                     <Text style={[styles.date, {
                         color: COLORS.grayscale700
-                    }]}>{date}</Text>
+                    }]}>{formatDateTime(date)}</Text>
                 </View>
             </View>
             <View style={styles.viewRightContainer}>
                 <Text style={[styles.amount, {
                     color: COLORS.greyscale900
-                }]}>{amount}</Text>
+                }]}>¥ {amount}</Text>
                 <View style={styles.typeContainer}>
                     <Text style={[styles.type, {
                         color: COLORS.grayscale700
-                    }]}>{type}</Text>
+                    }]}>{grade}</Text>
                 </View>
             </View>
         </TouchableOpacity>

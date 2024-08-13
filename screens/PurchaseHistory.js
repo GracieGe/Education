@@ -1,13 +1,47 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
-import React from 'react';
-import { COLORS, SIZES, icons, images } from '../constants';
+import React, { useState } from 'react';
+import { COLORS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SectionHeader from '../components/SectionHeader';
-import { transactionHistory } from '../data';
 import TransactionHistoryItem from '../components/TransactionHistoryItem';
 import { ScrollView } from 'react-native-virtualized-view';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PurchaseHistory = ({ navigation }) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchOrderHistory = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const response = await axios.get(`${config.API_URL}/api/orders/user/orders`, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      const sortedOrders = response.data.sort((a, b) => new Date(b.timeOfPurchase) - new Date(a.timeOfPurchase));
+
+      setOrders(sortedOrders);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching order history:', error);
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchOrderHistory();
+    }, [])
+  );
+
   /**
    * render header
    */
@@ -31,22 +65,22 @@ const PurchaseHistory = ({ navigation }) => {
   }
 
   const renderTransactionHistory = () => {
+    if (loading) {
+      return <Text>Loading...</Text>;
+    }
+
     return (
       <View>
-        <SectionHeader
-          subtitle="See All"
-          onPress={() => navigation.navigate("TransactionHistory")}
-        />
         <FlatList
-          data={transactionHistory.slice(0, 6)}
-          keyExtractor={item => item.id}
+          data={orders}
+          keyExtractor={item => item.orderId}
           renderItem={({ item }) => (
             <TransactionHistoryItem
-              image={item.image}
-              name={item.name}
-              date={item.date}
-              type={item.type}
-              amount={item.amount}
+              image={`${config.API_URL}/${item.image}`} 
+              name={item.courseName} 
+              date={item.timeOfPurchase} 
+              amount={item.amount} 
+              grade = {item.grade}
             />
           )}
         />
