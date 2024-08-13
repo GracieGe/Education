@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Profile = () => {
+const ProfileStudent = () => {
   const { t } = useTranslation();
   const refRBSheet = useRef();
   const navigation = useNavigation();
@@ -440,4 +440,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Profile
+export default ProfileStudent

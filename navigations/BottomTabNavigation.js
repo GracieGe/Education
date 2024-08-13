@@ -1,14 +1,54 @@
 import { View, Platform, Image, Text } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS, FONTS, icons } from '../constants';
-import { Home, Inbox, Sessions, Profile, Course } from '../screens';
+import { Home, Inbox, Sessions, ProfileStudent, ProfileTeacher, Course } from '../screens';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import config from '../config';
 
 const Tab = createBottomTabNavigator()
 
 const BottomTabNavigation = () => {
     const { t } = useTranslation();
+    const [role, setRole] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                const response = await axios.get(`${config.API_URL}/api/users/me`, {
+                    headers: {
+                        'x-auth-token': token,
+                    },
+                });
+
+                setRole(response.data.role);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch user role:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    const ProfileComponent = role === 'teacher' ? ProfileTeacher : ProfileStudent;
 
     return (
         <Tab.Navigator screenOptions={{
@@ -131,7 +171,7 @@ const BottomTabNavigation = () => {
 
             <Tab.Screen
                 name="Profile"
-                component={Profile}
+                component={ProfileComponent}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (

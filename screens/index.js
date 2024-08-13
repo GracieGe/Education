@@ -34,7 +34,7 @@ import PaymentMethods from "./PaymentMethods";
 import CancelOrder from "./CancelOrder";
 import CancelOrderPaymentMethods from "./CancelOrderPaymentMethods";
 import EnterYourPIN from "./EnterYourPIN";
-import TransactionHistory from "./TransactionHistory";
+import ProfileTeacher from "./ProfileTeacher";
 import TopupEwalletAmount from "./TopupEwalletAmount";
 import TopupEwalletMethods from "./TopupEwalletMethods";
 import AddPromo from "./AddPromo";
@@ -43,7 +43,7 @@ import AddNewAddress from "./AddNewAddress";
 import Home from "./Home";
 import Inbox from "./Inbox";
 import Course from "./Course";
-import Profile from "./Profile";
+import ProfileStudent from "./ProfileStudent";
 import Categories from "./Categories";
 import AllCourses from "./AllCourses";
 import AllTeacherProfiles from "./AllTeacherProfiles";
@@ -111,7 +111,7 @@ export {
     CancelOrder,
     CancelOrderPaymentMethods,
     EnterYourPIN,
-    TransactionHistory,
+    ProfileTeacher,
     TopupEwalletAmount,
     TopupEwalletMethods,
     AddPromo,
@@ -120,7 +120,7 @@ export {
     Home,
     Inbox,
     Course,
-    Profile,
+    ProfileStudent,
     Categories,
     AllCourses,
     AllTeacherProfiles,
