@@ -7,13 +7,16 @@ import { reducer } from '../utils/reducers/formReducers';
 import { validateInput } from '../utils/actions/formActions';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import axios from 'axios';
+import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const isTestMode = true
+const isTestMode = true;
 
 const initialState = {
   inputValues: {
-    phoneNumber: isTestMode ? '**********' : '',
-    newPhoneNumber: isTestMode ? '**********' : '',
+    phoneNumber: isTestMode ? '1234567890' : '',
+    newPhoneNumber: isTestMode ? '1234567890' : '',
   },
   inputValidities: {
     phoneNumber: false,
@@ -24,22 +27,70 @@ const initialState = {
 
 const ChangePhoneNumber = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
-  const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputChangedHandler = useCallback(
     (inputId, inputValue) => {
-      const result = validateInput(inputId, inputValue)
-      dispatchFormState({ inputId, validationResult: result, inputValue })
+      const result = validateInput(inputId, inputValue);
+      dispatchFormState({ type: 'FORM_INPUT_UPDATE', inputId, validationResult: result, inputValue });
     },
     [dispatchFormState]
-  )
+  );
 
   useEffect(() => {
     if (error) {
-      Alert.alert('An error occured', error)
+      Alert.alert('An error occurred', error);
     }
-  }, [error])
+  }, [error]);
+
+  const handleSubmit = async () => {
+    const phoneNumberValid = formState.inputValidities.phoneNumber === null;
+    const newPhoneNumberValid = formState.inputValidities.newPhoneNumber === null;
+    const isFormValid = phoneNumberValid && newPhoneNumberValid;
+
+    if (!isFormValid) {
+      Alert.alert('Invalid input', 'Please fill out all fields correctly.');
+      return;
+    }
+
+    const userData = {
+      newPhoneNumber: formState.inputValues.newPhoneNumber,
+    };
+
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      setIsLoading(true);
+      const response = await axios.put(`${config.API_URL}/api/users/update-phone`, userData, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      setIsLoading(false);
+      if (response.status === 200) {
+        setModalVisible(true);
+      } else {
+        throw new Error('Failed to update phone number');
+      }
+    } catch (err) {
+      setIsLoading(false); 
+      if (err.response) {
+      }
+    
+      if (err.response && err.response.status === 400 && err.response.data.msg === 'Phone number already exists') {
+        Alert.alert('Update Error', 'The new phone number already exists. Please use a different phone number.');
+      } else {
+        setError(err.message);
+        Alert.alert('An error occurred', err.message);
+      }
+    }
+  };
 
   // Render modal
   const renderModal = () => {
@@ -117,8 +168,9 @@ const ChangePhoneNumber = ({ navigation }) => {
         <Button
           title="Continue"
           filled
-          onPress={() => setModalVisible(true)}
+          onPress={handleSubmit}
           style={styles.button}
+          isLoading={isLoading}
         />
         {renderModal()}
       </View>
