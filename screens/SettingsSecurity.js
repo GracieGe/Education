@@ -27,7 +27,7 @@ const SettingsSecurity = ({ navigation }) => {
             onPress={() => { navigation.navigate("ChangePassword") }}
           />
           <Button
-            title="Change Email"
+            title="Change Phone Number"
             style={{
               backgroundColor: COLORS.tansparentPrimary,
               borderRadius: 32,
@@ -35,7 +35,7 @@ const SettingsSecurity = ({ navigation }) => {
               marginTop: 22
             }}
             textColor={COLORS.black}
-            onPress={() => { navigation.navigate("ChangeEmail") }}
+            onPress={() => { navigation.navigate("ChangePhoneNumber") }}
           />
         </ScrollView>
       </View>

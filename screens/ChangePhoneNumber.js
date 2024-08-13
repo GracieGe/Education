@@ -23,7 +23,7 @@ const initialState = {
   formIsValid: false,
 };
 
-const ChangeEmail = ({ navigation }) => {
+const ChangePhoneNumber = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [error, setError] = useState(null);
   const [isChecked, setChecked] = useState(false);
@@ -273,4 +273,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ChangeEmail
+export default ChangePhoneNumber

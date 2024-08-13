@@ -20,7 +20,7 @@ import AddNewCard from "./AddNewCard";
 import SettingsSecurity from "./SettingsSecurity";
 import ChangePIN from "./ChangePIN";
 import ChangePassword from "./ChangePassword";
-import ChangeEmail from "./ChangeEmail";
+import ChangePhoneNumber from "./ChangePhoneNumber";
 import SettingsLanguage from "./SettingsLanguage";
 import SettingsPrivacyPolicy from "./SettingsPrivacyPolicy";
 import InviteFriends from "./InviteFriends";
@@ -97,7 +97,7 @@ export {
     SettingsSecurity,
     ChangePIN,
     ChangePassword,
-    ChangeEmail,
+    ChangePhoneNumber,
     SettingsLanguage,
     SettingsPrivacyPolicy,
     InviteFriends,
