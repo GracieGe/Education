@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Image, Alert, TouchableWithoutFeedback, Modal, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Alert, TouchableWithoutFeedback, Modal } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SIZES, icons, illustrations } from '../constants';
@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import { reducer } from '../utils/reducers/formReducers';
 import { validateInput } from '../utils/actions/formActions';
 import Input from '../components/Input';
-import CheckBox from '@react-native-community/checkbox';
 import Button from '../components/Button';
 
 const isTestMode = true
@@ -28,9 +27,7 @@ const initialState = {
 
 const ChangePassword = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isChecked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const inputChangedHandler = useCallback(
@@ -66,7 +63,7 @@ const ChangePassword = ({ navigation }) => {
               <Text style={[styles.modalTitle, {
                 color: COLORS.black
               }]}>Congratulations!</Text>
-              <Text style={styles.modalSubtitle}>Your account is ready to use. You will be redirected to the Home page in a few seconds..</Text>
+              <Text style={styles.modalSubtitle}>Your have successfully changed your password.</Text>
               <Button
                 title="Continue"
                 filled
@@ -129,23 +126,6 @@ const ChangePassword = ({ navigation }) => {
             icon={icons.padlock}
             secureTextEntry={true}
           />
-          <View style={styles.checkBoxContainer}>
-            <View style={{ flexDirection: 'row' }}>
-              <CheckBox
-                style={styles.checkbox}
-                value={isChecked}
-                boxType="square"
-                onTintColor={isChecked ? COLORS.primary : "gray"}
-                onFillColor={isChecked ? COLORS.primary : "gray"}
-                onCheckColor={COLORS.white}
-                onValueChange={setChecked}
-                tintColors={{ true: COLORS.primary, false: "gray" }}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.privacy, { color: COLORS.black }]}>Remenber me</Text>
-              </View>
-            </View>
-          </View>
           <View>
           </View>
         </ScrollView>
@@ -186,72 +166,10 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     marginVertical: 12
   },
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkBoxContainer: {
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 18,
-  },
-  checkbox: {
-    marginRight: Platform.OS == "ios" ? 8 : 14,
-    marginLeft: 4,
-    height: 16,
-    width: 16,
-    borderColor: COLORS.primary,
-  },
-  privacy: {
-    fontSize: 12,
-    fontFamily: "Urbanist Regular",
-    color: COLORS.black,
-  },
-  socialTitle: {
-    fontSize: 19.25,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 26
-  },
-  socialBtnContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bottomContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 18,
-    position: "absolute",
-    bottom: 12,
-    right: 0,
-    left: 0,
-  },
-  bottomLeft: {
-    fontSize: 14,
-    fontFamily: "Urbanist Regular",
-    color: "black"
-  },
-  bottomRight: {
-    fontSize: 16,
-    fontFamily: "Urbanist Medium",
-    color: COLORS.primary
-  },
   button: {
     marginVertical: 6,
     width: SIZES.width - 32,
     borderRadius: 30
-  },
-  forgotPasswordBtnText: {
-    fontSize: 16,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.primary,
-    textAlign: "center",
-    marginTop: 12
   },
   modalTitle: {
     fontSize: 24,

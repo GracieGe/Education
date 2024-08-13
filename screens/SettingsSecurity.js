@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
-import { COLORS, icons } from '../constants';
+import { View, StyleSheet } from 'react-native';
+import React from 'react';
+import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
@@ -56,28 +56,6 @@ const styles = StyleSheet.create({
   scrollView: {
     marginVertical: 22
   },
-  arrowRight: {
-    height: 24,
-    width: 24,
-    tintColor: COLORS.greyscale900
-  },
-  view: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 16
-  },
-  viewLeft: {
-    fontSize: 18,
-    fontFamily: "Urbanist SemiBold",
-    color: COLORS.greyscale900,
-    marginRight: 8
-  },
-  button: {
-    backgroundColor: COLORS.tansparentPrimary,
-    borderRadius: 32,
-    borderColor: COLORS.tansparentPrimary,
-    marginTop: 22
-  }
 })
 
 export default SettingsSecurity

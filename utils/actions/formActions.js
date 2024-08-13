@@ -18,6 +18,7 @@ export const validateInput = (inputId, inputValue, role) => {
         inputId === 'location' ||
         inputId === 'userName' ||
         inputId === 'phoneNumber' ||
+        inputId === 'newPhoneNumber' ||
         inputId === 'email' ||
         inputId === 'creditCardHolderName' ||
         inputId === 'bio' ||
