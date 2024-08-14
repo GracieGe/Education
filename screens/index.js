@@ -42,7 +42,7 @@ import Address from "./Address";
 import AddNewAddress from "./AddNewAddress";
 import Home from "./Home";
 import Inbox from "./Inbox";
-import Course from "./Course";
+import CourseStudent from "./CourseStudent";
 import ProfileStudent from "./ProfileStudent";
 import Categories from "./Categories";
 import AllCourses from "./AllCourses";
@@ -50,7 +50,7 @@ import AllTeacherProfiles from "./AllTeacherProfiles";
 import CategoryBread from "./CategoryBread";
 import CategoryHamburger from "./CategoryHamburger";
 import CategoryMeat from "./CategoryMeat";
-import CategoryPizza from "./CategoryPizza";
+import CourseTeacher from "./CourseTeacher";
 import Favourite from "./Favourite";
 import CourseDetails from "./CourseDetails";
 import FoodReviews from "./FoodReviews";
@@ -119,7 +119,7 @@ export {
     AddNewAddress,
     Home,
     Inbox,
-    Course,
+    CourseStudent,
     ProfileStudent,
     Categories,
     AllCourses,
@@ -127,7 +127,7 @@ export {
     CategoryBread,
     CategoryHamburger,
     CategoryMeat,
-    CategoryPizza,
+    CourseTeacher,
     Favourite,
     CourseDetails,
     FoodReviews,

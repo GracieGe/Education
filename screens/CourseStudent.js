@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Course = () => {
+const CourseStudent = () => {
   const [orders, setOrders] = useState([]);
   const navigation = useNavigation();
 
@@ -293,4 +293,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Course;
+export default CourseStudent;
