@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import { SIZES, COLORS, images } from '../constants';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios';
+import config from '../config'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CourseTeacher = () => {
-  const [orders, setOrders] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
   useEffect(() => {
-    // 模拟数据
-    const mockOrders = [
-      {
-        courseId: 1,
-        courseName: 'Chinese',
-        grade: 'Senior One',
-        image: 'https://via.placeholder.com/88',
+    const fetchCourses = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/teachers/myCourses`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+        
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        Alert.alert('Error', 'Failed to load courses');
+      } finally {
+        setLoading(false);
       }
-    ];
-    setOrders(mockOrders);
+    };
+
+    fetchCourses();
   }, []);
 
   const renderHeader = () => {
@@ -47,7 +64,7 @@ const CourseTeacher = () => {
       <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
         <View style={styles.detailsContainer}>
           <Image
-            // source={{ uri: `${config.API_URL}/${item.image}` }}
+            source={{ uri: `${config.API_URL}/${item.image}` }}
             resizeMode='cover'
             style={styles.courseImage}
           />
@@ -72,12 +89,20 @@ const CourseTeacher = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading courses...</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.container}>
         {renderHeader()}
         <FlatList
-          data={orders}
+          data={courses}
           keyExtractor={item => item.courseId.toString()}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmptyComponent}
@@ -196,6 +221,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
