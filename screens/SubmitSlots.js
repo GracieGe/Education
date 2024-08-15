@@ -73,7 +73,7 @@ const SubmitSlots = ({ navigation, route }) => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
-        <Header title="Book Slots" />
+        <Header title="Sumbit Slots" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
