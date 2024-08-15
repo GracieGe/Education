@@ -76,7 +76,7 @@ const CourseTeacher = () => {
         <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            // onPress={() => navigation.navigate("SelectTeachers", { courseId: item.courseId })}
+            onPress={() => navigation.navigate("SubmitSlots")}
             style={styles.selectBtn}>
             <Text style={styles.selectBtnText}>Submit Slots</Text>
           </TouchableOpacity>

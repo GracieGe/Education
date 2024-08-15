@@ -49,7 +49,7 @@ import AllCourses from "./AllCourses";
 import AllTeacherProfiles from "./AllTeacherProfiles";
 import CategoryBread from "./CategoryBread";
 import CategoryHamburger from "./CategoryHamburger";
-import CategoryMeat from "./CategoryMeat";
+import SubmitSlots from "./SubmitSlots";
 import CourseTeacher from "./CourseTeacher";
 import Favourite from "./Favourite";
 import CourseDetails from "./CourseDetails";
@@ -126,7 +126,7 @@ export {
     AllTeacherProfiles,
     CategoryBread,
     CategoryHamburger,
-    CategoryMeat,
+    SubmitSlots,
     CourseTeacher,
     Favourite,
     CourseDetails,
