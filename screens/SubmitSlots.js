@@ -12,17 +12,21 @@ const SubmitSlots = ({ navigation, route }) => {
   const { teacherId, fullName } = route.params || {};
   const selectedAddress = route.params?.selectedAddress;
   const [image, setImage] = useState(null);
-  const [error, setError] = useState(null);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const [showSlotsDropdown, setShowSlotsDropdown] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState("");
-  const [selectedSlotId, setSelectedSlotId] = useState(null);
-  const [slots, setSlots] = useState([]);
+  const [showStartTimeDropdown, setShowStartTimeDropdown] = useState(false);
+  const [showEndTimeDropdown, setShowEndTimeDropdown] = useState(false);
+  const [selectedStartTime, setSelectedStartTime] = useState("");
+  const [selectedEndTime, setSelectedEndTime] = useState("");
   const [location, setLocation] = useState("");
 
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
   const [selectedDate, setSelectedDate] = useState("");
+
+  const timeOptions = Array.from({ length: 24 }, (_, index) => {
+    const hour = index.toString().padStart(2, '0');
+    return `${hour}:00`;
+  });
 
   useEffect(() => {
     if (selectedAddress) {
@@ -32,7 +36,8 @@ const SubmitSlots = ({ navigation, route }) => {
 
   useEffect(() => {
     if (selectedDate) {
-      setSelectedSlot("");
+      setSelectedStartTime("");
+      setSelectedEndTime("");
       setLocation("");
     }
   }, [selectedDate]);
@@ -45,28 +50,22 @@ const SubmitSlots = ({ navigation, route }) => {
     return time.substring(0, 5); 
   };
 
-  const renderSlotsDropdown = () => (
+  const renderTimeDropdown = (showDropdown, setShowDropdown, selectedTime, setSelectedTime) => (
     <View style={styles.dropdownContainer}>
-      {slots.length === 0 ? (
-        <Text style={{ color: COLORS.black, padding: 10 }}>No available slots.</Text>
-      ) : (
-        slots.map((slot, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.dropdownItem}
-            onPress={() => {
-              setSelectedSlot(`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`);
-              setSelectedSlotId(slot.slotId);
-              setLocation(slot.location);
-              setShowSlotsDropdown(false);
-            }}
-          >
-            <Text style={{ color: COLORS.black }}>
-              {`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`}
-            </Text>
-          </TouchableOpacity>
-        ))
-      )}
+      {timeOptions.map((time, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.dropdownItem}
+          onPress={() => {
+            setSelectedTime(time);
+            setShowDropdown(false);
+          }}
+        >
+          <Text style={{ color: COLORS.black }}>
+            {time}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 
@@ -101,20 +100,37 @@ const SubmitSlots = ({ navigation, route }) => {
                 <Feather name="calendar" size={24} color={COLORS.grayscale400} />
               </TouchableOpacity>
             </View>
-            <Text style={styles.Label}>Available Slots:</Text>
-            <View style={{ width: SIZES.width - 32 }}>
-              <TouchableOpacity
-                style={[styles.inputBtn, {
-                  backgroundColor: COLORS.greyscale500,
-                  borderColor: COLORS.greyscale500,
-                }]}
-                onPress={() => setShowSlotsDropdown(!showSlotsDropdown)}
-              >
-                <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{selectedSlot || "Select a slot"}</Text>
-                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
-              </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: SIZES.width - 32 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.Label}>Start time:</Text>
+                <TouchableOpacity
+                  style={[styles.inputBtn, {
+                    backgroundColor: COLORS.greyscale500,
+                    borderColor: COLORS.greyscale500,
+                  }]}
+                  onPress={() => setShowStartTimeDropdown(!showStartTimeDropdown)}
+                >
+                  <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{selectedStartTime || "Select start time"}</Text>
+                  <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+                </TouchableOpacity>
+                {showStartTimeDropdown && renderTimeDropdown(showStartTimeDropdown, setShowStartTimeDropdown, selectedStartTime, setSelectedStartTime)}
+              </View>
+              <View style={{ width: 10 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.Label}>End time:</Text>
+                <TouchableOpacity
+                  style={[styles.inputBtn, {
+                    backgroundColor: COLORS.greyscale500,
+                    borderColor: COLORS.greyscale500,
+                  }]}
+                  onPress={() => setShowEndTimeDropdown(!showEndTimeDropdown)}
+                >
+                  <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{selectedEndTime || "Select end time"}</Text>
+                  <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+                </TouchableOpacity>
+                {showEndTimeDropdown && renderTimeDropdown(showEndTimeDropdown, setShowEndTimeDropdown, selectedEndTime, setSelectedEndTime)}
+              </View>
             </View>
-            {showSlotsDropdown && renderSlotsDropdown()}
             <Text style={styles.Label}>Location:</Text>
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
