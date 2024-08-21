@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { AboutUs, AddNewAddress, AddNewCard, AddPromo, Address, CancelOrder, CancelOrderPaymentMethods, Categories, CategoryBread, CategoryHamburger, SubmitSlots, ChangePhoneNumber, ChangePIN, ChangePassword, Chat, ChatWithPerson, CheckoutOrders, CheckoutOrdersAddress, CheckoutOrdersCompleted, CreateNewPIN, CreateNewPassword, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, EnterYourPIN, Favourite, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, FoodDetailsOffers, FoodReviews, ForgotPasswordEmail, ForgotPasswordMethods, ForgotPasswordPhoneNumber, GiveTipForDriver, HelpCenter, InviteFriends, Login, MyCart, Notifications, OTPVerification, Onboarding1, Onboarding2, Onboarding3, Onboarding4, PaymentMethods, RateTheDriver, RateTheRestaurant, AllTeacherProfiles, Search, SearchingDriver, SettingsLanguage, SettingsNotifications, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, TopupEwalletAmount, TopupEwalletMethods, TrackDriver, VideoCall, VoiceCall, Welcome, SelectTeachers } from '../screens';
+import { AboutUs, AddNewAddress, AddNewCard, AddPromo, Address, CancelOrder, CancelOrderPaymentMethods, Categories, AddressForTeacher, CategoryHamburger, SubmitSlots, ChangePhoneNumber, ChangePIN, ChangePassword, Chat, ChatWithPerson, CheckoutOrders, CheckoutOrdersAddress, CheckoutOrdersCompleted, CreateNewPIN, CreateNewPassword, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, EnterYourPIN, Favourite, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, FoodDetailsOffers, FoodReviews, ForgotPasswordEmail, ForgotPasswordMethods, ForgotPasswordPhoneNumber, GiveTipForDriver, HelpCenter, InviteFriends, Login, MyCart, Notifications, OTPVerification, Onboarding1, Onboarding2, Onboarding3, Onboarding4, PaymentMethods, RateTheDriver, RateTheRestaurant, AllTeacherProfiles, Search, SearchingDriver, SettingsLanguage, SettingsNotifications, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, TopupEwalletAmount, TopupEwalletMethods, TrackDriver, VideoCall, VoiceCall, Welcome, SelectTeachers } from '../screens';
 import BottomTabNavigation from './BottomTabNavigation';
 
 const Stack = createNativeStackNavigator();
@@ -86,7 +86,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="Categories" component={Categories}/>
                 <Stack.Screen name="AllCourses" component={AllCourses}/>
                 <Stack.Screen name="AllTeacherProfiles" component={AllTeacherProfiles}/>
-                <Stack.Screen name="CategoryBread" component={CategoryBread}/>
+                <Stack.Screen name="AddressForTeacher" component={AddressForTeacher}/>
                 <Stack.Screen name="CategoryHamburger" component={CategoryHamburger}/>
                 <Stack.Screen name="SubmitSlots" component={SubmitSlots}/>
                 <Stack.Screen name="Favourite" component={Favourite}/>

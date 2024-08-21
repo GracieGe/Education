@@ -47,7 +47,7 @@ import ProfileStudent from "./ProfileStudent";
 import Categories from "./Categories";
 import AllCourses from "./AllCourses";
 import AllTeacherProfiles from "./AllTeacherProfiles";
-import CategoryBread from "./CategoryBread";
+import AddressForTeacher from "./AddressForTeacher";
 import CategoryHamburger from "./CategoryHamburger";
 import SubmitSlots from "./SubmitSlots";
 import CourseTeacher from "./CourseTeacher";
@@ -124,7 +124,7 @@ export {
     Categories,
     AllCourses,
     AllTeacherProfiles,
-    CategoryBread,
+    AddressForTeacher,
     CategoryHamburger,
     SubmitSlots,
     CourseTeacher,

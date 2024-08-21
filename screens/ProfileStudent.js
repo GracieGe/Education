@@ -138,11 +138,6 @@ const ProfileStudent = () => {
           name={t('editProfile')}
           onPress={() => navigation.navigate("EditProfile")}
         />
-         <SettingsItem
-          icon={icons.location2Outline}
-          name={t('address')}
-          onPress={() => navigation.navigate("Address")}
-        />
         <SettingsItem
           icon={icons.wallet2Outline}
           name={t('purchaseHistory')}

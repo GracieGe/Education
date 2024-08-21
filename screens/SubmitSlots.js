@@ -8,9 +8,11 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
 import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
+import config from '../config'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubmitSlots = ({ navigation, route }) => {
-  const { teacherId, fullName } = route.params || {};
   const selectedAddress = route.params?.selectedAddress;
   const [image, setImage] = useState(null);
   const [error, setError] = useState(null);
@@ -22,26 +24,43 @@ const SubmitSlots = ({ navigation, route }) => {
   const [selectedEndHour, setSelectedEndHour] = useState("00");
   const [selectedEndMinute, setSelectedEndMinute] = useState("00");
   const [location, setLocation] = useState("");
+  const [fullName, setFullName] = useState('');
 
   const today = new Date();
   const formattedToday = getFormatedDate(today, "YYYY/MM/DD");
   const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
+    const fetchTeacherDetails = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+  
+        const response = await axios.get(`${config.API_URL}/api/teachers/teacherDetails`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+  
+        const teacher = response.data;
+        setImage(teacher.photo);
+        setFullName(teacher.fullName);
+      } catch (error) {
+        console.error('Error fetching teacher details:', error);
+        setError('Failed to load teacher details');
+      }
+    };
+  
+    fetchTeacherDetails();
+  }, []);
+
+  useEffect(() => {
     if (selectedAddress) {
       setLocation(selectedAddress);
     }
   }, [selectedAddress]);
-
-  useEffect(() => {
-    if (selectedDate) {
-      setSelectedStartHour("");
-      setSelectedStartMinute("");
-      setSelectedEndHour("");
-      setSelectedEndMinute("");
-      setLocation("");
-    }
-  }, [selectedDate]);
 
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(true);
@@ -58,6 +77,40 @@ const SubmitSlots = ({ navigation, route }) => {
     setShowEndTimePicker(false);
   };
 
+  const handleSubmit = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const formattedDate = selectedDate.replace(/\//g, '-');
+
+      const slotData = {
+        date: formattedDate,
+        startTime: `${selectedStartHour}:${selectedStartMinute}`,
+        endTime: `${selectedEndHour}:${selectedEndMinute}`,
+        location: location || null, 
+      };
+
+      const response = await axios.post(`${config.API_URL}/api/slots/createSlot`, slotData, {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+
+      if (response.status === 201) {
+        Alert.alert('Congratulations', 'Slot is created successfully!');
+        navigation.goBack();
+      } else {
+        Alert.alert('Error', 'Failed to create slot');
+      }
+    } catch (error) {
+      console.error('Error submitting slot:', error);
+      Alert.alert('Error', 'Failed to create slot');
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
       <View style={[styles.container, { backgroundColor: COLORS.white }]}>
@@ -67,12 +120,12 @@ const SubmitSlots = ({ navigation, route }) => {
             <View style={styles.avatarContainer}>
               {image && (
                 <Image
-                  // source={{ uri: image }}
+                  source={{ uri: `${config.API_URL}/${image}` }}
                   resizeMode="cover"
                   style={styles.avatar}
                 />
               )}
-              <Text style={styles.teacherName}>Yang Liu</Text>
+              <Text style={styles.teacherName}>{fullName}</Text>
             </View>
           </View>
           <View>
@@ -126,7 +179,7 @@ const SubmitSlots = ({ navigation, route }) => {
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={styles.inputBtn}
-                onPress={() => navigation.navigate('Address', { teacherId })}
+                onPress={() => navigation.navigate('AddressForTeacher')}
               >
                 <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{location || "Select the location"}</Text>
                 <Feather name="chevron-right" size={24} color={COLORS.grayscale400} />
@@ -214,7 +267,7 @@ const SubmitSlots = ({ navigation, route }) => {
           title="Submit"
           filled
           style={styles.button}
-          onPress={() => navigation.goBack()}
+          onPress={handleSubmit}
         />
         <Button
           title="Cancel"
@@ -301,6 +354,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
+    flexDirection: 'row', 
+    justifyContent: 'center',
   },
   picker: {
     width: 100,

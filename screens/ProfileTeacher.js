@@ -143,11 +143,6 @@ const ProfileTeacher = () => {
           name={t('application')}
           // onPress={() => navigation.navigate("PurchaseHistory")}
         />
-         <SettingsItem
-          icon={icons.location2Outline}
-          name={t('address')}
-          onPress={() => navigation.navigate("Address")}
-        />
         <SettingsItem
           icon={icons.shieldOutline}
           name={t('account')}
