@@ -27,7 +27,21 @@ const ViewSlots = () => {
           },
         });
 
-        setSlots(response.data);
+      const sortedSlots = response.data.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+
+        if (dateA - dateB !== 0) {
+          return dateB - dateA;  
+        }
+
+        const timeA = a.startTime.split(':').join('');
+        const timeB = b.startTime.split(':').join('');
+        
+        return timeB - timeA; 
+      });
+
+      setSlots(sortedSlots);
       } catch (error) {
         console.error('Error fetching slots:', error);
         setError('Error fetching slots');
@@ -38,6 +52,14 @@ const ViewSlots = () => {
   }, []);
 
   const renderItem = ({ item }) => {
+    const formattedDate = new Date(item.date).toISOString().split('T')[0];
+
+    const formatTime = (time) => time.substring(0, 5);
+    const formattedTime = `${formatTime(item.startTime)} - ${formatTime(item.endTime)}`;
+
+    const buttonStyle = item.status === 'Unbooked' ? styles.selectBtn : styles.bookingBtn;
+    const buttonTextStyle = item.status === 'Unbooked' ? styles.selectBtnText : styles.bookingBtnText;
+
     return (
       <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
         <View style={styles.detailsContainer}>
@@ -47,16 +69,16 @@ const ViewSlots = () => {
             style={styles.courseImage}
           />
           <View style={styles.detailsRightContainer}>
-            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Date: {item.date}</Text>
-            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {`${item.startTime} - ${item.endTime}`}</Text>
+            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Date: {formattedDate}</Text>
+            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {formattedTime}</Text>
             <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Location: {item.location}</Text>
           </View>
         </View>
         <View style={[styles.separateLine, { marginVertical: 10, backgroundColor: COLORS.grayscale200 }]} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.selectBtn}>
-            <Text style={styles.selectBtnText}>{item.status}</Text>
+            style={buttonStyle}>
+            <Text style={buttonTextStyle}>{item.status}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
