@@ -9,23 +9,46 @@ import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ViewSlots = () => {
-  const slots = [
-    { slotId: '1', date: '2024-08-22', time: '10:00 - 12:00', location: 'Room 101' },
-    { slotId: '2', date: '2024-08-23', time: '14:00 - 16:00', location: 'Room 102' }
-  ];
+  const [slots, setSlots] = useState([]);
+  const [error, setError] = useState(null);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/slots/teacherSlots`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+
+        setSlots(response.data);
+      } catch (error) {
+        console.error('Error fetching slots:', error);
+        setError('Error fetching slots');
+      }
+    };
+
+    fetchSlots();
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity style={[styles.cardContainer, { backgroundColor: COLORS.white }]}>
         <View style={styles.detailsContainer}>
           <Image
-            // source={{ uri: `${config.API_URL}/${item.image}` }}
+            source={{ uri: `${config.API_URL}/${item.image}` }}
             resizeMode='cover'
             style={styles.courseImage}
           />
           <View style={styles.detailsRightContainer}>
             <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Date: {item.date}</Text>
-            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {item.time}</Text>
+            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {`${item.startTime} - ${item.endTime}`}</Text>
             <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Location: {item.location}</Text>
           </View>
         </View>
@@ -33,7 +56,7 @@ const ViewSlots = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.selectBtn}>
-            <Text style={styles.selectBtnText}>Unbooked</Text>
+            <Text style={styles.selectBtnText}>{item.status}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -46,7 +69,7 @@ const ViewSlots = () => {
         <Header title="View Slots" />
         <FlatList
           data={slots} 
-          keyExtractor={(item) => item.slotId}
+          keyExtractor={(item) => item.slotId.toString()}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem} 
         />
