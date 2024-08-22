@@ -81,6 +81,7 @@ const CourseTeacher = () => {
             <Text style={styles.selectBtnText}>Submit Slots</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate("ViewSlots")}
             style={styles.bookingBtn}>
             <Text style={styles.bookingBtnText}>View Slots</Text>
           </TouchableOpacity>
