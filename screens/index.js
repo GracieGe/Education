@@ -35,7 +35,7 @@ import CancelOrder from "./CancelOrder";
 import CancelOrderPaymentMethods from "./CancelOrderPaymentMethods";
 import EnterYourPIN from "./EnterYourPIN";
 import ProfileTeacher from "./ProfileTeacher";
-import TopupEwalletAmount from "./TopupEwalletAmount";
+import SessionsForTeachers from "./SessionsForTeachers";
 import TopupEwalletMethods from "./TopupEwalletMethods";
 import AddPromo from "./AddPromo";
 import Address from "./Address";
@@ -112,7 +112,7 @@ export {
     CancelOrderPaymentMethods,
     EnterYourPIN,
     ProfileTeacher,
-    TopupEwalletAmount,
+    SessionsForTeachers,
     TopupEwalletMethods,
     AddPromo,
     Address,

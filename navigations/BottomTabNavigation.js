@@ -2,7 +2,7 @@ import { View, Platform, Image, Text } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS, FONTS, icons } from '../constants';
-import { Home, Inbox, Sessions, ProfileStudent, ProfileTeacher, CourseStudent, CourseTeacher } from '../screens';
+import { Home, Inbox, Sessions, SessionsForTeachers, ProfileStudent, ProfileTeacher, CourseStudent, CourseTeacher } from '../screens';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -50,6 +50,7 @@ const BottomTabNavigation = () => {
 
     const ProfileComponent = role === 'teacher' ? ProfileTeacher : ProfileStudent;
     const CourseComponent = role === 'teacher' ? CourseTeacher : CourseStudent;
+    const SessionComponent = role === 'teacher' ? SessionsForTeachers : Sessions;
 
     return (
         <Tab.Navigator screenOptions={{
@@ -120,7 +121,7 @@ const BottomTabNavigation = () => {
             />
             <Tab.Screen
                 name="Sessions"
-                component={Sessions}
+                component={SessionComponent}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
