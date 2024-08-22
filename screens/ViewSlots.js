@@ -52,10 +52,9 @@ const ViewSlots = () => {
   }, []);
 
   const renderItem = ({ item }) => {
-    const formattedDate = new Date(item.date).toISOString().split('T')[0];
-
-    const formatTime = (time) => time.substring(0, 5);
-    const formattedTime = `${formatTime(item.startTime)} - ${formatTime(item.endTime)}`;
+    const localDate = new Date(item.date).toLocaleDateString('en-CA');
+    const localTimeStart = item.startTime.substring(0, 5);  
+    const localTimeEnd = item.endTime.substring(0, 5); 
 
     const buttonStyle = item.status === 'Unbooked' ? styles.selectBtn : styles.bookingBtn;
     const buttonTextStyle = item.status === 'Unbooked' ? styles.selectBtnText : styles.bookingBtnText;
@@ -69,8 +68,8 @@ const ViewSlots = () => {
             style={styles.courseImage}
           />
           <View style={styles.detailsRightContainer}>
-            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Date: {formattedDate}</Text>
-            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {formattedTime}</Text>
+            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Date: {localDate}</Text>
+            <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Time: {localTimeStart} - {localTimeEnd}</Text>
             <Text style={[styles.grade, { color: COLORS.greyscale900 }]}>Location: {item.location}</Text>
           </View>
         </View>
