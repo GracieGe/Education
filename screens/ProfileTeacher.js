@@ -9,12 +9,44 @@ import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
+import axios from 'axios';
+import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileTeacher = () => {
   const { t } = useTranslation();
   const refRBSheet = useRef();
   const navigation = useNavigation();
+
+  const [teacherData, setTeacherData] = useState({
+    photo: null,
+    fullName: '',
+    email: ''
+  });
+
+  useEffect(() => {
+    const fetchTeacherData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get(`${config.API_URL}/api/teachers/teacherDetails`, {
+          headers: {
+            'x-auth-token': token,
+          }
+        });
+
+        const { photo, fullName, email } = response.data;
+        setTeacherData({ photo, fullName, email });
+      } catch (error) {
+        console.error('Error fetching teacher data:', error);
+      }
+    };
+
+    fetchTeacherData();
+  }, []);
 
   const getCurrentLanguage = () => {
     const lang = i18n.language;
@@ -78,19 +110,19 @@ const ProfileTeacher = () => {
    * Render User Profile
    */
   const renderProfile = () => {
-    const [image, setImage] = useState(images.user1)
+    const { photo, fullName, email } = teacherData;
 
     return (
       <View style={styles.profileContainer}>
         <View>
           <Image
-            source={image}
+            source={photo ? { uri: `${config.API_URL}/${photo}` } : icons.userDefault2}
             resizeMode='cover'
             style={styles.avatar}
           />
         </View>
-        <Text style={[styles.title, { color: COLORS.greyscale900 }]}>Nathalie Erneson</Text>
-        <Text style={[styles.subtitle, { color: COLORS.greyscale900 }]}>nathalie_erneson@gmail.com</Text>
+        <Text style={[styles.title, { color: COLORS.greyscale900 }]}>{fullName}</Text>
+        <Text style={[styles.subtitle, { color: COLORS.greyscale900 }]}>{email}</Text>
       </View>
     )
   }
