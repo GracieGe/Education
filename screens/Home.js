@@ -81,7 +81,7 @@ const Home = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.viewRight}>
-          <TouchableOpacity onPress={() => navigation.navigate("Favourite")}>
+          <TouchableOpacity>
             <Image
               source={icons.heartOutline}
               resizeMode='contain'

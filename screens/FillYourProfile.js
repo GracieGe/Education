@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { COLORS, SIZES, FONTS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,7 +11,6 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Input from '../components/Input';
 import DatePickerModal from '../components/DatePickerModal';
 import Button from '../components/Button';
-import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
 import config from '../config';
 
@@ -41,11 +40,25 @@ const FillYourProfile = ({ route, navigation }) => {
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-
   const [birthday, setBirthday] = useState('');
+  const [showGenderModal, setShowGenderModal] = useState(false);
+  const [showGradeModal, setShowGradeModal] = useState(false);
 
   const handleOnPressBirthday = () => {
     setOpenStartDatePicker(true);
+  };
+
+  const genderOptions = ['Male', 'Female', 'Other'];
+  const gradeOptions = ['Senior One', 'Senior Two', 'Senior Three'];
+
+  const handleGenderChange = (value) => {
+    inputChangedHandler('gender', value);
+    setShowGenderModal(false);
+  };
+
+  const handleGradeChange = (value) => {
+    inputChangedHandler('grade', value);
+    setShowGradeModal(false);
   };
 
   const inputChangedHandler = useCallback(
@@ -181,82 +194,76 @@ const FillYourProfile = ({ route, navigation }) => {
             </View>
           </View>
           <View>
+            <Text style={styles.label}>Full Name</Text>
             <Input
-              id="fullName"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['fullName']}
-              placeholder="Full Name"
-              placeholderTextColor={styles.placeholderStyle.color}
-              style={[styles.inputText, styles.inputPadding]}
+              value={formState.inputValues.fullName}
+              onInputChanged={(id, value) => inputChangedHandler('fullName', value)}
+              placeholderTextColor={COLORS.black}
             />
-            <RNPickerSelect
-              onValueChange={(value) => inputChangedHandler('gender', value)}
-              items={[
-                { label: 'Male', value: 'male' },
-                { label: 'Female', value: 'female' },
-                { label: 'Other', value: 'other' },
-              ]}
-              style={{
-                inputIOS: [styles.pickerInput, styles.inputPadding],
-                inputAndroid: [styles.pickerInput, styles.inputPadding],
-                placeholder: styles.placeholderStyle,
-              }}
-              placeholder={{
-                label: 'Gender',
-                value: null,
-                color: styles.placeholderStyle.color,
-                fontSize: styles.placeholderStyle.fontSize,
-                fontFamily: styles.placeholderStyle.fontFamily
-              }}
-            />
-            <TouchableOpacity
-              style={[styles.inputBtn, styles.inputContainer]}
-              onPress={handleOnPressBirthday}
-            >
-              <Text style={[{ color: birthday ? '#111' : styles.placeholderStyle.color, fontSize: styles.placeholderStyle.fontSize, fontFamily: styles.placeholderStyle.fontFamily }, styles.inputPadding]}>
-                {birthday || 'Birthday'}
-              </Text>
-              <Feather name="calendar" size={24} color={COLORS.grayscale400} />
-            </TouchableOpacity>
+            <Text style={styles.label}>Age</Text>
             <Input
-              id="age"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['age']}
-              placeholder="Age"
-              placeholderTextColor={styles.placeholderStyle.color}
-              style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
+              value={formState.inputValues.age}
+              onInputChanged={(id, value) => inputChangedHandler('age', value)}
+              placeholderTextColor={COLORS.black}
             />
+            <Text style={styles.label}>Email</Text>
             <Input
-              id="email"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities['email']}
-              placeholder="Email"
-              placeholderTextColor={styles.placeholderStyle.color}
-              keyboardType="email-address"
-              style={[styles.inputText, { fontSize: styles.placeholderStyle.fontSize }]}
+              value={formState.inputValues.email}
+              onInputChanged={(id, value) => inputChangedHandler('email', value)}
+              placeholderTextColor={COLORS.black}
             />
+            <Text style={styles.label}>Birthday</Text>
+            <View style={{ width: SIZES.width - 32 }}>
+              <TouchableOpacity
+                style={[styles.inputBtn, {
+                  backgroundColor: COLORS.greyscale500,
+                  borderColor: COLORS.greyscale500,
+                }]}
+                onPress={handleOnPressBirthday}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{formState.inputValues.birthday || ''}</Text>
+                <Feather name="calendar" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.label}>Gender</Text>
+            <View>
+              <TouchableOpacity
+                style={[styles.inputBtn, {
+                  backgroundColor: COLORS.greyscale500,
+                  borderColor: COLORS.greyscale500,
+                }]}
+                onPress={() => setShowGenderModal(true)}
+              >
+                <Text style={{ ...FONTS.body4, color: COLORS.black }}>{formState.inputValues.gender || ''}</Text>
+                <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+              </TouchableOpacity>
+            </View>
             {role === 'student' && (
-              <RNPickerSelect
-                onValueChange={(value) => inputChangedHandler('grade', value)}
-                items={[
-                  { label: 'Senior One', value: 'Senior One' },
-                  { label: 'Senior Two', value: 'Senior Two' },
-                  { label: 'Senior Three', value: 'Senior Three' },
-                ]}
-                style={{
-                  inputIOS: styles.pickerInput,
-                  inputAndroid: styles.pickerInput,
-                  placeholder: styles.placeholderStyle
-                }}
-                placeholder={{
-                  label: 'Grade',
-                  value: null,
-                  color: styles.placeholderStyle.color,
-                }}
-              />
+              <>
+                <Text style={styles.label}>Grade</Text>
+                <View>
+                  <TouchableOpacity
+                    style={[styles.inputBtn, {
+                      backgroundColor: COLORS.greyscale500,
+                      borderColor: COLORS.greyscale500,
+                    }]}
+                    onPress={() => setShowGradeModal(true)}
+                  >
+                    <Text style={{ ...FONTS.body4, color: COLORS.black }}>{formState.inputValues.grade || ''}</Text>
+                    <Feather name="chevron-down" size={24} color={COLORS.grayscale400} />
+                  </TouchableOpacity>
+                </View>
+              </>
             )}
           </View>
         </ScrollView>
+        <View style={styles.bottomSpacing} />
+        <Button
+          title="Continue"
+          filled
+          style={styles.continueButton}
+          onPress={handleContinue}
+        />
       </View>
       <DatePickerModal
         open={openStartDatePicker}
@@ -269,14 +276,50 @@ const FillYourProfile = ({ route, navigation }) => {
           setOpenStartDatePicker(false);
         }}
       />
-      <View style={styles.bottomContainer}>
-        <Button
-          title="Continue"
-          filled
-          style={styles.continueButton}
-          onPress={handleContinue}
-        />
-      </View>
+      <Modal
+        visible={showGenderModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowGenderModal(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setShowGenderModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {genderOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={styles.modalOption}
+                  onPress={() => handleGenderChange(option)}
+                >
+                  <Text style={styles.modalOptionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={showGradeModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowGradeModal(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setShowGradeModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {gradeOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={styles.modalOption}
+                  onPress={() => handleGradeChange(option)}
+                >
+                  <Text style={styles.modalOptionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   )
 };
@@ -314,105 +357,58 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  inputText: {
-    color: '#111',
-    fontSize: 16,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    borderColor: COLORS.greyscale500,
-    borderWidth: .4,
-    borderRadius: 12,
-    height: 52,
-    width: SIZES.width - 32,
-    alignItems: 'center',
-    marginVertical: 12,
-    backgroundColor: COLORS.greyscale500,
-  },
-  downIcon: {
-    width: 10,
-    height: 10,
-    tintColor: "#111"
-  },
-  selectFlagContainer: {
-    width: 90,
-    height: 50,
-    marginHorizontal: 5,
-    flexDirection: "row",
-  },
-  flagIcon: {
-    width: 30,
-    height: 30
-  },
-  input: {
-    flex: 1,
-    marginVertical: 10,
-    height: 40,
-    fontSize: 14,
-    color: "#111"
-  },
   inputBtn: {
     borderWidth: 1,
     borderRadius: 12,
     borderColor: COLORS.greyscale500,
-    height: 52,
-    paddingLeft: 8,
+    height: 50,
+    paddingLeft: 12,
     fontSize: 18,
     justifyContent: "space-between",
-    marginTop: 4,
+    marginVertical: 8,
     backgroundColor: COLORS.greyscale500,
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 8
-  },
-  pickerInput: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    marginVertical: 12,
-    backgroundColor: COLORS.greyscale500,
-  },
-  placeholderStyle: {
-    color: COLORS.gray,
-    fontSize: 15,
-    fontFamily: 'System',
-  },
-  inputPadding: {
-    paddingLeft: 8,
-  },
-  bottomContainer: {
-    position: "absolute",
-    bottom: 22,
-    right: 16,
-    left: 16,
-    flexDirection: "row",
-    justifyContent: "center",
-    width: SIZES.width - 32,
-    alignItems: "center"
+    paddingRight: 8,
   },
   continueButton: {
-    width: (SIZES.width - 32) / 2 - 8,
+    width: SIZES.width - 32,
     borderRadius: 32,
     backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary
+    borderColor: COLORS.primary,
   },
-  closeBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 999,
+  label: {
+    ...FONTS.body4,
+    color: COLORS.black,
+    marginBottom: 4,
+    marginTop: 8,
+    paddingLeft: 4,
+  },
+  bottomSpacing: {
+    height: 50,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
     backgroundColor: COLORS.white,
-    position: "absolute",
-    right: 16,
-    top: 32,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999
-  }
+    width: 300,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalOption: {
+    paddingVertical: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalOptionText: {
+    ...FONTS.body3,
+    color: COLORS.black,
+  },
 });
 
 export default FillYourProfile;
