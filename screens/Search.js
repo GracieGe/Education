@@ -1,629 +1,257 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { COLORS, SIZES, icons } from '../constants';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList, ScrollView } from 'react-native';
+import { COLORS, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-virtualized-view';
-import { categories, cuisines, foods, ratings } from '../data';
 import NotFoundCard from '../components/NotFoundCard';
-import RBSheet from "react-native-raw-bottom-sheet";
-import Button from '../components/Button';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VerticalCourseCard from '../components/VerticalCourseCard';
 import HorizontalTeacherProfile from '../components/HorizontalTeacherProfile';
-
-// Handler slider
-const CustomSliderHandle = ({ enabled, markerStyle }) => {
-    return (
-        <View
-            style={[
-                markerStyle,
-                {
-                    backgroundColor: enabled ? COLORS.primary : 'lightgray',
-                    borderColor: 'white',
-                    borderWidth: 2,
-                    borderRadius: 10,
-                    width: 20,
-                    height: 20,
-                },
-            ]}
-        />
-    );
-};
+import axios from 'axios';
+import config from '../config';
 
 const Search = ({ navigation }) => {
-    const refRBSheet = useRef();
-    const [selectedCategories, setSelectedCategories] = useState(["1"]);
-    const [selectedRating, setSelectedRating] = useState(["1"]);
-    const [selectedCuisines, setSelectedCuisines] = useState([]);
-    const [priceRange, setPriceRange] = useState([0, 100]); // Initial price range
+    const [searchType, setSearchType] = useState('courses');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+    const [resultsCount, setResultsCount] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    const handleSliderChange = (values) => {
-        setPriceRange(values);
+    const handleSearch = useCallback(async () => {
+        setLoading(true);
+        try {
+            let dataToFilter = [];
+            if (searchType === 'courses') {
+                const response = await axios.get(`${config.API_URL}/api/courses`);
+                dataToFilter = response.data;
+            } else {
+                const response = await axios.get(`${config.API_URL}/api/teachers/signed`);
+                dataToFilter = response.data;
+            }
+            
+            const filteredResults = dataToFilter.filter((item) =>
+                searchType === 'courses' 
+                    ? item.courseName.toLowerCase().includes(searchQuery.toLowerCase()) 
+                    : item.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredData(filteredResults);
+            setResultsCount(filteredResults.length);
+        } catch (error) {
+            console.error('Error fetching search data:', error);
+        }
+        setLoading(false);
+    }, [searchQuery, searchType]);
+
+    useEffect(() => {
+        handleSearch();
+    }, [searchType, handleSearch]);
+
+    const handleSearchQueryChange = (text) => {
+        setSearchQuery(text);
     };
-    /**
-    * Render header
-    */
-    const renderHeader = () => {
-        return (
-            <View style={styles.headerContainer}>
-                <View style={styles.headerLeft}>
-                    <TouchableOpacity
-                        onPress={() => navigation.goBack()}>
-                        <Image
-                            source={icons.back}
-                            resizeMode='contain'
-                            style={[styles.backIcon, {
-                                tintColor: COLORS.greyscale900
-                            }]}
-                        />
-                    </TouchableOpacity>
-                    <Text style={[styles.headerTitle, {
-                        color: COLORS.greyscale900
-                    }]}>
-                        Search
-                    </Text>
-                </View>
-                <TouchableOpacity>
+
+    const renderHeader = () => (
+        <View style={styles.headerContainer}>
+            <View style={styles.headerLeft}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                        source={icons.moreCircle}
+                        source={icons.back}
                         resizeMode='contain'
-                        style={[styles.moreIcon, {
-                            tintColor: COLORS.greyscale900
-                        }]}
+                        style={styles.backIcon}
                     />
                 </TouchableOpacity>
+                <Text style={styles.headerTitle}>Search</Text>
             </View>
-        )
-    }
+        </View>
+    );
 
-    /**
-     * Render content
-    */
-    const renderContent = () => {
-        const [selectedTab, setSelectedTab] = useState('row');
-        const [searchQuery, setSearchQuery] = useState('');
-        const [filteredFoods, setFilteredFoods] = useState(foods);
-        const [resultsCount, setResultsCount] = useState(0);
+    const renderSearchTypeToggle = () => (
+        <View style={styles.toggleContainer}>
+            <TouchableOpacity
+                style={[
+                    styles.toggleButton,
+                    searchType === 'courses' && styles.activeToggleButton,
+                ]}
+                onPress={() => setSearchType('courses')}
+            >
+                <Text
+                    style={[
+                        styles.toggleButtonText,
+                        searchType === 'courses' && styles.activeToggleButtonText,
+                    ]}
+                >
+                    Courses
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[
+                    styles.toggleButton,
+                    searchType === 'teachers' && styles.activeToggleButton,
+                ]}
+                onPress={() => setSearchType('teachers')}
+            >
+                <Text
+                    style={[
+                        styles.toggleButtonText,
+                        searchType === 'teachers' && styles.activeToggleButtonText,
+                    ]}
+                >
+                    Teachers
+                </Text>
+            </TouchableOpacity>
+        </View>
+    );
 
-        useEffect(() => {
-            handleSearch();
-        }, [searchQuery, selectedTab]);
-
-
-        const handleSearch = () => {
-            const allFoods = foods.filter((food) =>
-                food.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredFoods(allFoods);
-            setResultsCount(allFoods.length);
-        };
-
-        return (
-            <View>
-                {/* Search bar */}
-                <View
-                    onPress={() => console.log("Search")}
-                    style={[styles.searchBarContainer, {
-                        backgroundColor: COLORS.secondaryWhite
-                    }]}>
-                    <TouchableOpacity
-                        onPress={handleSearch}>
-                        <Image
-                            source={icons.search2}
-                            resizeMode='contain'
-                            style={styles.searchIcon}
-                        />
-                    </TouchableOpacity>
-                    <TextInput
-                        placeholder='Search'
-                        placeholderTextColor={COLORS.gray}
-                        style={[styles.searchInput, {
-                            color: COLORS.greyscale900
-                        }]}
-                        value={searchQuery}
-                        onChangeText={(text) => setSearchQuery(text)}
+    const renderContent = () => (
+        <View>
+            {/* Search bar */}
+            <View style={styles.searchBarContainer}>
+                <TouchableOpacity onPress={handleSearch}>
+                    <Image
+                        source={icons.search2}
+                        resizeMode='contain'
+                        style={styles.searchIcon}
                     />
-                    <TouchableOpacity
-                        onPress={() => refRBSheet.current.open()}>
-                        <Image
-                            source={icons.filter}
-                            resizeMode='contain'
-                            style={styles.filterIcon}
-                        />
-                    </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
+                <TextInput
+                    placeholder='Search'
+                    placeholderTextColor={COLORS.gray}
+                    style={styles.searchInput}
+                    value={searchQuery}
+                    onChangeText={handleSearchQueryChange}
+                    onSubmitEditing={handleSearch}
+                />
+            </View>
 
-
-                <View style={styles.reusltTabContainer}>
-                    <Text style={[styles.tabText, {
-                        color: COLORS.black
-                    }]}>{resultsCount} founds</Text>
-                    <View style={styles.viewDashboard}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setSelectedTab('column');
-                                setSearchQuery(''); // Clear search query when changing tab
-                            }}>
-                            <Image
-                                source={selectedTab === 'column' ? icons.document2 : icons.document2Outline}
-                                resizeMode='contain'
-                                style={styles.dashboardIcon}
+            {loading ? (
+                <Text>Loading...</Text>
+            ) : resultsCount > 0 ? (
+                <FlatList
+                    key={searchType}
+                    data={filteredData}
+                    keyExtractor={(item) => 
+                        searchType === 'courses' ? item.courseId?.toString() : item.teacherId?.toString()
+                    }
+                    numColumns={searchType === 'courses' ? 2 : 1}
+                    columnWrapperStyle={searchType === 'courses' ? { justifyContent: 'space-between', marginBottom: 16 } : null}
+                    renderItem={({ item }) => (
+                        searchType === 'courses' ? (
+                            <VerticalCourseCard
+                                courseName={item.courseName}
+                                grade={item.grade}
+                                price={item.price}
+                                rating={item.rating}
+                                numReviews={item.numReviews}
+                                image={`${config.API_URL}/${item.image}`}
+                                onPress={() => navigation.navigate("CourseDetails", { courseId: item.courseId })}
                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setSelectedTab('row');
-                                setSearchQuery(''); // Clear search query when changing tab
-                            }}>
-                            <Image
-                                source={selectedTab === 'row' ? icons.dashboard : icons.dashboardOutline}
-                                resizeMode='contain'
-                                style={styles.dashboardIcon}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                {/* Results container  */}
-                <View>
-                    {/* Events result list */}
-                    <View style={{
-                        backgroundColor: COLORS.secondaryWhite,
-                        marginVertical: 16
-                    }}>
-                        {resultsCount && resultsCount > 0 ? (
-                            <>
-                                {
-                                    selectedTab === 'row' ? (
-                                        <FlatList
-                                            data={filteredFoods}
-                                            keyExtractor={(item) => item.id}
-                                            numColumns={2}
-                                            columnWrapperStyle={{ gap: 16 }}
-                                            renderItem={({ item }) => {
-                                                return (
-                                                    <VerticalCourseCard
-                                                        name={item.name}
-                                                        image={item.image}
-                                                        distance={item.distance}
-                                                        price={item.price}
-                                                        fee={item.fee}
-                                                        rating={item.rating}
-                                                        numReviews={item.numReviews}
-                                                        onPress={() => navigation.navigate("FoodDetails")}
-                                                    />
-                                                )
-                                            }}
-                                        />
-                                    ) : (
-                                        <FlatList
-                                            data={filteredFoods}
-                                            keyExtractor={(item) => item.id}
-                                            renderItem={({ item }) => {
-                                                return (
-                                                    <HorizontalTeacherProfile
-                                                        name={item.name}
-                                                        image={item.image}
-                                                        course={item.course}
-                                                        grade={item.grade}
-                                                        rating={item.rating}
-                                                        numReviews={item.numReviews}
-                                                        isPromo={item.isPromo}
-                                                        onPress={() => navigation.navigate("FoodDetails")}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                    )
-                                }
-                            </>
                         ) : (
-                            <NotFoundCard />
-                        )}
-                    </View>
-                </View>
-            </View>
-        )
-    }
-
-    // Toggle category selection
-    const toggleCategory = (categoryId) => {
-        const updatedCategories = [...selectedCategories];
-        const index = updatedCategories.indexOf(categoryId);
-
-        if (index === -1) {
-            updatedCategories.push(categoryId);
-        } else {
-            updatedCategories.splice(index, 1);
-        }
-
-        setSelectedCategories(updatedCategories);
-    };
-
-    // toggle rating selection
-    const toggleRating = (ratingId) => {
-        const updatedRatings = [...selectedRating];
-        const index = updatedRatings.indexOf(ratingId);
-
-        if (index === -1) {
-            updatedRatings.push(ratingId);
-        } else {
-            updatedRatings.splice(index, 1);
-        }
-
-        setSelectedRating(updatedRatings);
-    };
-
-    // Function to toggle selected cuisine
-    const toggleCuisine = (cuisineId) => {
-        // Check if the cuisine is already selected
-        if (selectedCuisines.includes(cuisineId)) {
-            // If selected, remove it
-            setSelectedCuisines(selectedCuisines.filter(id => id !== cuisineId));
-        } else {
-            // If not selected, add it
-            setSelectedCuisines([...selectedCuisines, cuisineId]);
-        }
-    };
-
-    const renderCuisinesItem = ({ item }) => (
-        <TouchableOpacity
-            style={{
-                backgroundColor: selectedCuisines.includes(item.id) ? COLORS.primary : "transparent",
-                padding: 10,
-                marginVertical: 5,
-                borderColor: COLORS.primary,
-                borderWidth: 1.3,
-                borderRadius: 24,
-                marginRight: 12,
-            }}
-            onPress={() => toggleCuisine(item.id)}>
-
-            <Text style={{
-                color: selectedCuisines.includes(item.id) ? COLORS.white : COLORS.primary
-            }}>{item.name}</Text>
-        </TouchableOpacity>
-    );
-
-    // Category item
-    const renderCategoryItem = ({ item }) => (
-        <TouchableOpacity
-            style={{
-                backgroundColor: selectedCategories.includes(item.id) ? COLORS.primary : "transparent",
-                padding: 10,
-                marginVertical: 5,
-                borderColor: COLORS.primary,
-                borderWidth: 1.3,
-                borderRadius: 24,
-                marginRight: 12,
-            }}
-            onPress={() => toggleCategory(item.id)}>
-
-            <Text style={{
-                color: selectedCategories.includes(item.id) ? COLORS.white : COLORS.primary
-            }}>{item.name}</Text>
-        </TouchableOpacity>
-    );
-
-    const renderRatingItem = ({ item }) => (
-        <TouchableOpacity
-            style={{
-                backgroundColor: selectedRating.includes(item.id) ? COLORS.primary : "transparent",
-                paddingHorizontal: 16,
-                paddingVertical: 6,
-                marginVertical: 5,
-                borderColor: COLORS.primary,
-                borderWidth: 1.3,
-                borderRadius: 24,
-                marginRight: 12,
-                flexDirection: "row",
-                alignItems: "center",
-            }}
-            onPress={() => toggleRating(item.id)}>
-            <View style={{ marginRight: 6 }}>
-                <FontAwesome name="star" size={14} color={selectedRating.includes(item.id) ? COLORS.white : COLORS.primary} />
-            </View>
-            <Text style={{
-                color: selectedRating.includes(item.id) ? COLORS.white : COLORS.primary
-            }}>{item.title}</Text>
-        </TouchableOpacity>
+                            <HorizontalTeacherProfile
+                                fullName={item.fullName}
+                                photo={`${config.API_URL}/${item.photo}`}
+                                courseName={item.courseName}
+                                grade={item.grade}
+                                rating={item.rating}
+                                numReviews={item.numReviews}
+                                onPress={() => navigation.navigate("TeacherDetails", { teacherId: item.teacherId })}
+                            />
+                        )
+                    )}
+                />
+            ) : (
+                <NotFoundCard />
+            )}
+        </View>
     );
 
     return (
-        <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
-            <View style={[styles.container, { backgroundColor: COLORS.white }]}>
+        <SafeAreaView style={styles.area}>
+            <View style={styles.container}>
                 {renderHeader()}
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
+                    {renderSearchTypeToggle()}
                     {renderContent()}
                 </ScrollView>
-                <RBSheet
-                    ref={refRBSheet}
-                    closeOnDragDown={true}
-                    closeOnPressMask={false}
-                    height={580}
-                    customStyles={{
-                        wrapper: {
-                            backgroundColor: "rgba(0,0,0,0.5)",
-                        },
-                        draggableIcon: {
-                            backgroundColor: "#000",
-                        },
-                        container: {
-                            borderTopRightRadius: 32,
-                            borderTopLeftRadius: 32,
-                            height: 580,
-                            backgroundColor: COLORS.white,
-                            alignItems: "center",
-                        }
-                    }}
-                >
-                    <Text style={[styles.bottomTitle, {
-                        color: COLORS.greyscale900
-                    }]}>Filter</Text>
-                    <View style={styles.separateLine} />
-                    <View style={{ width: SIZES.width - 32 }}>
-                        <Text style={[styles.sheetTitle, {
-                            color: COLORS.greyscale900
-                        }]}>Category</Text>
-                        <FlatList
-                            data={categories}
-                            keyExtractor={item => item.id}
-                            showsHorizontalScrollIndicator={false}
-                            horizontal
-                            renderItem={renderCategoryItem}
-                        />
-                        <Text style={[styles.sheetTitle, {
-                            color: COLORS.greyscale900
-                        }]}>Filter</Text>
-                        <MultiSlider
-                            values={priceRange}
-                            sliderLength={SIZES.width - 32}
-                            onValuesChange={handleSliderChange}
-                            min={0}
-                            max={100}
-                            step={1}
-                            allowOverlap={false}
-                            snapped
-                            minMarkerOverlapDistance={40}
-                            customMarker={CustomSliderHandle}
-                            selectedStyle={{ backgroundColor: COLORS.primary }}
-                            unselectedStyle={{ backgroundColor: 'lightgray' }}
-                            containerStyle={{ height: 40 }}
-                            trackStyle={{ height: 3 }}
-                        />
-
-                        <Text style={[styles.sheetTitle, {
-                            color: COLORS.greyscale900
-                        }]}>Cuisines</Text>
-
-                        <FlatList
-                            data={cuisines}
-                            keyExtractor={item => item.id}
-                            showsHorizontalScrollIndicator={false}
-                            horizontal
-                            renderItem={renderCuisinesItem}
-                        />
-
-                        <Text style={[styles.sheetTitle, {
-                            color: COLORS.greyscale900
-                        }]}>Rating</Text>
-                        <FlatList
-                            data={ratings}
-                            keyExtractor={item => item.id}
-                            showsHorizontalScrollIndicator={false}
-                            horizontal
-                            renderItem={renderRatingItem}
-                        />
-                    </View>
-
-                    <View style={styles.separateLine} />
-
-                    <View style={styles.bottomContainer}>
-                        <Button
-                            title="Reset"
-                            style={{
-                                width: (SIZES.width - 32) / 2 - 8,
-                                backgroundColor: COLORS.tansparentPrimary,
-                                borderRadius: 32,
-                                borderColor: COLORS.tansparentPrimary
-                            }}
-                            textColor={COLORS.primary}
-                            onPress={() => refRBSheet.current.close()}
-                        />
-                        <Button
-                            title="Filter"
-                            filled
-                            style={styles.logoutButton}
-                            onPress={() => refRBSheet.current.close()}
-                        />
-                    </View>
-                </RBSheet>
             </View>
         </SafeAreaView>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
     area: {
         flex: 1,
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
     },
     container: {
         flex: 1,
+        padding: 16,
         backgroundColor: COLORS.white,
-        padding: 16
     },
     headerContainer: {
-        flexDirection: "row",
-        width: SIZES.width - 32,
-        justifyContent: "space-between",
-        marginBottom: 16
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
     },
     headerLeft: {
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     backIcon: {
-        height: 24,
         width: 24,
-        tintColor: COLORS.black
+        height: 24,
+        tintColor: COLORS.black,
     },
     headerTitle: {
         fontSize: 20,
-        fontFamily: "Urbanist Bold",
+        marginLeft: 16,
         color: COLORS.black,
-        marginLeft: 16
-    },
-    moreIcon: {
-        width: 24,
-        height: 24,
-        tintColor: COLORS.black
     },
     searchBarContainer: {
-        width: SIZES.width - 32,
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: COLORS.secondaryWhite,
         padding: 16,
         borderRadius: 12,
-        height: 52,
+        height: 50,
         marginBottom: 16,
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
     },
     searchIcon: {
-        height: 24,
         width: 24,
-        tintColor: COLORS.gray
+        height: 24,
+        tintColor: COLORS.gray,
     },
     searchInput: {
         flex: 1,
         fontSize: 16,
-        fontFamily: "Urbanist Regular",
-        marginHorizontal: 8
+        marginHorizontal: 8,
+        color: COLORS.black,
+        paddingVertical: 0,  
+        textAlignVertical: 'center',
     },
-    filterIcon: {
-        width: 24,
-        height: 24,
-        tintColor: COLORS.primary
+    toggleContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
     },
-    tabContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: SIZES.width - 32,
-        justifyContent: "space-between"
-    },
-    tabBtn: {
-        width: (SIZES.width - 32) / 2 - 6,
-        height: 42,
+    toggleButton: {
+        width: '48%',
+        paddingVertical: 10,
         borderRadius: 12,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 1.4,
+        alignItems: 'center',
+        borderWidth: 1.3,
         borderColor: COLORS.primary,
-        borderRadius: 32
     },
-    selectedTab: {
-        width: (SIZES.width - 32) / 2 - 6,
-        height: 42,
-        borderRadius: 12,
+    activeToggleButton: {
         backgroundColor: COLORS.primary,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 1.4,
-        borderColor: COLORS.primary,
-        borderRadius: 32
     },
-    tabBtnText: {
+    toggleButtonText: {
         fontSize: 16,
-        fontFamily: "Urbanist SemiBold",
         color: COLORS.primary,
-        textAlign: "center"
     },
-    selectedTabText: {
-        fontSize: 16,
-        fontFamily: "Urbanist SemiBold",
+    activeToggleButtonText: {
         color: COLORS.white,
-        textAlign: "center"
     },
-    resultContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: SIZES.width - 32,
-        marginVertical: 16,
-    },
-    subtitle: {
-        fontSize: 18,
-        fontFamily: "Urbanist Bold",
-        color: COLORS.black,
-    },
-    subResult: {
-        fontSize: 14,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.primary
-    },
-    resultLeftView: {
-        flexDirection: "row"
-    },
-    bottomContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginVertical: 12,
-        paddingHorizontal: 16,
-        width: SIZES.width
-    },
-    cancelButton: {
-        width: (SIZES.width - 32) / 2 - 8,
-        backgroundColor: COLORS.tansparentPrimary,
-        borderRadius: 32
-    },
-    logoutButton: {
-        width: (SIZES.width - 32) / 2 - 8,
-        backgroundColor: COLORS.primary,
-        borderRadius: 32
-    },
-    bottomTitle: {
-        fontSize: 24,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.black,
-        textAlign: "center",
-        marginTop: 12
-    },
-    separateLine: {
-        height: .4,
-        width: SIZES.width - 32,
-        backgroundColor: COLORS.greyscale300,
-        marginVertical: 12
-    },
-    sheetTitle: {
-        fontSize: 18,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.black,
-        marginVertical: 12
-    },
-    reusltTabContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: SIZES.width - 32,
-        justifyContent: "space-between"
-    },
-    viewDashboard: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: 36,
-        justifyContent: "space-between"
-    },
-    dashboardIcon: {
-        width: 16,
-        height: 16,
-        tintColor: COLORS.primary
-    },
-    tabText: {
-        fontSize: 20,
-        fontFamily: "Urbanist SemiBold",
-        color: COLORS.black
-    }
-})
+});
 
-export default Search
+export default Search;
