@@ -3,8 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { COLORS, SIZES, icons, images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-virtualized-view';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { launchImageLibrary } from 'react-native-image-picker';
 import SettingsItem from '../components/SettingsItem';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Button from '../components/Button';
@@ -82,26 +80,6 @@ const ProfileStudent = () => {
   const renderProfile = () => {
     const [image, setImage] = useState(images.user1)
 
-    // Image Profile handler
-    const pickImage = () => {
-      const options = {
-        mediaType: 'photo',
-        includeBase64: false,
-        maxHeight: 2000,
-        maxWidth: 2000,
-      };
-
-      launchImageLibrary(options, (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('Image picker error: ', response.error);
-        } else {
-          let imageUri = response.uri || response.assets?.[0]?.uri;
-          setImage({ uri: imageUri });
-        }
-      });
-    };
     return (
       <View style={styles.profileContainer}>
         <View>
@@ -110,11 +88,6 @@ const ProfileStudent = () => {
             resizeMode='cover'
             style={styles.avatar}
           />
-          <TouchableOpacity
-            onPress={pickImage}
-            style={styles.picContainer}>
-            <MaterialIcons name="edit" size={16} color={COLORS.white} />
-          </TouchableOpacity>
         </View>
         <Text style={[styles.title, { color: COLORS.greyscale900 }]}>Nathalie Erneson</Text>
         <Text style={[styles.subtitle, { color: COLORS.greyscale900 }]}>nathalie_erneson@gmail.com</Text>
