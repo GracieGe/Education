@@ -120,4 +120,32 @@ describe('Home Screen', () => {
 
     expect(navigateMock).toHaveBeenCalledWith('Search');
   });
+
+  it('navigates to course details when a course card is clicked', async () => {
+    const navigateMock = jest.fn();
+    const { findAllByText } = render(<Home navigation={{ navigate: navigateMock }} />);
+  
+    // Wait for courses to load and get all elements with the text "Mathematics 101"
+    const mathCourseCards = await findAllByText('Mathematics 101');
+    
+    // Simulate clicking on the first course card (or whichever one you want to test)
+    fireEvent.press(mathCourseCards[0]);
+  
+    // Check that the navigation function was called with the correct arguments
+    expect(navigateMock).toHaveBeenCalledWith('CourseDetails', { courseId: 1 }); // Assuming courseId is 1
+  });
+
+  it('navigates to teacher details when a teacher card is clicked', async () => {
+    const navigateMock = jest.fn();
+    const { getByText, findByText } = render(<Home navigation={{ navigate: navigateMock }} />);
+  
+    // Wait for teachers to load
+    const teacherCard = await findByText('John Doe');
+  
+    // Simulate clicking on the teacher card
+    fireEvent.press(teacherCard);
+  
+    // Check that the navigation function was called with the correct arguments
+    expect(navigateMock).toHaveBeenCalledWith('TeacherDetails', { teacherId: 1 }); // Assuming teacherId is 1
+  });
 });
