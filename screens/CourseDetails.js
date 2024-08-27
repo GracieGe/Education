@@ -48,6 +48,7 @@ const CourseDetails = ({ route, navigation }) => {
     return (
       <View style={styles.headerContainer}>
         <TouchableOpacity
+          testID="back-button"
           onPress={() => navigation.goBack()}>
           <Image
             source={icons.back}
