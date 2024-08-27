@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import Home from '../screens/Home';
 import axios from 'axios';
 
@@ -66,7 +66,7 @@ describe('Home Screen Integration Tests', () => {
 
     // Wait for categories to load
     const mathElements = await findAllByText('Math');
-    expect(mathElements.length).toBeGreaterThan(0); // Ensure there is at least one "Math" element
+    expect(mathElements.length).toBeGreaterThan(0); 
 
     // Simulate selecting the first "Math" category element
     fireEvent.press(mathElements[0]);
@@ -78,5 +78,59 @@ describe('Home Screen Integration Tests', () => {
     // Verify that the courses are displayed
     expect(mathCourse1).toBeTruthy();
     expect(mathCourse2).toBeTruthy();
+  });
+
+  it('loads and displays teachers after selecting a category', async () => {
+    // Mock API responses for categories and teachers
+    axios.get.mockImplementation((url) => {
+      if (url.includes('/categories')) {
+        return Promise.resolve({
+          data: [
+            { categoryId: 'math', categoryName: 'Math' },
+            { categoryId: 'science', categoryName: 'Science' },
+          ],
+        });
+      } else if (url.includes('/teachers')) {
+        return Promise.resolve({
+          data: [
+            {
+              teacherId: 1,
+              fullName: 'John Doe',
+              photo: { uri: 'https://example.com/photo1.jpg' },
+              courseName: 'Mathematics 101',
+              grade: 'Senior Two',
+              rating: 4.8,
+              numReviews: 150,
+            },
+            {
+              teacherId: 2,
+              fullName: 'Jane Smith',
+              photo: { uri: 'https://example.com/photo2.jpg' },
+              courseName: 'Physics Basics',
+              grade: 'Senior One',
+              rating: 4.9,
+              numReviews: 200,
+            },
+          ],
+        });
+      }
+    });
+
+    const { findAllByText, findByText } = render(<Home navigation={{ navigate: jest.fn() }} />);
+
+    // Wait for categories to load
+    const mathElements = await findAllByText('Math');
+    expect(mathElements.length).toBeGreaterThan(0); 
+
+    // Simulate selecting the first "Math" category element
+    fireEvent.press(mathElements[0]);
+
+    // Wait for teachers to load after selecting category
+    const teacher1 = await findByText('John Doe');
+    const teacher2 = await findByText('Jane Smith');
+
+    // Verify that the teachers are displayed
+    expect(teacher1).toBeTruthy();
+    expect(teacher2).toBeTruthy();
   });
 });
