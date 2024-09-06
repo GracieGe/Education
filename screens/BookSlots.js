@@ -196,6 +196,7 @@ const BookSlots = ({ navigation, route }) => {
                   source={{ uri: image }}
                   resizeMode="cover"
                   style={styles.avatar}
+                  testID="avatar"
                 />
               )}
               <Text style={styles.teacherName}>{fullName}</Text>

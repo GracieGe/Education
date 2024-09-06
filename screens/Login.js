@@ -74,8 +74,8 @@ const Login = ({ navigation }) => {
       if (err.response) {
       if (err.response.status === 400) {
         setError('Invalid phone number or password. Please try again.');
-      } else if (err.response.status === 401 || err.response.status === 403) {
-        setError('Invalid phone number or password');
+      } else if (err.response.status === 403) {
+        setError('Your account is deactivated. Please contact administrators to activate your account first.');
       } else {
         setError('An error occurred during login. Please try again.');
       }
