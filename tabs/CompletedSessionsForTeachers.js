@@ -106,7 +106,6 @@ const completedSessionsForTeachers = ({ navigation }) => {
             }]} />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("RateTheDriver")}
                 style={styles.evaluationBtn}>
                 <Text style={styles.evaluationBtnText}>Give Evaluation</Text>
               </TouchableOpacity>

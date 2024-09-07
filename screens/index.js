@@ -66,7 +66,6 @@ import TeacherDetails from "./TeacherDetails";
 import VoiceCall from "./VoiceCall";
 import VideoCall from "./VideoCall";
 import SelectTeachers from "./SelectTeachers";
-import RateTheDriver from "./RateTheDriver";
 import GiveTipForDriver from "./GiveTipForDriver";
 import RateTheRestaurant from "./RateTheRestaurant";
 import MyCart from "./MyCart";
@@ -143,7 +142,6 @@ export {
     VoiceCall,
     VideoCall,
     SelectTeachers,
-    RateTheDriver,
     GiveTipForDriver,
     RateTheRestaurant,
     MyCart,
