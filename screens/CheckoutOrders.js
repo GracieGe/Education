@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
 import OrderSummaryCard from '../components/OrderSummaryCard';
 import Button from '../components/Button';
+import config from '../config';
 
 const CheckoutOrders = ({ route, navigation }) => {
   const { courseData, count, notes } = route.params;
@@ -33,7 +34,7 @@ const CheckoutOrders = ({ route, navigation }) => {
             }]} />
             <OrderSummaryCard
               name={`${courseData.courseName} | ${courseData.grade}`}
-              image={images.courses1}
+              image={`${config.API_URL}/${courseData.image}`}
               price={`¥${courseData.price}/h`}
               quantity={count}
               onPress={() => console.log("Clicked")}

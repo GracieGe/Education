@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { AboutUs, AddNewAddress, AddNewCard, AddPromo, Address, CancelOrder, CancelOrderPaymentMethods, Categories, AddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePIN, ChangePassword, Chat, ChatWithPerson, CheckoutOrders, CheckoutOrdersAddress, CheckoutOrdersCompleted, CreateNewPIN, CreateNewPassword, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, EnterYourPIN, Favourite, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, FoodDetailsOffers, FoodReviews, ForgotPasswordEmail, ForgotPasswordMethods, ForgotPasswordPhoneNumber, GiveTipForDriver, HelpCenter, InviteFriends, Login, MyCart, Notifications, OTPVerification, Onboarding1, Onboarding2, Onboarding3, Onboarding4, PaymentMethods, RateTheRestaurant, AllTeacherProfiles, Search, SearchingDriver, SettingsLanguage, SettingsNotifications, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, TopupEwalletMethods, TrackDriver, VideoCall, VoiceCall, Welcome, SelectTeachers } from '../screens';
+import { AboutUs, AddNewAddress, Address, AddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePIN, ChangePassword, Chat, ChatWithPerson, CheckoutOrders, CheckoutOrdersAddress, CheckoutOrdersCompleted, CreateNewPIN, CreateNewPassword, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, EnterYourPIN, Favourite, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, FoodDetailsOffers, FoodReviews, ForgotPasswordEmail, ForgotPasswordMethods, ForgotPasswordPhoneNumber, GiveTipForDriver, HelpCenter, InviteFriends, Login, MyCart, Notifications, OTPVerification, Onboarding1, Onboarding2, Onboarding3, Onboarding4, PaymentMethods, RateTheRestaurant, AllTeacherProfiles, Search, CompletePayment, SettingsLanguage, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, SelectTeachers } from '../screens';
 import BottomTabNavigation from './BottomTabNavigation';
 
 const Stack = createNativeStackNavigator();
@@ -45,7 +45,6 @@ const AppNavigation = () => {
                 <Stack.Screen name="Onboarding2" component={Onboarding2}/>
                 <Stack.Screen name="Onboarding3" component={Onboarding3}/>
                 <Stack.Screen name="Onboarding4" component={Onboarding4}/>
-                <Stack.Screen name="Welcome" component={Welcome}/>
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="Signup" component={Signup}/>
                 <Stack.Screen name="ForgotPasswordMethods" component={ForgotPasswordMethods}/>
@@ -58,9 +57,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="EditAddress" component={EditAddress}/>
                 <Stack.Screen name="Main" component={BottomTabNavigation}/>
                 <Stack.Screen name="EditProfile" component={EditProfile}/>
-                <Stack.Screen name="SettingsNotifications" component={SettingsNotifications}/>
                 <Stack.Screen name='PurchaseHistory' component={PurchaseHistory}/>
-                <Stack.Screen name="AddNewCard" component={AddNewCard}/>
                 <Stack.Screen name="SettingsSecurity" component={SettingsSecurity}/>
                 <Stack.Screen name="ChangePIN" component={ChangePIN}/>
                 <Stack.Screen name="ChangePassword" component={ChangePassword}/>
@@ -75,14 +72,9 @@ const AppNavigation = () => {
                 <Stack.Screen name="Notifications" component={Notifications}/>
                 <Stack.Screen name="Search" component={Search}/>
                 <Stack.Screen name="PaymentMethods" component={PaymentMethods}/>
-                <Stack.Screen name="CancelOrder" component={CancelOrder}/>
-                <Stack.Screen name="CancelOrderPaymentMethods" component={CancelOrderPaymentMethods}/>
                 <Stack.Screen name="EnterYourPIN" component={EnterYourPIN}/>
-                <Stack.Screen name="TopupEwalletMethods" component={TopupEwalletMethods}/>
-                <Stack.Screen name="AddPromo" component={AddPromo}/>
                 <Stack.Screen name="Address" component={Address}/>
                 <Stack.Screen name="AddNewAddress" component={AddNewAddress}/>
-                <Stack.Screen name="Categories" component={Categories}/>
                 <Stack.Screen name="AllCourses" component={AllCourses}/>
                 <Stack.Screen name="AllTeacherProfiles" component={AllTeacherProfiles}/>
                 <Stack.Screen name="AddressForTeacher" component={AddressForTeacher}/>
@@ -96,12 +88,9 @@ const AppNavigation = () => {
                 <Stack.Screen name="CourseDetailsAddItem" component={CourseDetailsAddItem}/>
                 <Stack.Screen name="CheckoutOrders" component={CheckoutOrders}/>
                 <Stack.Screen name="CheckoutOrdersAddress" component={CheckoutOrdersAddress}/>
-                <Stack.Screen name="SearchingDriver" component={SearchingDriver}/>
+                <Stack.Screen name="CompletePayment" component={CompletePayment}/>
                 <Stack.Screen name="CheckoutOrdersCompleted" component={CheckoutOrdersCompleted}/>
-                <Stack.Screen name="TrackDriver" component={TrackDriver}/>
                 <Stack.Screen name="TeacherDetails" component={TeacherDetails}/>
-                <Stack.Screen name="VoiceCall" component={VoiceCall}/>
-                <Stack.Screen name="VideoCall" component={VideoCall}/>
                 <Stack.Screen name="ChatWithPerson" component={ChatWithPerson}/>
                 <Stack.Screen name="SelectTeachers" component={SelectTeachers}/>
                 <Stack.Screen name="GiveTipForDriver" component={GiveTipForDriver}/>

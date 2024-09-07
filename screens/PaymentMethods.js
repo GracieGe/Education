@@ -55,7 +55,7 @@ const PaymentMethods = ({ route, navigation }) => {
       });
 
       if (response.status === 201) {
-        navigation.navigate("SearchingDriver");
+        navigation.navigate("CompletePayment");
       } else {
         console.error('Error creating order:', response.status);
       }

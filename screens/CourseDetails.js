@@ -115,7 +115,6 @@ const CourseDetails = ({ route, navigation }) => {
           backgroundColor: COLORS.grayscale200
         }]} />
         <TouchableOpacity
-          onPress={() => navigation.navigate("FoodReviews")}
           style={styles.reviewContainer}>
           <View style={styles.reviewLeftContainer}>
             <Fontisto name="star" size={20} color="orange" />
@@ -207,7 +206,7 @@ const styles = StyleSheet.create({
   backIcon: {
     width: 24,
     height: 24,
-    tintColor: COLORS.white
+    tintColor: COLORS.black
   },
   bookmarkIcon: {
     width: 24,

@@ -11,7 +11,7 @@ const OrderSummaryCard = ({ name, image, price, quantity, onPress }) => {
         <View style={styles.container}>
             <View style={styles.viewLeftContainer}>
                 <Image
-                    source={image}
+                    source={{ uri: image }} 
                     resizeMode='contain'
                     style={styles.image}
                 />

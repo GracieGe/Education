@@ -29,9 +29,9 @@ const CourseDetailsAddItem = ({ route, navigation }) => {
         return (
           <View>
             <Image
-              source={images.courses1}
+              source={{ uri: `${config.API_URL}/${courseData.image}` }}
               resizeMode='cover'
-              style={{ width: SIZES.width, height: 350 }} 
+              style={{ width: SIZES.width, height: 380 }} 
             />
             <View style={styles.separateLine} />
           </View>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     backIcon: {
         width: 24,
         height: 24,
-        tintColor: COLORS.white
+        tintColor: COLORS.black
     },
     bookmarkIcon: {
         width: 24,
