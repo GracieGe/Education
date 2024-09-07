@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { AboutUs, AddNewAddress, Address, AddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePIN, ChangePassword, Chat, ChatWithPerson, CheckoutOrders, CheckoutOrdersAddress, CheckoutOrdersCompleted, CreateNewPIN, CreateNewPassword, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, EnterYourPIN, Favourite, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, FoodDetailsOffers, FoodReviews, ForgotPasswordEmail, ForgotPasswordMethods, ForgotPasswordPhoneNumber, GiveTipForDriver, HelpCenter, InviteFriends, Login, MyCart, Notifications, OTPVerification, Onboarding1, Onboarding2, Onboarding3, Onboarding4, PaymentMethods, RateTheRestaurant, AllTeacherProfiles, Search, CompletePayment, SettingsLanguage, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, SelectTeachers } from '../screens';
+import { AboutUs, AddNewAddress, Address, AddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePassword, ChatWithPerson, CheckoutOrders, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, Login, PaymentMethods, AllTeacherProfiles, Search, CompletePayment, SettingsLanguage, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, SelectTeachers } from '../screens';
 import BottomTabNavigation from './BottomTabNavigation';
 
 const Stack = createNativeStackNavigator();
@@ -37,42 +37,27 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
             <Stack.Navigator 
+              initialRouteName={isFirstLaunch ? 'Signup' : 'Login'}
               screenOptions={{ headerShown: false }}
               // replace the second onboaring1 with login in order to make the user not to see the onboarding 
               // when login the next time
-              initialRouteName={isFirstLaunch ? 'Onboarding1' : 'Signup'}>
-                <Stack.Screen name="Onboarding1" component={Onboarding1}/>
-                <Stack.Screen name="Onboarding2" component={Onboarding2}/>
-                <Stack.Screen name="Onboarding3" component={Onboarding3}/>
-                <Stack.Screen name="Onboarding4" component={Onboarding4}/>
+            >
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="Signup" component={Signup}/>
-                <Stack.Screen name="ForgotPasswordMethods" component={ForgotPasswordMethods}/>
-                <Stack.Screen name="ForgotPasswordEmail" component={ForgotPasswordEmail}/>
-                <Stack.Screen name="ForgotPasswordPhoneNumber" component={ForgotPasswordPhoneNumber}/>
-                <Stack.Screen name="OTPVerification" component={OTPVerification}/>
-                <Stack.Screen name="CreateNewPassword" component={CreateNewPassword}/>
                 <Stack.Screen name="FillYourProfile" component={FillYourProfile}/>
-                <Stack.Screen name="CreateNewPIN" component={CreateNewPIN}/>
                 <Stack.Screen name="EditAddress" component={EditAddress}/>
                 <Stack.Screen name="Main" component={BottomTabNavigation}/>
                 <Stack.Screen name="EditProfile" component={EditProfile}/>
                 <Stack.Screen name='PurchaseHistory' component={PurchaseHistory}/>
                 <Stack.Screen name="SettingsSecurity" component={SettingsSecurity}/>
-                <Stack.Screen name="ChangePIN" component={ChangePIN}/>
                 <Stack.Screen name="ChangePassword" component={ChangePassword}/>
                 <Stack.Screen name="ChangePhoneNumber" component={ChangePhoneNumber}/>
                 <Stack.Screen name="SettingsLanguage" component={SettingsLanguage}/>
                 <Stack.Screen name="SettingsPrivacyPolicy" component={SettingsPrivacyPolicy}/>
-                <Stack.Screen name="InviteFriends" component={InviteFriends}/>
-                <Stack.Screen name="HelpCenter" component={HelpCenter}/>
                 <Stack.Screen name="CustomerService" component={CustomerService}/>
                 <Stack.Screen name="BookSlots" component={BookSlots}/>
-                <Stack.Screen name="Chat" component={Chat}/>
-                <Stack.Screen name="Notifications" component={Notifications}/>
                 <Stack.Screen name="Search" component={Search}/>
                 <Stack.Screen name="PaymentMethods" component={PaymentMethods}/>
-                <Stack.Screen name="EnterYourPIN" component={EnterYourPIN}/>
                 <Stack.Screen name="Address" component={Address}/>
                 <Stack.Screen name="AddNewAddress" component={AddNewAddress}/>
                 <Stack.Screen name="AllCourses" component={AllCourses}/>
@@ -80,22 +65,14 @@ const AppNavigation = () => {
                 <Stack.Screen name="AddressForTeacher" component={AddressForTeacher}/>
                 <Stack.Screen name="ViewSlots" component={ViewSlots}/>
                 <Stack.Screen name="SubmitSlots" component={SubmitSlots}/>
-                <Stack.Screen name="Favourite" component={Favourite}/>
                 <Stack.Screen name="CourseDetails" component={CourseDetails}/>
-                <Stack.Screen name="FoodReviews" component={FoodReviews}/>
                 <Stack.Screen name="CourseDescription" component={CourseDescription}/>
-                <Stack.Screen name="FoodDetailsOffers" component={FoodDetailsOffers}/>
                 <Stack.Screen name="CourseDetailsAddItem" component={CourseDetailsAddItem}/>
                 <Stack.Screen name="CheckoutOrders" component={CheckoutOrders}/>
-                <Stack.Screen name="CheckoutOrdersAddress" component={CheckoutOrdersAddress}/>
                 <Stack.Screen name="CompletePayment" component={CompletePayment}/>
-                <Stack.Screen name="CheckoutOrdersCompleted" component={CheckoutOrdersCompleted}/>
                 <Stack.Screen name="TeacherDetails" component={TeacherDetails}/>
                 <Stack.Screen name="ChatWithPerson" component={ChatWithPerson}/>
                 <Stack.Screen name="SelectTeachers" component={SelectTeachers}/>
-                <Stack.Screen name="GiveTipForDriver" component={GiveTipForDriver}/>
-                <Stack.Screen name="RateTheRestaurant" component={RateTheRestaurant}/>
-                <Stack.Screen name="MyCart" component={MyCart}/>
                 <Stack.Screen name="AboutUs" component={AboutUs}/>
               </Stack.Navigator> 
      </NavigationContainer>

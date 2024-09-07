@@ -140,7 +140,7 @@ const Login = ({ navigation }) => {
             style={styles.button}
             isLoading={isLoading}
           />
-          <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordMethods")}>
+          <TouchableOpacity>
             <Text style={styles.forgotPasswordBtnText}>Forgot the password?</Text>
           </TouchableOpacity>
         </ScrollView>
