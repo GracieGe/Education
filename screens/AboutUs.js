@@ -15,10 +15,10 @@ const AboutUs = () => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
                         <Text style={[styles.settingsTitle, { color: COLORS.black }]}>1. Company Description</Text>
-                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>xxxxxx</Text>
-                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>xxxxxx</Text>
-                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>xxxxxx</Text>
-                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>xxxxxx</Text>
+                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>Hongcai Education company.</Text>
+                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>Senior high school education.</Text>
+                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>A great number of teachers.</Text>
+                        <Text style={[styles.body, { color: COLORS.greyscale900 }]}>Qualified teaching level.</Text>
                     </View>
                     <View>
                         <Text style={[styles.settingsTitle, { color: COLORS.black }]}>2. Address</Text>
