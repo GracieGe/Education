@@ -49,7 +49,7 @@ const AddNewAddressForTeacher = ({ navigation }) => {
 
       if (response.status === 201) {
         Alert.alert('Congratulations', 'Address added successfully');
-        navigation.navigate('Address');
+        navigation.navigate('AddressForTeacher');
       }
     } catch (error) {
       console.error('Error adding address:', error);
