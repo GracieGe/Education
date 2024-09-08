@@ -61,7 +61,12 @@ const SelectTeachers = ({ navigation, route }) => {
     }
   };
 
-  const renderTeachers = () => (
+  const renderTeachers = () => {
+    if (teachers.length === 0) {
+      return <Text style={styles.noTeachersText}>No teachers available currently.</Text>;
+    }
+
+    return (
     <View style={{ backgroundColor: COLORS.secondaryWhite, marginVertical: 16 }}>
       <FlatList
         data={teachers}
@@ -84,6 +89,7 @@ const SelectTeachers = ({ navigation, route }) => {
       />
     </View>
   );
+};
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: COLORS.white }]}>
@@ -111,6 +117,12 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     marginVertical: 16
+  },
+  noTeachersText: {
+    textAlign: 'center',
+    color: COLORS.grayscale400,
+    fontSize: 16,
+    marginVertical: 20,
   }
 });
 
