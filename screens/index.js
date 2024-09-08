@@ -38,6 +38,7 @@ import Sessions from "./Sessions";
 import ChatWithPerson from "./ChatWithPerson";
 import AboutUs from "./AboutUs";
 import AddNewAddressForTeacher from "./AddNewAddressForTeacher";
+import EditAddressForTeacher from "./EditAddressForTeacher.js";
 
 export {
     Login,
@@ -79,5 +80,6 @@ export {
     Sessions,
     ChatWithPerson,
     AboutUs,
-    AddNewAddressForTeacher
+    AddNewAddressForTeacher,
+    EditAddressForTeacher
 }

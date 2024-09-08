@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { AboutUs, AddNewAddress, Address, AddressForTeacher, AddNewAddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePassword, ChatWithPerson, CheckoutOrders, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, FillYourProfile, EditAddress, CourseDetails, CourseDescription, CourseDetailsAddItem, Login, PaymentMethods, AllTeacherProfiles, Search, CompletePayment, SettingsLanguage, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, SelectTeachers } from '../screens';
+import { AboutUs, AddNewAddress, Address, AddressForTeacher, AddNewAddressForTeacher, ViewSlots, SubmitSlots, ChangePhoneNumber, ChangePassword, ChatWithPerson, CheckoutOrders, CustomerService, AllCourses, TeacherDetails, BookSlots, EditProfile, FillYourProfile, EditAddress, EditAddressForTeacher, CourseDetails, CourseDescription, CourseDetailsAddItem, Login, PaymentMethods, AllTeacherProfiles, Search, CompletePayment, SettingsLanguage, PurchaseHistory, SettingsPrivacyPolicy, SettingsSecurity, Signup, SelectTeachers } from '../screens';
 import BottomTabNavigation from './BottomTabNavigation';
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +46,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="Signup" component={Signup}/>
                 <Stack.Screen name="FillYourProfile" component={FillYourProfile}/>
                 <Stack.Screen name="EditAddress" component={EditAddress}/>
+                <Stack.Screen name="EditAddressForTeacher" component={EditAddressForTeacher}/>
                 <Stack.Screen name="Main" component={BottomTabNavigation}/>
                 <Stack.Screen name="EditProfile" component={EditProfile}/>
                 <Stack.Screen name='PurchaseHistory' component={PurchaseHistory}/>

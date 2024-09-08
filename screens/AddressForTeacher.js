@@ -4,7 +4,7 @@ import { COLORS, SIZES } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import { ScrollView } from 'react-native-virtualized-view';
-import UserAddressItem from '../components/UserAddressItem';
+import UserAddressItemTeacher from '../components/UserAddressItemTeacher';
 import Button from '../components/Button';
 import axios from 'axios';
 import config from '../config';
@@ -62,7 +62,7 @@ const AddressForTeacher = ({ navigation }) => {
                         data={userAddresses}
                         keyExtractor={item => item.addressId.toString()}
                         renderItem={({ item }) => (
-                            <UserAddressItem
+                            <UserAddressItemTeacher
                                 name={item.label}
                                 address={item.address}
                                 addressId={item.addressId}
