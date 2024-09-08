@@ -14,7 +14,7 @@ import { useIsFocused, useRoute } from '@react-navigation/native';
 // user address location
 const Address = ({ navigation }) => {
     const route = useRoute();
-    const { teacherId } = route.params || {};
+    const { teacherId, fullName } = route.params || {};
     const [userAddresses, setUserAddresses] = useState([]);
     const isFocused = useIsFocused();
 
@@ -47,6 +47,7 @@ const Address = ({ navigation }) => {
     const handleSelectAddress = (address) => {
         navigation.navigate('BookSlots', {
             teacherId,
+            fullName,
             selectedAddress: address,
         });
     };
@@ -76,7 +77,7 @@ const Address = ({ navigation }) => {
             <View style={styles.btnContainer}>
                 <Button
                     title="Add New Address"
-                    onPress={() => navigation.navigate("AddNewAddress")}
+                    onPress={() => navigation.navigate("AddNewAddress", {teacherId, fullName})}
                     filled
                     style={styles.btn}
                 />

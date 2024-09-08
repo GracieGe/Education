@@ -9,14 +9,11 @@ import Header from '../components/Header';
 import axios from 'axios';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute } from '@react-navigation/native';
 
-const AddNewAddress = ({ navigation }) => {
+const AddNewAddressForTeacher = ({ navigation }) => {
   const [address, setAddress] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [addressError, setAddressError] = useState('');
-  const route = useRoute();
-  const { teacherId, fullName } = route.params || {};
 
   const handleLabelSelection = (label) => {
     setSelectedLabel(prevLabel => prevLabel === label ? null : label);
@@ -52,7 +49,7 @@ const AddNewAddress = ({ navigation }) => {
 
       if (response.status === 201) {
         Alert.alert('Congratulations', 'Address added successfully');
-        navigation.navigate('Address', {teacherId, fullName});
+        navigation.navigate('Address');
       }
     } catch (error) {
       console.error('Error adding address:', error);
@@ -204,4 +201,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AddNewAddress;
+export default AddNewAddressForTeacher;

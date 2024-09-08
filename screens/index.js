@@ -37,6 +37,7 @@ import SelectTeachers from "./SelectTeachers";
 import Sessions from "./Sessions";
 import ChatWithPerson from "./ChatWithPerson";
 import AboutUs from "./AboutUs";
+import AddNewAddressForTeacher from "./AddNewAddressForTeacher";
 
 export {
     Login,
@@ -77,5 +78,6 @@ export {
     SelectTeachers,
     Sessions,
     ChatWithPerson,
-    AboutUs
+    AboutUs,
+    AddNewAddressForTeacher
 }

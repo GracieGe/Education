@@ -234,7 +234,7 @@ const BookSlots = ({ navigation, route }) => {
             <View style={{ width: SIZES.width - 32 }}>
               <TouchableOpacity
                 style={styles.inputBtn}
-                onPress={() => navigation.navigate('Address', { teacherId })}
+                onPress={() => navigation.navigate('Address', { teacherId, fullName })}
               >
                 <Text style={{ ...FONTS.body4, color: COLORS.grayscale400 }}>{location || "Select the location"}</Text>
                 <Feather name="chevron-right" size={24} color={COLORS.grayscale400} />

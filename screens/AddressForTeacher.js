@@ -76,7 +76,7 @@ const AddressForTeacher = ({ navigation }) => {
             <View style={styles.btnContainer}>
                 <Button
                     title="Add New Address"
-                    onPress={() => navigation.navigate("AddNewAddress")}
+                    onPress={() => navigation.navigate("AddNewAddressForTeacher")}
                     filled
                     style={styles.btn}
                 />
