@@ -11,7 +11,7 @@ import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditAddress = ({ route, navigation }) => {
-  const { addressId } = route.params;
+  const { addressId, teacherId, fullName } = route.params;
   const [address, setAddress] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [addressError, setAddressError] = useState('');
@@ -88,7 +88,7 @@ const EditAddress = ({ route, navigation }) => {
 
       if (response.status === 200) {
         Alert.alert('Congratulations', 'Address updated successfully');
-        navigation.navigate('Address');
+        navigation.navigate('Address', {teacherId, fullName});
       }
     } catch (error) {
       console.error('Error updating address:', error);

@@ -68,6 +68,8 @@ const Address = ({ navigation }) => {
                                 address={item.address}
                                 addressId={item.addressId}
                                 navigation={navigation}
+                                teacherId={teacherId}
+                                fullName={fullName} 
                                 onPress={() => handleSelectAddress(`(${item.label}) ${item.address}`)}
                             />
                         )}

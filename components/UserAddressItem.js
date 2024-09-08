@@ -7,7 +7,9 @@ const UserAddressItem = ({
     address,
     addressId,
     onPress,
-    navigation
+    navigation,
+    teacherId,
+    fullName
 }) => {
 
     return (
@@ -36,7 +38,7 @@ const UserAddressItem = ({
                 </View>
             </View>
             <TouchableOpacity
-                onPress={() => navigation.navigate('EditAddress', { addressId })}
+                onPress={() => navigation.navigate('EditAddress', { addressId, teacherId, fullName })}
             >
                 <Image
                     source={icons.editPencil}
